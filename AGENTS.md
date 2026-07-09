@@ -28,7 +28,7 @@ Ces regles s'appliquent au repo Git de l'etude de cas Innoscripta.
 ## Stack actuelle
 
 - Frontend: React 19 + TypeScript strict + Vite 8.
-- Package manager: `pnpm` 10.16.1 via Corepack.
+- Package manager: `pnpm` 10.34.4 via Corepack.
 - Runtime local: Node 22.22.3 et commandes partagees via `mise`.
 - Styling: Tailwind CSS v4 et CSS editorial mobile-first.
 - Etat: URL pour recherche/filtres partageables, `localStorage` pour preferences utilisateur.
@@ -42,10 +42,11 @@ Ces regles s'appliquent au repo Git de l'etude de cas Innoscripta.
 - `pnpm check`: format et lint Biome.
 - `pnpm typecheck`: TypeScript strict.
 - `pnpm test`: tests Vitest.
+- `pnpm test:coverage`: tests Vitest avec seuils de couverture obligatoires.
 - `pnpm test:e2e`: smoke Playwright, a lancer hors session navigateur live.
 - `pnpm build`: build client et bundle serveur autonome.
 - `pnpm build:static-demo`: build client autonome avec fixtures locales, sans serveur API.
-- `mise run verify`: controle local agrege.
+- `mise run verify`: Biome, TypeScript, couverture et build de production.
 - `mise run docker:up`: build et demarrage du container jusqu'au healthcheck.
 - `mise run docker:verify`: build, smoke `/api/health` et `/api/search`, puis arret propre.
 - `mise run docker:down`: arret et suppression de la stack de revue locale.

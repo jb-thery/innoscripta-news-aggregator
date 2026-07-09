@@ -9,7 +9,7 @@ Le plan detaille et la tracabilite du brief sont conserves dans `PLAN.md`. Ce do
 - Cache et etats asynchrones via TanStack Query.
 - BFF Hono same-origin, les cles provider restent cote serveur.
 - Schemas Zod et OpenAPI derives du serveur.
-- Client, types, hooks et mocks generes avec Orval.
+- Client, types et hooks generes avec Orval.
 - Adaptateurs distincts pour NewsAPI.org, The Guardian et New York Times.
 - Fallback mock automatique par provider lorsqu'une cle est absente.
 - Build statique optionnel utilisant les memes fixtures sans serveur API.
@@ -17,6 +17,9 @@ Le plan detaille et la tracabilite du brief sont conserves dans `PLAN.md`. Ce do
 - Interface anglais/allemand, themes clair/sombre et responsive mobile.
 - Image Docker multi-stage executant le serveur en utilisateur non-root.
 - Taches `mise` alignees sur le workflow PAC pour installer, verifier, lancer et arreter la stack de revue.
+- PostHog conditionnel, error boundary global et captures sans texte de recherche.
+- CSP distinct pour l'application et la documentation Swagger.
+- Gates locaux et CI sur audit, couverture, E2E desktop/mobile et runtime Docker.
 
 ## Parcours de donnees
 
@@ -32,7 +35,7 @@ Le plan detaille et la tracabilite du brief sont conserves dans `PLAN.md`. Ce do
 ```bash
 pnpm check
 pnpm typecheck
-pnpm test
+pnpm test:coverage
 pnpm test:e2e
 pnpm build
 pnpm build:static-demo
@@ -43,14 +46,14 @@ docker run --rm -p 3000:3000 innoscripta-news-aggregator
 
 ## Preuves locales
 
-- 14 tests Vitest verts.
-- 2 scenarios Playwright Chromium verts.
+- 41 tests Vitest verts avec seuils 80% statements/lines/functions et 65% branches.
+- 6 scenarios Playwright verts sur desktop Chromium et Pixel 5.
 - Build client et bundle serveur autonome verts.
 - Build statique et navigation directe sur `/feed` valides sans requete fetch ou XHR.
 - Image Docker executee sans cle en mode mock.
 - Smoke container valide sur `/`, `/api/health` et `/api/search`.
 - Arret SIGTERM valide avec un code de sortie `0` et suppression de la stack Compose.
-- Audit navigateur mobile: Accessibility 100, Best Practices 100, SEO 100, Agentic Browsing 100.
+- Audit navigateur mobile: Accessibility 100, Best Practices 100 et SEO 100.
 
 ## Reste lie a la publication
 
