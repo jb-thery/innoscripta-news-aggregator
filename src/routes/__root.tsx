@@ -1,14 +1,20 @@
 import type { QueryClient } from "@tanstack/react-query"
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import { createRootRouteWithContext, Outlet, useRouterState } from "@tanstack/react-router"
-import { TanStackRouterDevtools } from "@tanstack/react-router-devtools"
-import { useEffect } from "react"
+import { lazy, Suspense, useEffect } from "react"
 import { AppShell } from "@/components/app-shell"
 import { safeCapture } from "@/lib/analytics"
 
 interface RouterContext {
   queryClient: QueryClient
 }
+
+const DevelopmentTools = import.meta.env.DEV
+  ? lazy(() =>
+      import("@/components/development-tools").then(({ DevelopmentTools }) => ({
+        default: DevelopmentTools,
+      })),
+    )
+  : null
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: RootComponent,
@@ -29,11 +35,10 @@ function RootComponent() {
   return (
     <AppShell>
       <Outlet />
-      {import.meta.env.DEV ? (
-        <>
-          <ReactQueryDevtools initialIsOpen={false} />
-          <TanStackRouterDevtools position="bottom-right" />
-        </>
+      {DevelopmentTools ? (
+        <Suspense fallback={null}>
+          <DevelopmentTools />
+        </Suspense>
       ) : null}
     </AppShell>
   )
