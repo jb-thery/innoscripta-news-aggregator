@@ -19,6 +19,29 @@ const sourceStatus = (provider: ProviderId, ok: boolean, error: string | null): 
   error,
 })
 
+const contentSecurityPolicy = (path: string) => {
+  const isApiDocumentation = path === "/docs"
+  const scriptSources = isApiDocumentation
+    ? "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net"
+    : "script-src 'self'"
+  const styleSources = isApiDocumentation
+    ? "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net"
+    : "style-src 'self' 'unsafe-inline'"
+
+  return [
+    "default-src 'self'",
+    scriptSources,
+    styleSources,
+    "img-src 'self' https: data:",
+    "font-src 'self' data:",
+    "connect-src 'self'",
+    "object-src 'none'",
+    "frame-ancestors 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+  ].join("; ")
+}
+
 const securityHeaders = async (context: Context, next: Next) => {
   await next()
 
@@ -29,20 +52,7 @@ const securityHeaders = async (context: Context, next: Next) => {
     "Permissions-Policy",
     "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
   )
-  context.header(
-    "Content-Security-Policy",
-    [
-      "default-src 'self'",
-      "script-src 'self' 'unsafe-inline'",
-      "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' https: data:",
-      "font-src 'self' data:",
-      "connect-src 'self' https://newsapi.org https://content.guardianapis.com https://api.nytimes.com https://eu.i.posthog.com https://eu-assets.i.posthog.com",
-      "frame-ancestors 'none'",
-      "base-uri 'self'",
-      "form-action 'self'",
-    ].join("; "),
-  )
+  context.header("Content-Security-Policy", contentSecurityPolicy(context.req.path))
 }
 
 const healthRoute = createRoute({

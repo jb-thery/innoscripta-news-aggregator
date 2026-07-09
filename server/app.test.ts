@@ -55,4 +55,22 @@ describe("news BFF", () => {
 
     expect(await response.json()).toMatchObject({ status: "ok", mode: "mock" })
   })
+
+  it("should enforce a strict application content security policy", async () => {
+    const response = await createApp([]).request("/api/health")
+    const policy = response.headers.get("content-security-policy")
+
+    expect(policy).toContain("script-src 'self'")
+    expect(policy).toContain("connect-src 'self'")
+    expect(policy).toContain("object-src 'none'")
+    expect(policy).not.toContain("script-src 'self' 'unsafe-inline'")
+  })
+
+  it("should allow only the Swagger CDN on the documentation route", async () => {
+    const response = await createApp([]).request("/docs")
+    const policy = response.headers.get("content-security-policy")
+
+    expect(policy).toContain("script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net")
+    expect(policy).toContain("style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net")
+  })
 })
