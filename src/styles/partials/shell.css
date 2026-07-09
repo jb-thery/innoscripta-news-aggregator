@@ -1,0 +1,147 @@
+.site-frame {
+  min-height: 100vh;
+}
+
+.top-rule {
+  height: 7px;
+  background: linear-gradient(90deg, var(--signal) 0 35%, var(--ink) 35% 82%, var(--electric) 82%);
+}
+
+.site-header {
+  position: sticky;
+  z-index: 20;
+  top: 0;
+  display: grid;
+  grid-template-columns: minmax(210px, 1fr) auto minmax(210px, 1fr);
+  align-items: center;
+  width: min(100% - 2rem, 1480px);
+  min-height: 84px;
+  margin: 0 auto;
+  border-bottom: 1px solid var(--line-strong);
+  background: color-mix(in srgb, var(--paper) 90%, transparent);
+  backdrop-filter: blur(16px);
+}
+
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  color: inherit;
+  gap: 0.75rem;
+  text-decoration: none;
+}
+
+.wordmark__mark {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--ink);
+  background: var(--signal-solid);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  place-items: center;
+  transform: rotate(-3deg);
+}
+
+.wordmark strong,
+.wordmark small {
+  display: block;
+}
+
+.wordmark strong {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 650;
+  line-height: 1;
+}
+
+.wordmark small {
+  margin-top: 0.28rem;
+  color: var(--ink-muted);
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.primary-nav {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  gap: 2rem;
+}
+
+.nav-link {
+  position: relative;
+  display: grid;
+  height: 84px;
+  color: var(--ink-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  place-items: center;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.nav-link::after {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 3px;
+  background: var(--signal);
+  content: "";
+  transform: scaleX(0);
+  transition: transform 180ms ease;
+}
+
+.nav-link:hover,
+.nav-link--active {
+  color: var(--ink);
+}
+
+.nav-link--active::after {
+  transform: scaleX(1);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
+
+.badge.runtime-badge {
+  min-height: var(--header-control-height);
+  padding-inline: 0.7rem;
+  gap: 0.4rem;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0 4px color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.language-control {
+  display: flex;
+  align-items: center;
+  min-height: var(--header-control-height);
+  padding: 0 0.45rem 0 0.65rem;
+  border: 1px solid var(--line);
+  background: var(--paper-raised);
+  gap: 0.25rem;
+}
+
+.language-control select {
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 800;
+}

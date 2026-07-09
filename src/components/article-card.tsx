@@ -3,6 +3,7 @@ import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import type { Article } from "@/api/generated/model"
 import { cn } from "@/lib/utils"
+import { ArticleImage } from "./article-image"
 import { Badge } from "./ui/badge"
 import { Card } from "./ui/card"
 
@@ -11,6 +12,9 @@ interface ArticleCardProps {
   lead?: boolean
   index: number
 }
+
+const MAX_STAGGERED_CARD_INDEX = 8
+const CARD_STAGGER_DELAY_MS = 55
 
 export function ArticleCard({ article, lead = false, index }: ArticleCardProps) {
   const { t, i18n } = useTranslation()
@@ -28,21 +32,17 @@ export function ArticleCard({ article, lead = false, index }: ArticleCardProps) 
   return (
     <Card
       className={cn("article-card", lead && "article-card--lead")}
-      style={{ animationDelay: `${Math.min(index, 8) * 55}ms` }}
+      style={{
+        animationDelay: `${Math.min(index, MAX_STAGGERED_CARD_INDEX) * CARD_STAGGER_DELAY_MS}ms`,
+      }}
     >
       <div className="article-card__image-wrap">
-        {article.imageUrl ? (
-          <img
-            className="article-card__image"
-            src={article.imageUrl}
-            alt={t("article.imageAlt", { title: article.title })}
-            loading={lead ? "eager" : "lazy"}
-          />
-        ) : (
-          <div className="article-card__image-placeholder" aria-hidden="true">
-            <span>{article.provider.slice(0, 2).toUpperCase()}</span>
-          </div>
-        )}
+        <ArticleImage
+          imageUrl={article.imageUrl}
+          title={t("article.imageAlt", { title: article.title })}
+          provider={article.provider}
+          eager={lead}
+        />
         <Badge className="article-card__source" tone="accent">
           {article.source}
         </Badge>

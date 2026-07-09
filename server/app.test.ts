@@ -1,6 +1,7 @@
 // @vitest-environment node
 
 import { describe, expect, it } from "vitest"
+import { API_PATHS } from "../shared/paths"
 import { createApp } from "./app"
 import { getFixtureArticles } from "./providers/fixtures"
 import type { ArticleProvider } from "./providers/types"
@@ -8,14 +9,12 @@ import { SearchResponseSchema } from "./schema"
 
 const successfulProvider = (id: ArticleProvider["id"], live = false): ArticleProvider => ({
   id,
-  label: id,
   hasLiveCredentials: () => live,
   search: async () => getFixtureArticles(id),
 })
 
 const failingProvider = (id: ArticleProvider["id"]): ArticleProvider => ({
   id,
-  label: id,
   hasLiveCredentials: () => false,
   search: async () => {
     throw new Error(`${id} is unavailable`)
@@ -30,7 +29,7 @@ describe("news BFF", () => {
       successfulProvider("nytimes"),
     ])
 
-    const response = await app.request("/api/search?q=")
+    const response = await app.request(`${API_PATHS.search}?q=`)
     const payload = SearchResponseSchema.parse(await response.json())
 
     expect(payload).toMatchObject({
@@ -51,7 +50,7 @@ describe("news BFF", () => {
       successfulProvider("nytimes"),
     ])
 
-    const response = await app.request("/api/health")
+    const response = await app.request(API_PATHS.health)
 
     expect(await response.json()).toMatchObject({ status: "ok", mode: "mock" })
   })
@@ -63,7 +62,7 @@ describe("news BFF", () => {
       successfulProvider("nytimes"),
     ])
 
-    const response = await app.request("/api/health")
+    const response = await app.request(API_PATHS.health)
 
     expect(await response.json()).toMatchObject({ status: "ok", mode: "mixed" })
   })
@@ -75,7 +74,7 @@ describe("news BFF", () => {
       successfulProvider("nytimes", true),
     ])
 
-    const response = await app.request("/api/health")
+    const response = await app.request(API_PATHS.health)
 
     expect(await response.json()).toMatchObject({ status: "ok", mode: "live" })
   })
@@ -87,7 +86,7 @@ describe("news BFF", () => {
       successfulProvider("nytimes"),
     ])
 
-    const response = await app.request("/api/search?q=AI&providers=guardian")
+    const response = await app.request(`${API_PATHS.search}?q=AI&providers=guardian`)
     const payload = SearchResponseSchema.parse(await response.json())
 
     expect(payload.sources).toEqual([
@@ -98,13 +97,13 @@ describe("news BFF", () => {
   })
 
   it("should reject malformed search dates", async () => {
-    const response = await createApp([]).request("/api/search?from=not-a-date")
+    const response = await createApp([]).request(`${API_PATHS.search}?from=not-a-date`)
 
     expect(response.status).toBe(400)
   })
 
   it("should enforce a strict application content security policy", async () => {
-    const response = await createApp([]).request("/api/health")
+    const response = await createApp([]).request(API_PATHS.health)
     const policy = response.headers.get("content-security-policy")
 
     expect(policy).toContain("script-src 'self'")
@@ -114,7 +113,7 @@ describe("news BFF", () => {
   })
 
   it("should allow only the Swagger CDN on the documentation route", async () => {
-    const response = await createApp([]).request("/docs")
+    const response = await createApp([]).request(API_PATHS.docs)
     const policy = response.headers.get("content-security-policy")
 
     expect(policy).toContain("script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net")

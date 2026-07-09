@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title">
+  <title id="title">Abstract global news map</title>
+  <rect width="1200" height="675" fill="#172d28" />
+  <g fill="none" stroke="#61c994" stroke-width="4" opacity=".65">
+    <ellipse cx="600" cy="338" rx="390" ry="220" />
+    <ellipse cx="600" cy="338" rx="180" ry="220" />
+    <path d="M210 338h780M278 210h644M278 465h644" />
+  </g>
+  <path d="m480 290 82-62 96 42 84-47 73 87-53 111-133 42-118-63z" fill="#f3efe5" opacity=".88" />
+  <circle cx="742" cy="223" r="25" fill="#ff542f" />
+</svg>

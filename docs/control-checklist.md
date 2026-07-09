@@ -41,11 +41,13 @@ Verification locale du 10 juillet 2026.
 
 ## UI et accessibilite
 
-- [x] Interface controlee en 1440 x 1000 et 390 x 844.
+- [x] Interface controlee en 1200 x 900 et 390 x 844.
 - [x] Aucun overflow horizontal mobile.
 - [x] Controles semantiques, labels et focus visible.
 - [x] Filtres fermes absents de l'arbre accessible.
 - [x] Cibles tactiles principales de 44 px minimum.
+- [x] Badge de runtime, selecteur de langue et bouton de theme alignes a 44 px sur desktop.
+- [x] Images des trois providers servies localement et chargees en `200` dans le container Docker.
 - [x] Texte des cartes lisible sans troncature bloquante.
 - [x] Lighthouse mobile: Accessibility 100 et Best Practices 100.
 
@@ -55,7 +57,7 @@ Verification locale du 10 juillet 2026.
 - [x] `pnpm typecheck`.
 - [x] `pnpm test:coverage`, 41 tests verts.
 - [x] Seuils de couverture: 80% statements/lines/functions et 65% branches.
-- [x] Couverture mesuree: 81.45% statements, 80.91% lines, 84% functions et 67.03% branches.
+- [x] Couverture mesuree: 82.29% statements, 81.81% lines, 84.81% functions et 66.48% branches.
 - [x] `pnpm test:e2e`, 6 scenarios verts sur desktop Chromium et Pixel 5.
 - [x] `pnpm build`.
 - [x] `pnpm build:static-demo`.
@@ -65,6 +67,7 @@ Verification locale du 10 juillet 2026.
 - [x] Container non-root, healthcheck Compose et arret SIGTERM avec code `0`.
 - [x] `mise run docker:verify` reconstruit, teste et supprime la stack de revue.
 - [x] Console navigateur sans erreur ni avertissement.
+- [x] Zod configure en mode `jitless` avant validation pour respecter le CSP strict sans signal navigateur.
 - [x] Demo statique validee sans requete fetch ou XHR, y compris sur `/feed` apres rechargement.
 - [x] Diff controle avec `git diff --check`.
 - [x] Commitlint, pre-commit Biome et pre-push `verify:fast` operationnels.

@@ -1,6 +1,8 @@
 import { z } from "zod"
 import { ALL_PROVIDER_IDS } from "@/lib/providers"
 
+z.config({ jitless: true })
+
 const optionalString = z.preprocess(
   (value) => (typeof value === "string" && value.trim() ? value.trim() : undefined),
   z.string().optional(),
