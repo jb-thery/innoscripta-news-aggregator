@@ -1,7 +1,8 @@
-FROM node:22-slim AS build
+FROM node:22-slim AS builder
 
-RUN corepack enable && corepack prepare pnpm@10.16.1 --activate
 WORKDIR /app
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+RUN corepack enable
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile
@@ -11,12 +12,13 @@ RUN pnpm build
 
 FROM node:22-slim AS runner
 
-ENV NODE_ENV=production
-ENV PORT=3000
 WORKDIR /app
+ENV NODE_ENV=production \
+  HOST=0.0.0.0 \
+  PORT=3000
 
-COPY --from=build /app/dist ./dist
-COPY --from=build /app/server-dist ./server-dist
+COPY --from=builder --chown=node:node /app/dist ./dist
+COPY --from=builder --chown=node:node /app/server-dist ./server-dist
 
 EXPOSE 3000
 USER node
