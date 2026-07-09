@@ -1,0 +1,121 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 750;
+  gap: 0.45rem;
+  letter-spacing: 0.025em;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.button:hover {
+  transform: translateY(-1px);
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  transform: none;
+}
+
+.button--default {
+  padding: 0 1rem;
+}
+
+.button--small {
+  min-height: 44px;
+  padding: 0 0.8rem;
+}
+
+.button--icon-size {
+  width: var(--header-control-height);
+  height: var(--header-control-height);
+}
+
+.button--primary {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.button--primary:hover {
+  background: var(--signal);
+  color: #fff;
+}
+
+.button--outline {
+  border-color: var(--ink);
+  background: transparent;
+  color: var(--ink);
+}
+
+.button--outline:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.button--ghost,
+.button--icon {
+  background: transparent;
+  color: var(--ink);
+}
+
+.button--ghost:hover,
+.button--icon:hover {
+  background: color-mix(in srgb, var(--ink) 7%, transparent);
+}
+
+.button--icon {
+  border-color: var(--line);
+  background: var(--paper-raised);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0.25rem 0.55rem;
+  border: 1px solid var(--line);
+  background: var(--paper-raised);
+  color: var(--ink-muted);
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.badge--accent {
+  border-color: var(--signal-solid);
+  background: var(--signal-solid);
+  color: #fff;
+}
+
+.badge--success {
+  border-color: color-mix(in srgb, var(--success) 35%, var(--line));
+  color: var(--success);
+}
+
+.badge--danger {
+  color: var(--danger);
+}
+
+.input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 0;
+  background: var(--paper-raised);
+  color: var(--ink);
+}
+
+.input::placeholder {
+  color: color-mix(in srgb, var(--ink-muted) 75%, transparent);
+}

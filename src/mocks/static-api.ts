@@ -1,5 +1,6 @@
 import { filterArticles } from "@server/providers/filter"
 import { mockArticles } from "@server/providers/fixtures"
+import { API_PATHS } from "@shared/paths"
 import type { ProviderId, SourceStatus } from "@/api/generated/model"
 
 const PROVIDER_IDS: ProviderId[] = ["newsapi", "guardian", "nytimes"]
@@ -18,7 +19,7 @@ const getOptionalParam = (url: URL, name: string) => {
 export function createStaticApiResponse(url: string): Response {
   const requestUrl = new URL(url, "https://signal-desk.local")
 
-  if (requestUrl.pathname === "/api/health") {
+  if (requestUrl.pathname === API_PATHS.health) {
     return jsonResponse({
       status: "ok",
       mode: "mock",
@@ -26,7 +27,7 @@ export function createStaticApiResponse(url: string): Response {
     })
   }
 
-  if (requestUrl.pathname !== "/api/search") {
+  if (requestUrl.pathname !== API_PATHS.search) {
     return jsonResponse({ error: "Static endpoint not found" }, 404)
   }
 

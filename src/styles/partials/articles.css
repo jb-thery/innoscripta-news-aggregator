@@ -1,0 +1,207 @@
+.card {
+  border: 1px solid var(--line-strong);
+  background: var(--paper-raised);
+}
+
+.article-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  animation: card-in 440ms both ease-out;
+  box-shadow: 0 0 0 transparent;
+  transition:
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.article-card:hover {
+  box-shadow: var(--shadow);
+  transform: translateY(-3px);
+}
+
+.article-card--lead {
+  grid-column: span 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1.18fr) minmax(320px, 0.82fr);
+}
+
+.article-card__image-wrap {
+  position: relative;
+  min-height: 245px;
+  overflow: hidden;
+}
+
+.article-card--lead .article-card__image-wrap {
+  min-height: 455px;
+}
+
+.article-card__image,
+.article-card__image-placeholder {
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  object-fit: cover;
+  transition: transform 400ms ease;
+}
+
+.article-card:hover .article-card__image {
+  transform: scale(1.025);
+}
+
+.article-card__image-placeholder {
+  display: grid;
+  background:
+    linear-gradient(
+      135deg,
+      transparent 45%,
+      color-mix(in srgb, var(--signal) 60%, transparent) 45% 55%,
+      transparent 55%
+    ),
+    color-mix(in srgb, var(--electric) 14%, var(--paper));
+  place-items: center;
+}
+
+.article-card__image-placeholder span {
+  font-family: var(--font-display);
+  font-size: 4rem;
+}
+
+.article-card__source {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+}
+
+.article-card__body {
+  display: flex;
+  padding: 1.3rem;
+  flex: 1;
+  flex-direction: column;
+}
+
+.article-card--lead .article-card__body {
+  padding: clamp(1.6rem, 4vw, 3rem);
+}
+
+.article-card__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  color: var(--ink-muted);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+}
+
+.article-card__meta > span:last-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.article-card h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.65rem, 2.7vw, 2.3rem);
+  font-weight: 540;
+  letter-spacing: -0.025em;
+  line-height: 1.02;
+}
+
+.article-card--lead h2 {
+  font-size: clamp(2.3rem, 3vw, 3rem);
+  hyphens: none;
+  overflow-wrap: anywhere;
+}
+
+.article-card__body > p {
+  display: -webkit-box;
+  margin: 1.1rem 0 1.5rem;
+  color: var(--ink-muted);
+  font-size: 0.92rem;
+  line-height: 1.55;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.article-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  gap: 1rem;
+}
+
+.article-card__footer > span {
+  color: var(--ink-muted);
+  font-size: 0.72rem;
+}
+
+.article-card__footer a {
+  display: inline-flex;
+  align-items: center;
+  color: var(--signal-dark);
+  font-size: 0.74rem;
+  font-weight: 800;
+  gap: 0.35rem;
+  text-decoration: none;
+}
+
+.article-card__footer a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.state-panel {
+  display: grid;
+  min-height: 280px;
+  margin: 1.5rem 0 4rem;
+  padding: 2rem;
+  border: 1px dashed var(--line-strong);
+  background: color-mix(in srgb, var(--paper-raised) 72%, transparent);
+  text-align: center;
+  place-items: center;
+  align-content: center;
+}
+
+.state-panel h1,
+.state-panel h2 {
+  margin: 0.8rem 0 0;
+  font-family: var(--font-display);
+  font-size: 2rem;
+}
+
+.state-panel p {
+  max-width: 520px;
+  margin: 0.6rem auto 1.2rem;
+  color: var(--ink-muted);
+}
+
+.state-panel--error svg {
+  color: var(--danger);
+}
+
+.state-panel__radar {
+  color: var(--electric);
+  animation: spin 2.8s linear infinite;
+}
+
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(80px, 150px));
+  width: min(100%, 500px);
+  margin-top: 1rem;
+  gap: 0.5rem;
+}
+
+.skeleton-grid span {
+  height: 5px;
+  background: linear-gradient(90deg, var(--line), var(--paper-raised), var(--line));
+  background-size: 200% 100%;
+  animation: shimmer 1.3s infinite linear;
+}

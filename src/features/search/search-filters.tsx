@@ -1,10 +1,11 @@
 import { ChevronDown, RotateCcw, Search, SlidersHorizontal } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
+import type { ProviderId } from "@/api/generated/model"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { CATEGORIES } from "@/lib/categories"
 import { PROVIDERS } from "@/lib/providers"
+import { AdvancedSearchFilters } from "./advanced-search-filters"
 import type { SearchState } from "./search-state"
 
 interface SearchFiltersProps {
@@ -12,6 +13,8 @@ interface SearchFiltersProps {
   onChange: (change: Partial<SearchState>) => void
   onReset: () => void
 }
+
+const SEARCH_DEBOUNCE_MS = 350
 
 export function SearchFilters({ value, onChange, onReset }: SearchFiltersProps) {
   const { t } = useTranslation()
@@ -28,11 +31,11 @@ export function SearchFilters({ value, onChange, onReset }: SearchFiltersProps) 
       return
     }
 
-    const timeout = window.setTimeout(() => onChange({ q: query }), 350)
+    const timeout = window.setTimeout(() => onChange({ q: query }), SEARCH_DEBOUNCE_MS)
     return () => window.clearTimeout(timeout)
   }, [onChange, query, value.q])
 
-  const toggleProvider = (providerId: string) => {
+  const toggleProvider = (providerId: ProviderId) => {
     const nextProviders = new Set(selectedProviders)
     if (nextProviders.has(providerId)) {
       nextProviders.delete(providerId)
@@ -96,68 +99,13 @@ export function SearchFilters({ value, onChange, onReset }: SearchFiltersProps) 
         hidden={!isOpen}
         id="search-filters"
       >
-        <label className="field-label" htmlFor="filter-from">
-          <span>{t("filters.from")}</span>
-          <Input
-            id="filter-from"
-            type="date"
-            value={value.from ?? ""}
-            onChange={(event) => onChange({ from: event.target.value || undefined })}
-          />
-        </label>
-
-        <label className="field-label" htmlFor="filter-to">
-          <span>{t("filters.to")}</span>
-          <Input
-            id="filter-to"
-            type="date"
-            value={value.to ?? ""}
-            onChange={(event) => onChange({ to: event.target.value || undefined })}
-          />
-        </label>
-
-        <label className="field-label" htmlFor="filter-category">
-          <span>{t("filters.category")}</span>
-          <select
-            id="filter-category"
-            className="input"
-            value={value.category ?? ""}
-            onChange={(event) => onChange({ category: event.target.value || undefined })}
-          >
-            <option value="">{t("filters.allCategories")}</option>
-            {CATEGORIES.map((category) => (
-              <option value={category} key={category}>
-                {t(`categories.${category}`)}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <label className="field-label" htmlFor="filter-author">
-          <span>{t("filters.author")}</span>
-          <Input
-            id="filter-author"
-            value={value.author ?? ""}
-            onChange={(event) => onChange({ author: event.target.value || undefined })}
-            placeholder={t("filters.authorPlaceholder")}
-          />
-        </label>
-
-        <fieldset className="source-fieldset">
-          <legend>{t("filters.sources")}</legend>
-          <div className="checkbox-row">
-            {PROVIDERS.map((provider) => (
-              <label className="check-pill" key={provider.id}>
-                <input
-                  type="checkbox"
-                  checked={selectedProviders.has(provider.id)}
-                  onChange={() => toggleProvider(provider.id)}
-                />
-                <span>{provider.shortLabel}</span>
-              </label>
-            ))}
-          </div>
-        </fieldset>
+        <AdvancedSearchFilters
+          value={value}
+          selectedProviders={selectedProviders}
+          onChange={onChange}
+          onToggleProvider={toggleProvider}
+          translate={t}
+        />
       </div>
     </section>
   )
