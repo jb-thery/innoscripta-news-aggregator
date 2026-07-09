@@ -1,4 +1,5 @@
 import { ArrowUpRight, Clock3 } from "lucide-react"
+import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import type { Article } from "@/api/generated/model"
 import { cn } from "@/lib/utils"
@@ -13,11 +14,16 @@ interface ArticleCardProps {
 
 export function ArticleCard({ article, lead = false, index }: ArticleCardProps) {
   const { t, i18n } = useTranslation()
-  const publishedAt = new Intl.DateTimeFormat(i18n.language, {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  }).format(new Date(article.publishedAt))
+  const dateFormatter = useMemo(
+    () =>
+      new Intl.DateTimeFormat(i18n.resolvedLanguage ?? i18n.language, {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      }),
+    [i18n.language, i18n.resolvedLanguage],
+  )
+  const publishedAt = dateFormatter.format(new Date(article.publishedAt))
 
   return (
     <Card

@@ -5,7 +5,8 @@ import { ArticleGrid } from "@/components/article-grid"
 import { SourceStatusStrip } from "@/components/source-status-strip"
 import { ErrorState, LoadingState } from "@/components/states"
 import { applyPreferences } from "@/features/preferences/apply-preferences"
-import { hasPreferences, usePreferences } from "@/features/preferences/preferences-context"
+import { hasPreferences } from "@/features/preferences/preferences"
+import { usePreferences } from "@/features/preferences/preferences-context"
 import { PreferencesControls } from "@/features/preferences/preferences-controls"
 
 export const Route = createFileRoute("/feed")({
