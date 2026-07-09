@@ -1,0 +1,9 @@
+# Signal Desk
+
+Signal Desk is a React and TypeScript news aggregator case study. It combines normalized results from NewsAPI.org, The Guardian and The New York Times through a contract-first Hono backend.
+
+## Useful links
+
+- [Application](/)
+- [OpenAPI documentation](/docs)
+- [OpenAPI contract](/openapi.json)

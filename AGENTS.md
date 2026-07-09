@@ -1,11 +1,11 @@
 # AGENTS.md - Innoscripta Frontend Case Study
 
-Ces regles s'appliquent a ce dossier et au futur repo Git qui sera initialise ici.
+Ces regles s'appliquent au repo Git de l'etude de cas Innoscripta.
 
 ## Perimetre
 
 - Construire une application frontend React + TypeScript pour l'etude de cas Innoscripta.
-- Ne pas initialiser Git, commit, push ou creer de remote sans demande explicite.
+- Ne pas commit, push ou creer de remote sans demande explicite.
 - Le brief PDF est la source autoritaire: `source-materials/cs-frontend-developer-2025.pdf`.
 - Le texte PAC est un contexte conserve: `source-materials/portail-academique-screen-map.md`. Ne pas en faire une exigence produit de l'agregateur de news sans instruction explicite.
 
@@ -25,14 +25,26 @@ Ces regles s'appliquent a ce dossier et au futur repo Git qui sera initialise ic
 - Les cles NewsAPI, Guardian et NYT ne doivent pas etre exposees dans le bundle navigateur.
 - Si une API exige une cle secrete, passer par un proxy local, un serveur minimal, une route backend ou un mode mock documente.
 
-## Stack attendu
+## Stack actuelle
 
-- Frontend: React + TypeScript.
-- Outil recommande: Vite avec le template `react-ts`.
-- Package manager recommande: `pnpm`, sauf contrainte contraire.
-- Styling: CSS modulaire ou solution legere, mobile-first, sans framework lourd sauf besoin justifie.
+- Frontend: React 19 + TypeScript strict + Vite 8.
+- Package manager: `pnpm` 10.16.1 via Corepack.
+- Styling: Tailwind CSS v4 et CSS editorial mobile-first.
 - Etat: URL pour recherche/filtres partageables, `localStorage` pour preferences utilisateur.
-- Donnees: une interface `Article` normalisee et un adaptateur par source.
+- Donnees: TanStack Query, TanStack Router, schema `Article` Zod et un adaptateur serveur par source.
+- BFF: Hono contract-first, OpenAPI et client Orval genere.
+- Runtime: un container Node sert la SPA et `/api` sur le port 3000.
+
+## Commandes de reference
+
+- `pnpm dev`: client Vite 5173 et serveur Hono 3000.
+- `pnpm check`: format et lint Biome.
+- `pnpm typecheck`: TypeScript strict.
+- `pnpm test`: tests Vitest.
+- `pnpm test:e2e`: smoke Playwright, a lancer hors session navigateur live.
+- `pnpm build`: build client et bundle serveur autonome.
+- `pnpm build:static-demo`: build client autonome avec fixtures locales, sans serveur API.
+- `docker compose up --build`: execution complete en mode mock sans cle.
 
 ## JCode skills disponibles
 
@@ -79,6 +91,7 @@ Avant implementation, revalider les limites, les endpoints et les conditions d'u
   - typecheck;
   - tests unitaires ou integration;
   - build;
+  - build statique de demonstration;
   - build Docker;
   - smoke test local du container.
 - Mettre a jour `README.md`, `.env.example` et la documentation Docker avec chaque changement qui affecte l'execution.
