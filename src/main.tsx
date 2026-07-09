@@ -4,7 +4,7 @@ import "@/styles/index.css"
 import "@/lib/i18n"
 
 import { QueryClientProvider } from "@tanstack/react-query"
-import { createRouter, RouterProvider } from "@tanstack/react-router"
+import { createHashHistory, createRouter, RouterProvider } from "@tanstack/react-router"
 import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
 import { ErrorBoundary } from "@/components/error-boundary"
@@ -14,13 +14,14 @@ import { AnalyticsProvider } from "@/lib/analytics-provider"
 import { queryClient } from "@/lib/query-client"
 import { routeTree } from "./routeTree.gen"
 
-const routerBasePath = import.meta.env.BASE_URL.replace(/\/+$/, "") || "/"
+const routerBasePath = __HASH_ROUTING__ ? "/" : import.meta.env.BASE_URL.replace(/\/+$/, "") || "/"
 
 const router = createRouter({
   routeTree,
   basepath: routerBasePath,
   context: { queryClient },
   defaultPreload: "intent",
+  history: __HASH_ROUTING__ ? createHashHistory() : undefined,
   scrollRestoration: true,
 })
 
