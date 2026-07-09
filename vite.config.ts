@@ -7,6 +7,7 @@ import { defineConfig } from "vite"
 export default defineConfig({
   base: process.env.VITE_BASE_PATH ?? "/",
   define: {
+    __HASH_ROUTING__: JSON.stringify(process.env.VITE_HASH_ROUTING === "true"),
     __STATIC_MOCK__: JSON.stringify(process.env.VITE_ENABLE_MOCK_DATA === "true"),
   },
   plugins: [tanstackRouter({ target: "react", autoCodeSplitting: true }), react(), tailwindcss()],

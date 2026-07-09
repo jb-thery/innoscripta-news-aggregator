@@ -14,7 +14,7 @@
     "dev:server": "tsx watch server/index.ts",
     "prebuild": "pnpm generate:api",
     "build": "vite build && pnpm build:server",
-    "build:pages": "VITE_BASE_PATH=/innoscripta-news-aggregator/ pnpm build:static-demo && cp dist/index.html dist/404.html",
+    "build:pages": "VITE_BASE_PATH=/innoscripta-news-aggregator/ VITE_HASH_ROUTING=true pnpm build:static-demo",
     "build:static-demo": "pnpm generate:api && VITE_ENABLE_MOCK_DATA=true vite build",
     "build:server": "tsup",
     "preview": "node server-dist/index.js",
