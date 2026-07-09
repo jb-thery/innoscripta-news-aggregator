@@ -38,6 +38,16 @@ describe("analytics client", () => {
     expect(posthog.capture).toHaveBeenCalledWith("news_search", { query_length: 4 })
   })
 
+  it("should not report exceptions when analytics is disabled", async () => {
+    vi.stubEnv("VITE_PUBLIC_POSTHOG_KEY", "")
+    vi.stubEnv("VITE_PUBLIC_POSTHOG_HOST", "")
+    const { reportError } = await import("./analytics")
+
+    reportError(new Error("render failed"))
+
+    expect(posthog.captureException).not.toHaveBeenCalled()
+  })
+
   it("should report exceptions when analytics is configured", async () => {
     vi.stubEnv("VITE_PUBLIC_POSTHOG_KEY", "test-key")
     vi.stubEnv("VITE_PUBLIC_POSTHOG_HOST", "/ingest")

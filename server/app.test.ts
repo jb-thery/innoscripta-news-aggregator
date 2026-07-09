@@ -6,10 +6,10 @@ import { getFixtureArticles } from "./providers/fixtures"
 import type { ArticleProvider } from "./providers/types"
 import { SearchResponseSchema } from "./schema"
 
-const successfulProvider = (id: ArticleProvider["id"]): ArticleProvider => ({
+const successfulProvider = (id: ArticleProvider["id"], live = false): ArticleProvider => ({
   id,
   label: id,
-  hasLiveCredentials: () => false,
+  hasLiveCredentials: () => live,
   search: async () => getFixtureArticles(id),
 })
 
@@ -54,6 +54,53 @@ describe("news BFF", () => {
     const response = await app.request("/api/health")
 
     expect(await response.json()).toMatchObject({ status: "ok", mode: "mock" })
+  })
+
+  it("should report mixed mode when some providers have credentials", async () => {
+    const app = createApp([
+      successfulProvider("newsapi", true),
+      successfulProvider("guardian"),
+      successfulProvider("nytimes"),
+    ])
+
+    const response = await app.request("/api/health")
+
+    expect(await response.json()).toMatchObject({ status: "ok", mode: "mixed" })
+  })
+
+  it("should report live mode when every provider has credentials", async () => {
+    const app = createApp([
+      successfulProvider("newsapi", true),
+      successfulProvider("guardian", true),
+      successfulProvider("nytimes", true),
+    ])
+
+    const response = await app.request("/api/health")
+
+    expect(await response.json()).toMatchObject({ status: "ok", mode: "live" })
+  })
+
+  it("should mark providers not selected by the request", async () => {
+    const app = createApp([
+      successfulProvider("newsapi"),
+      successfulProvider("guardian"),
+      successfulProvider("nytimes"),
+    ])
+
+    const response = await app.request("/api/search?q=AI&providers=guardian")
+    const payload = SearchResponseSchema.parse(await response.json())
+
+    expect(payload.sources).toEqual([
+      { provider: "guardian", ok: true, error: null },
+      { provider: "newsapi", ok: true, error: "Not selected" },
+      { provider: "nytimes", ok: true, error: "Not selected" },
+    ])
+  })
+
+  it("should reject malformed search dates", async () => {
+    const response = await createApp([]).request("/api/search?from=not-a-date")
+
+    expect(response.status).toBe(400)
   })
 
   it("should enforce a strict application content security policy", async () => {

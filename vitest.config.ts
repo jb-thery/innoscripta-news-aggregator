@@ -8,7 +8,23 @@ export default defineConfig({
     setupFiles: ["./src/test/setup.ts"],
     exclude: ["tests/e2e/**", "node_modules/**", "dist/**", "server-dist/**"],
     coverage: {
-      reporter: ["text", "html"],
+      include: ["server/**/*.ts", "src/**/*.ts"],
+      exclude: [
+        "**/*.test.ts",
+        "server/index.ts",
+        "server/openapi.ts",
+        "src/api/generated/**",
+        "src/routeTree.gen.ts",
+        "src/test/**",
+        "src/vite-env.d.ts",
+      ],
+      reporter: ["text", "html", "json-summary"],
+      thresholds: {
+        branches: 65,
+        functions: 80,
+        lines: 80,
+        statements: 80,
+      },
     },
   },
   resolve: {
