@@ -208,8 +208,8 @@ Current local evidence:
 - 41 Vitest tests across provider normalization, filtering, preferences, analytics,
   API behavior, partial failure, and static responses.
 - Enforced coverage minimums: 80% statements, lines, and functions; 65% branches.
-- Current broad TypeScript logic coverage: 81.38% statements, 80.84% lines, 84% functions,
-  and 66.66% branches.
+- Current broad TypeScript logic coverage: 81.45% statements, 80.91% lines, 84% functions,
+  and 67.03% branches.
 - 6 Playwright scenarios across desktop Chromium and a Pixel 5 viewport.
 - Production SPA, standalone Hono server, and fixture-only static builds.
 - Multi-stage Docker build, non-root runtime, healthcheck, API smoke tests, and clean SIGTERM.

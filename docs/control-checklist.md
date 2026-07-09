@@ -55,7 +55,7 @@ Verification locale du 10 juillet 2026.
 - [x] `pnpm typecheck`.
 - [x] `pnpm test:coverage`, 41 tests verts.
 - [x] Seuils de couverture: 80% statements/lines/functions et 65% branches.
-- [x] Couverture mesuree: 81.38% statements, 80.84% lines, 84% functions et 66.66% branches.
+- [x] Couverture mesuree: 81.45% statements, 80.91% lines, 84% functions et 67.03% branches.
 - [x] `pnpm test:e2e`, 6 scenarios verts sur desktop Chromium et Pixel 5.
 - [x] `pnpm build`.
 - [x] `pnpm build:static-demo`.
