@@ -10,7 +10,7 @@ import { createRoot } from "react-dom/client"
 import { ErrorBoundary } from "@/components/error-boundary"
 import { ThemeProvider } from "@/components/theme-provider"
 import { PreferencesProvider } from "@/features/preferences/preferences-context"
-import { AnalyticsProvider } from "@/lib/analytics"
+import { AnalyticsProvider } from "@/lib/analytics-provider"
 import { queryClient } from "@/lib/query-client"
 import { routeTree } from "./routeTree.gen"
 

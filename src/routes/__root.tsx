@@ -20,11 +20,11 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 })
 
 function RootComponent() {
-  const location = useRouterState({ select: (state) => state.location.href })
+  const pathname = useRouterState({ select: (state) => state.location.pathname })
 
   useEffect(() => {
-    safeCapture("$pageview", { $current_url: location })
-  }, [location])
+    safeCapture("$pageview", { $current_url: new URL(pathname, window.location.origin).toString() })
+  }, [pathname])
 
   return (
     <AppShell>
