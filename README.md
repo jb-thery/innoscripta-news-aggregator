@@ -1,5 +1,8 @@
 # Signal Desk
 
+[![CI](https://github.com/jb-thery/innoscripta-news-aggregator/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/jb-thery/innoscripta-news-aggregator/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 Signal Desk is a responsive news aggregator that searches NewsAPI.org, The Guardian,
 and The New York Times through one normalized and resilient interface. It is a frontend
 case study focused on React architecture, typed API integration, partial-failure handling,
