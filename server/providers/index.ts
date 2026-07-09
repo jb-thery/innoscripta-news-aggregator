@@ -6,7 +6,7 @@ import type { ArticleProvider } from "./types"
 
 const providerSchema = ProviderIdSchema.optional()
 
-export function getFailProviderFromEnv(): ProviderId | undefined {
+function getFailProviderFromEnv(): ProviderId | undefined {
   const parsed = providerSchema.safeParse(process.env.MOCK_FAIL_PROVIDER)
   return parsed.success ? parsed.data : undefined
 }

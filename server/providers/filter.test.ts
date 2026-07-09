@@ -27,4 +27,28 @@ describe("article filtering", () => {
       articleMatchesParams({ ...article, title: "AI policy reaches procurement" }, { q: "AI" }),
     ).toBe(true)
   })
+
+  it("should reject articles when their provider is excluded", () => {
+    expect(articleMatchesParams(article, { q: "", providers: "guardian,nytimes" })).toBe(false)
+  })
+
+  it("should reject articles published before the date range", () => {
+    expect(articleMatchesParams(article, { q: "", from: "2026-07-11" })).toBe(false)
+  })
+
+  it("should reject articles published after the date range", () => {
+    expect(articleMatchesParams(article, { q: "", to: "2026-07-09" })).toBe(false)
+  })
+
+  it("should reject articles outside the selected category", () => {
+    expect(articleMatchesParams(article, { q: "", category: "technology" })).toBe(false)
+  })
+
+  it("should reject articles outside the selected author", () => {
+    expect(articleMatchesParams(article, { q: "", author: "Grace" })).toBe(false)
+  })
+
+  it("should accept matching articles when the query is empty", () => {
+    expect(articleMatchesParams(article, { q: "" })).toBe(true)
+  })
 })

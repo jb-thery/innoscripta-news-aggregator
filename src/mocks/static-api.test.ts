@@ -3,6 +3,18 @@ import { describe, expect, it } from "vitest"
 import { createStaticApiResponse } from "./static-api"
 
 describe("static demo API", () => {
+  it("should report mock health without a server", async () => {
+    const response = createStaticApiResponse("/api/health")
+
+    expect(await response.json()).toMatchObject({ status: "ok", mode: "mock" })
+  })
+
+  it("should return not found for unsupported static endpoints", () => {
+    const response = createStaticApiResponse("/api/unknown")
+
+    expect(response.status).toBe(404)
+  })
+
   it("should return normalized search results without a server", async () => {
     const response = createStaticApiResponse("/api/search?q=AI&providers=newsapi,guardian,nytimes")
 

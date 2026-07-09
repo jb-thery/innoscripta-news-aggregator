@@ -37,3 +37,12 @@ test("should persist personalized feed preferences after reload", async ({ page 
   )
   await expect(page.locator("article")).toHaveCount(2)
 })
+
+test("should switch the interface language without reloading", async ({ page }) => {
+  await page.goto("/")
+
+  await page.getByLabel("Language").selectOption("de")
+
+  await expect(page.getByRole("heading", { level: 1, name: "Durch den Lärm lesen." })).toBeVisible()
+  await expect(page.locator("html")).toHaveAttribute("lang", "de")
+})

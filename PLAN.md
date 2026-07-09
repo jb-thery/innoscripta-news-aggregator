@@ -115,13 +115,13 @@ Consequences:
 
 ### 3.5 Contrat OpenAPI et generation du client (Orval)
 
-Le BFF est **contract-first**: ses routes sont decrites en Zod via `@hono/zod-openapi`, ce qui **genere automatiquement une spec OpenAPI**. **[Orval](https://orval.dev/)** consomme cette spec et **genere le client typé**: hooks TanStack Query + types TS + mocks MSW. Une seule source de verite (schema Zod -> OpenAPI -> client genere), zero type ecrit a la main cote client, zero derive. C'est un signal fort de rigueur pour Innoscripta (type-safety de bout en bout, contract-first).
+Le BFF est **contract-first**: ses routes sont decrites en Zod via `@hono/zod-openapi`, ce qui **genere automatiquement une spec OpenAPI**. **[Orval](https://orval.dev/)** consomme cette spec et **genere le client typé**: hooks TanStack Query + types TS. Une seule source de verite (schema Zod -> OpenAPI -> client genere), zero type ecrit a la main cote client, zero derive. C'est un signal fort de rigueur pour Innoscripta (type-safety de bout en bout, contract-first).
 
 - **Normalisation cote serveur (pattern Adapter au bon endroit)**: le BFF expose **un endpoint unifie** `GET /api/search` renvoyant des `Article[]` **deja normalises** + un statut par source. La normalisation vit dans `server/providers/*` (un adaptateur par source), la ou l'on parle aux 3 APIs heterogenes (anti-corruption layer). Le client ne connait jamais les formes brutes des providers.
-- **Fan-out parallele cote serveur**: le BFF interroge les 3 providers en `Promise.allSettled` -> **echecs partiels** renvoyes dans `sources: [{ provider, ok, error }]`, un seul aller-retour client.
+- **Fan-out parallele cote serveur**: le BFF encapsule chaque appel provider puis les execute avec `Promise.all` -> **echecs partiels** renvoyes dans `sources: [{ provider, ok, error }]`, un seul aller-retour client.
 - **Cote client**: on consomme les **hooks generes par Orval** (bases sur TanStack Query v5). L'UI ne manipule que des `Article`.
-- **Tests**: la normalisation (adapters) est testee en Vitest **cote serveur** (node, avec fixtures); Orval genere des **mocks MSW** pour les tests d'integration du front sans lancer le serveur. La conformite Article/filtrage/preferences reste couverte (exigence AGENTS.md).
-- **Fallback 5 jours**: si la chaine OpenAPI/Orval deborde, un client `fetch` typé a la main sur le meme contrat reste acceptable. Mais la generation fait surtout **gagner** du temps (hooks + types + mocks gratuits).
+- **Tests**: la normalisation (adapters) est testee en Vitest **cote serveur** (node, avec fixtures); le mode statique utilise une implementation locale du meme contrat. La conformite Article/filtrage/preferences reste couverte (exigence AGENTS.md).
+- **Fallback 5 jours**: si la chaine OpenAPI/Orval deborde, un client `fetch` typé a la main sur le meme contrat reste acceptable. Mais la generation fait surtout **gagner** du temps (hooks + types).
 
 ---
 
@@ -140,9 +140,6 @@ news-aggregator/
   orval.config.ts             # generation du client depuis openapi.json
   openapi.json                # spec generee par le BFF (@hono/zod-openapi)
   index.html
-  public/
-    locales/en/translation.json
-    locales/de/translation.json
   src/
     main.tsx
     routeTree.gen.ts          # genere par le plugin TanStack Router (ignore par git)
@@ -159,14 +156,16 @@ news-aggregator/
     components/
       ui/                     # composants shadcn (zinc)
       article-card.tsx  states/ (loading/empty/error/partial)
-    mocks/                    # handlers MSW generes par Orval (tests + dev optionnel)
+    mocks/                    # implementation statique du contrat avec fixtures
     lib/
       query-client.ts         # TanStack Query
-      posthog.ts              # observabilite, activee par env
+      analytics.ts            # client PostHog, active par env
+      analytics-provider.tsx  # provider React conditionnel
       i18n.ts                 # i18next en/de
       utils.ts                # cn() shadcn
+    locales/                  # traductions en/de
     styles/ index.css         # tailwind v4 + variables zinc
-    test/ setup.ts            # RTL + jest-dom + MSW server
+    test/ setup.ts            # RTL + jest-dom
   server/
     index.ts                  # bootstrap @hono/node-server + serveStatic (prod)
     app.ts                    # OpenAPIHono: routes /api/* decrites en Zod
@@ -175,8 +174,8 @@ news-aggregator/
     providers/
       newsapi.ts guardian.ts nytimes.ts index.ts   # adaptateurs -> Article (pattern Adapter)
       __fixtures__/           # donnees mock par source (fallback sans cle)
-  tests/e2e/                  # Playwright (smoke)
-  .github/workflows/ci.yml    # lint + typecheck + test + build (+ orval verifie a jour)
+  tests/e2e/                  # Playwright desktop et mobile
+  .github/workflows/ci.yml    # audit + lint + types + couverture + e2e + Docker
 ```
 
 ### 4.1 Modele de donnees (deja cadre dans `../docs/api-sources.md`)
@@ -282,9 +281,8 @@ Approche (alignee sur le repo `workoutgen`, voir [Annexe A](#annexe-a--stack-et-
 - **Hooks git** (Husky v9, comme workoutgen):
   - `pre-commit`: `biome check --staged --write` (pas besoin de lint-staged).
   - `commit-msg`: commitlint (`@commitlint/config-conventional`).
-  - `pre-push` (optionnel): `typecheck` + `test`.
+  - `pre-push`: Biome + `typecheck` + tests.
 - **Alias `@/`** vers `src/` (tsconfig + vite).
-- **React Compiler** (React 19, optionnel mais recommande): memoisation automatique via `babel-plugin-react-compiler`; convention: ne pas ajouter `useMemo`/`useCallback`/`React.memo` a la main.
 - Pas de `console.log` residuel, pas de code mort, pas d'abstraction speculative (YAGNI).
 
 ---
@@ -292,9 +290,9 @@ Approche (alignee sur le repo `workoutgen`, voir [Annexe A](#annexe-a--stack-et-
 ## 10. Strategie de tests
 
 - **Vitest** (node) cote serveur: la **normalisation** de chaque adaptateur (fixtures brutes provider -> `Article` conforme au schema Zod) et le **fan-out / echecs partiels** de `/api/search`.
-- **Vitest + Testing Library** (jsdom) cote front: la **logique de filtrage** (date, categorie, source, auteur), les **preferences** (persistance localStorage, feed perso), et l'integration des composants via les **mocks MSW generes par Orval** (aucun serveur a lancer, contrat garanti conforme a l'OpenAPI).
-- **Playwright**: 1 a 2 tests e2e **smoke** (recherche -> resultats, application d'un filtre, ajout d'une preference) en **mode mock serveur** (sans cle) pour etre deterministe.
-- Regle: mocker les frontieres externes (fetch upstream cote serveur, handlers MSW cote front), pas les modules internes. Nettoyage en `afterEach`.
+- **Vitest + Testing Library** (jsdom) cote front: la **logique de filtrage**, les **preferences**, l'analytics conditionnelle et l'implementation statique du contrat.
+- **Playwright**: scenarios **smoke** sur desktop Chromium et Pixel 5 (recherche, filtre, preference, langue) en **mode mock serveur** pour etre deterministe.
+- Regle: mocker les frontieres externes (fetch upstream cote serveur, SDK analytics), pas les modules internes. Nettoyage en `afterEach`.
 
 ---
 
@@ -363,7 +361,7 @@ Merge `release/1.0.0` -> `main`, tag `v1.0.0`, back-merge dans `develop`.
 
 ### Phase 2 - Outillage qualite et CI
 - **Objectif**: format/lint/commits/hooks/CI operationnels.
-- **Actions**: Biome 2.5.x (`biome.json`, voir A.6), scripts `check`/`check:fix`; Husky v9 + commitlint (`commit-msg`), pre-commit `biome check --staged --write` (sans lint-staged); GitHub Actions reutilisable (`install --frozen-lockfile -> check -> typecheck -> test -> build`).
+- **Actions**: Biome 2.5.x (`biome.json`, voir A.6), scripts `check`/`check:fix`; Husky v9 + commitlint (`commit-msg`), pre-commit `biome check --staged --write` (sans lint-staged), pre-push `verify:fast`; GitHub Actions reutilisable (`install --frozen-lockfile -> audit -> check -> typecheck -> coverage -> build -> e2e -> Docker smoke`).
 - **Validation**: `pnpm biome check .` vert; un commit non conforme est rejete; CI verte.
 - **Commits**: `chore: add biome`; `ci: add commitlint and git hooks`; `ci: add github actions pipeline`.
 
@@ -381,9 +379,9 @@ Merge `release/1.0.0` -> `main`, tag `v1.0.0`, back-merge dans `develop`.
 
 ### Phase 5 - BFF contract-first (@hono/zod-openapi) + generation Orval
 - **Objectif**: endpoint unifie `/api/search` decrit en OpenAPI, cles cote serveur, client genere.
-- **Actions**: `server/app.ts` (`OpenAPIHono`, `GET /api/search` avec fan-out `Promise.allSettled` -> `Article[]` + statut par source, `GET /api/health`); `app.doc('/openapi.json')` (+ Swagger UI optionnel); `server/openapi.ts` emet `openapi.json`; `orval.config.ts` (client `react-query`, mocks MSW, input `openapi.json`, mutator `/api`) -> `src/api/generated`; `server/index.ts` bootstrap `@hono/node-server` + `serveStatic` (`import.meta.url`); `server.proxy` Vite vers le BFF; `.env.example` a jour. Voir Annexe A.7 et Annexe D.
+- **Actions**: `server/app.ts` (`OpenAPIHono`, `GET /api/search` avec fan-out parallele isole -> `Article[]` + statut par source, `GET /api/health`); `app.doc('/openapi.json')` et Swagger UI; `server/openapi.ts` emet `openapi.json`; `orval.config.ts` (client `react-query`, input `openapi.json`, mutator `/api`) -> `src/api/generated`; `server/index.ts` bootstrap `@hono/node-server` + `serveStatic`; `server.proxy` Vite vers le BFF; `.env.example` a jour. Voir Annexe A.7 et Annexe D.
 - **Validation**: `pnpm generate:api` (= `emit:openapi` puis `orval`) ne produit aucun diff en CI; `/api/search` renvoie `Article[]` + echecs partiels; aucune cle dans le bundle (`grep` du `dist`).
-- **Commits**: `feat(server): contract-first bff with zod-openapi`; `feat(api): generate client and msw mocks with orval`; `chore: wire dev proxy to bff`; `docs: document env variables`.
+- **Commits**: `feat(server): contract-first bff with zod-openapi`; `feat(api): generate typed client with orval`; `chore: wire dev proxy to bff`; `docs: document env variables`.
 
 ### Phase 6 - Couche donnees front (TanStack Query + Router)
 - **Objectif**: cache, routing type-safe, filtres URL, hooks generes.
@@ -411,19 +409,19 @@ Merge `release/1.0.0` -> `main`, tag `v1.0.0`, back-merge dans `develop`.
 
 ### Phase 10 - Observabilite (PostHog gated)
 - **Objectif**: monitoring instrumente, desactive par defaut.
-- **Actions**: `lib/posthog.ts` init conditionnel a `VITE_PUBLIC_POSTHOG_KEY` (mode desactive sinon); reverse proxy `/ingest` (dev via `server.proxy`, prod via Hono); `PostHogErrorBoundary` + listeners globaux + `captureException`; `$pageview` manuel sur navigation; `before_send` filtrant le bruit. Voir Annexe A.5.
+- **Actions**: provider PostHog conditionnel a `VITE_PUBLIC_POSTHOG_KEY` + host (mode desactive sinon); reverse proxy `/ingest` (dev via `server.proxy`, prod via Hono); error boundary React global + `captureException`; `capture_exceptions` pour les erreurs globales; `$pageview` manuel sans query string; evenement de recherche sans texte utilisateur. Voir Annexe A.5.
 - **Validation**: sans cle, aucun appel reseau PostHog et aucune erreur; avec une cle factice + reverse proxy, les evenements partent vers `/ingest`.
 - **Commits**: `feat(monitoring): posthog gated init`; `feat(monitoring): error boundary and capture`.
 
 ### Phase 11 - Tests (completion)
 - **Objectif**: couverture comportementale + smoke e2e.
-- **Actions**: completer les tests filtrage/preferences; Playwright smoke (recherche, filtre, preference) en mode mock.
-- **Validation**: `pnpm test` et `pnpm test:e2e` verts.
+- **Actions**: completer les tests filtrage/preferences/API/analytics; imposer les seuils de couverture; Playwright desktop/mobile (recherche, filtre, preference, langue) en mode mock.
+- **Validation**: `pnpm test:coverage` et `pnpm test:e2e` verts.
 - **Commits**: `test: filtering and preferences`; `test(e2e): playwright smoke`.
 
 ### Phase 12 - Docker, doc, release
 - **Objectif**: R9 + livraison.
-- **Actions**: `Dockerfile` multi-stage + `.dockerignore` + `docker-compose.yml`; en-tetes de securite servis par le BFF Hono (CSP, cache, `X-Content-Type-Options`, equivalent du `_headers` workoutgen); README (install, dev, Docker, variables, modes live/mock, limitations); completer `../docs/control-checklist.md`; `release/1.0.0` -> `main`, tag `v1.0.0`.
+- **Actions**: `Dockerfile` multi-stage + `.dockerignore` + `docker-compose.yml`; en-tetes de securite servis par le BFF Hono (CSP, `X-Content-Type-Options`, permissions, frame et referrer); README (install, dev, Docker, variables, modes live/mock, limitations); completer `docs/control-checklist.md`; `release/1.0.0` -> `main`, tag `v1.0.0`.
 - **Validation**: `docker build` + `docker run` demarrent le container; smoke test navigateur; diff scanne pour secrets; checklist complete.
 - **Commits**: `feat: add multi-stage dockerfile`; `docs: readme and docker guide`; `chore: complete control checklist`.
 
@@ -432,7 +430,7 @@ Merge `release/1.0.0` -> `main`, tag `v1.0.0`, back-merge dans `develop`.
 - **Actions**: creer le repo GitHub **public** (`gh repo create`), pousser `main` + `develop` + tags (historique GitFlow visible); README vitrine (section 15) avec captures/GIF; `LICENSE` (MIT); description + topics; **demo live** deployee (Cloudflare Pages / Netlify / Fly, mode mock) avec lien dans le README; verifier la CI verte sur GitHub; derniere passe secrets.
 - **Validation**: le repo se comprend en < 2 min; `docker run` sans cle marche depuis un clone frais; demo live accessible; CI verte; aucun secret dans l'historique.
 - **Commits/PR**: PRs `feature/*` -> `develop` visibles; `docs: add screenshots and live demo link`; tag `v1.0.0` sur `main`.
-- **Soumission**: repondre a `sharma@innoscripta.com` avec le lien du repo + CV a jour, sous 5 jours, **sans ZIP**.
+- **Soumission manuelle**: le candidat repond a `sharma@innoscripta.com` avec le lien du repo + CV a jour, sous 5 jours, **sans ZIP**. Aucun envoi automatise.
 
 ---
 
@@ -476,7 +474,7 @@ Merge `release/1.0.0` -> `main`, tag `v1.0.0`, back-merge dans `develop`.
 ### 15.1 Contraintes de l'email (obligatoires)
 - Livrer via **repo GitHub public**, **jamais de ZIP**.
 - Tout doit etre **documente et accessible via le repo**.
-- Repondre a **sharma@innoscripta.com** avec **lien du repo + CV a jour**, sous **5 jours**.
+- Repondre manuellement a **sharma@innoscripta.com** avec **lien du repo + CV a jour**, sous **5 jours**. Aucun envoi automatise.
 - Evaluation interne; si convaincant, entretien technique avec le lead IT.
 
 ### 15.2 README vitrine (ce que l'evaluateur voit en premier)
@@ -515,17 +513,17 @@ Prepa entretien (au-dela du take-home, a garder en tete): patterns creationnels 
 CV (a joindre a l'email): mettre en avant React + TypeScript, Docker, integration REST API, tests, design patterns / clean architecture; toute experience B2B SaaS / fintech / domaine reglemente; allemand meme niveau notion; performance/scalabilite et ownership (leurs valeurs), avec si possible une metrique.
 
 ### 15.5 Checklist de soumission
-- [ ] Repo GitHub **public**, pas de ZIP.
-- [ ] `docker compose up` / `docker run` sans cle lance l'app depuis un clone frais.
-- [ ] README vitrine complet (demo, captures, quickstart, stack, archi, trade-offs).
-- [ ] `LICENSE` (MIT) presente.
+- [x] Repo GitHub **public**, pas de ZIP.
+- [x] `docker compose up` / `docker run` sans cle lance l'app depuis un clone frais.
+- [x] README vitrine complet (captures, quickstart, stack, archi, trade-offs).
+- [x] `LICENSE` (MIT) presente.
 - [ ] CI GitHub Actions **verte** (lint, typecheck, test, build).
-- [ ] Pattern Adapter et SOLID/DRY/KISS enonces dans le README.
-- [ ] Tests presents (adapters, filtrage, preferences, etats).
-- [ ] i18n en/de operationnelle.
-- [ ] Aucun secret dans l'historique ni le bundle.
+- [x] Pattern Adapter et principes SOLID/DRY/KISS visibles dans l'architecture et le code.
+- [x] Tests presents (adapters, filtrage, preferences, etats, analytics, E2E).
+- [x] i18n en/de operationnelle.
+- [x] Aucun secret detecte dans le depot ni le bundle.
 - [ ] Demo live accessible (recommande).
-- [ ] Email a `sharma@innoscripta.com`: lien repo + CV a jour, sous 5 jours.
+- [ ] Email manuel a `sharma@innoscripta.com`: lien repo + CV a jour, sous 5 jours.
 
 ---
 
@@ -559,10 +557,9 @@ CV (a joindre a l'email): mettre en avant React + TypeScript, Docker, integratio
 | `@hono/node-server` | `^2.0` | Runtime Node du BFF |
 | `@hono/zod-openapi` | `^1.4` | Routes Zod -> spec OpenAPI (contract-first, **Zod v4 requis**) |
 | `@hono/swagger-ui` | `^0.6` | Swagger UI (optionnel) |
-| `orval` | `^8.20` | Client `react-query` + types + mocks MSW (devDep, ESM-only) |
-| `msw` | `^2` | Mocks reseau (generes par Orval) pour les tests |
+| `orval` | `^8.20` | Client `react-query` + types (devDep, ESM-only) |
 
-Tests: `vitest ^4`, `@testing-library/react`, `@testing-library/jest-dom`, `@testing-library/user-event`, `jsdom`, `@playwright/test ^1.61`, `msw ^2` (handlers generes par Orval).
+Tests: `vitest ^4`, `@testing-library/react`, `@testing-library/jest-dom`, `jsdom`, `@playwright/test ^1.61`.
 Qualite: `@biomejs/biome 2.5.x` (installe en version exacte), `@commitlint/cli ^21`, `@commitlint/config-conventional ^21`, `husky ^9`. Pas de `lint-staged`: `biome check --staged` suffit.
 Bonus workoutgen (optionnel): `babel-plugin-react-compiler` + `@rolldown/plugin-babel` (React Compiler), `date-fns ^4`, `lucide-react`, `sonner` (toasts).
 
@@ -591,7 +588,7 @@ const enabled = Boolean(key && host)
 - **Reverse proxy `/ingest`** (evite les bloqueurs, self-host du chemin d'ingestion):
   - Dev (`vite.config.ts` `server.proxy`): `/ingest/static` -> `https://eu-assets.i.posthog.com/static`, `/ingest` -> `https://eu.i.posthog.com`.
   - Prod: memes routes dans le BFF Hono (`app.all('/ingest/*', ...)`). Un seul container sert SPA + `/api` + `/ingest`.
-- Erreurs: `PostHogErrorBoundary` (React) + listeners globaux `window.addEventListener('error'|'unhandledrejection')` routes vers un `reportError()`, avec un `before_send` filtrant le bruit (pattern workoutgen + test unitaire). Captures manuelles via `posthog.captureException(err)`.
+- Erreurs: error boundary React global route vers `reportError()` et `posthog.captureException(err)`; `capture_exceptions: true` gere deja `window.onerror` et les promesses rejetees, donc aucun listener global duplique.
 - Gotcha: la cle de config est `capture_exceptions` (l'alias `enable_exception_autocapture` est legacy).
 
 ### A.6 Biome (verifie: 2.5.3, ligne v2)
@@ -605,8 +602,8 @@ const enabled = Boolean(key && host)
   "assist": { "actions": { "source": { "organizeImports": "on" } } },
   "formatter": { "indentStyle": "space", "indentWidth": 2, "lineWidth": 100, "lineEnding": "lf" },
   "linter": { "rules": { "recommended": true,
-    "correctness": { "noUnusedImports": "warn", "useHookAtTopLevel": "error" },
-    "style": { "useConst": "error", "useImportType": "warn" } } },
+    "correctness": { "noUnusedImports": "error", "useHookAtTopLevel": "error" },
+    "style": { "useConst": "error", "useImportType": "error" } } },
   "javascript": { "formatter": { "quoteStyle": "double", "semicolons": "asNeeded", "trailingCommas": "all" } }
 }
 ```
@@ -732,8 +729,8 @@ Gotcha verifie: sans `required: false`, `docker compose up` echoue si `.env` est
 
 ## Annexe D - Contract-first: Hono zod-openapi + Orval (verifie)
 
-Versions (npm, 2026): `orval` 8.20 (ESM-only), `@hono/zod-openapi` 1.4 (**Zod v4 requis**, Hono >= 4.10), `@hono/swagger-ui` 0.6, `msw` 2.15.
-Pipeline: `OpenAPIHono` (routes Zod) -> `openapi.json` -> Orval -> hooks TanStack Query + types + mocks MSW.
+Versions (npm, 2026): `orval` 8.20 (ESM-only), `@hono/zod-openapi` 1.4 (**Zod v4 requis**, Hono >= 4.10), `@hono/swagger-ui` 0.6.
+Pipeline: `OpenAPIHono` (routes Zod) -> `openapi.json` -> Orval -> hooks TanStack Query + types.
 
 ### D.1 Route BFF decrite en Zod (`server/app.ts`)
 ```ts
@@ -773,7 +770,7 @@ const searchRoute = createRoute({
 export const app = new OpenAPIHono();
 app.openapi(searchRoute, async (c) => {
   const params = c.req.valid('query'); // valide + typé au runtime
-  // fan-out Promise.allSettled sur les 3 adaptateurs -> Article[] + statut par source
+  // appels providers encapsules puis fan-out Promise.all -> Article[] + statut par source
   return c.json({ articles: [], sources: [] }, 200);
 });
 app.doc('/api/openapi.json', { openapi: '3.0.0', info: { title: 'News BFF', version: '1.0.0' } });
@@ -802,7 +799,6 @@ export default defineConfig({
       schemas: './src/api/generated/model',
       client: 'react-query',                                      // hooks TanStack Query v5
       httpClient: 'fetch',                                        // ou 'axios'
-      mock: { generators: [{ type: 'msw', baseUrl: '/api' }] },   // v8: tableau `generators`
       override: {
         mutator: { path: './src/api/http-client.ts', name: 'customInstance' },
         query: { useQuery: true, useSuspenseQuery: true },
@@ -827,7 +823,6 @@ En CI: lancer `generate:api` puis **echouer si `git diff` non vide** (le client 
 
 ### D.5 Gotchas verifies
 - `@hono/zod-openapi` v1 **exige Zod v4** (et Hono >= 4.10). Importer `z` depuis `@hono/zod-openapi`, pas depuis `zod`.
-- Orval v8 est **ESM-only**; `mock: { generators: [{ type: 'msw' }] }` (le `mock: true` ajoute aussi des factories Faker).
+- Orval v8 est **ESM-only**. Le projet ne genere que le client et les types; les fixtures deterministes restent dans `server/providers/fixtures.ts` et `src/mocks/static-api.ts`.
 - Toujours definir `operationId` (nom du hook) et `tags` (layout `tags-split`).
 - Reponses non validees au runtime cote Hono: garder les adaptateurs stricts (ils produisent deja des `Article` conformes).
-- Pointer le `baseUrl` MSW sur `/api` pour intercepter les memes chemins que le mutator.

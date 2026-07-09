@@ -1,5 +1,5 @@
 import type { Article } from "@/api/generated/model"
-import type { Preferences } from "./preferences-context"
+import type { Preferences } from "./preferences"
 
 const normalize = (value: string | null) => value?.trim().toLocaleLowerCase() ?? ""
 

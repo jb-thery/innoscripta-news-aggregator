@@ -34,6 +34,9 @@ Verification locale du 10 juillet 2026.
 - [x] Les fichiers `.env` reels sont ignores par Git et Docker.
 - [x] Les cles API restent cote serveur et ne sont pas dans le bundle navigateur.
 - [x] Le serveur applique CSP et en-tetes de securite.
+- [x] Le CSP applicatif refuse les scripts inline et Swagger a une exception limitee a jsDelivr.
+- [x] `pnpm audit --audit-level low` ne remonte aucune vulnerabilite connue.
+- [x] PostHog est desactive sans configuration, ne duplique pas les erreurs globales et ne capture pas le texte recherche.
 - [x] Le conteneur s'execute avec l'utilisateur non-root `node`.
 
 ## UI et accessibilite
@@ -50,8 +53,10 @@ Verification locale du 10 juillet 2026.
 
 - [x] `pnpm check`.
 - [x] `pnpm typecheck`.
-- [x] `pnpm test`, 14 tests verts.
-- [x] `pnpm test:e2e`, 2 scenarios Chromium verts.
+- [x] `pnpm test:coverage`, 41 tests verts.
+- [x] Seuils de couverture: 80% statements/lines/functions et 65% branches.
+- [x] Couverture mesuree: 81.45% statements, 80.91% lines, 84% functions et 67.03% branches.
+- [x] `pnpm test:e2e`, 6 scenarios verts sur desktop Chromium et Pixel 5.
 - [x] `pnpm build`.
 - [x] `pnpm build:static-demo`.
 - [x] `docker build -t innoscripta-news-aggregator:local .`.
@@ -62,6 +67,8 @@ Verification locale du 10 juillet 2026.
 - [x] Console navigateur sans erreur ni avertissement.
 - [x] Demo statique validee sans requete fetch ou XHR, y compris sur `/feed` apres rechargement.
 - [x] Diff controle avec `git diff --check`.
+- [x] Commitlint, pre-commit Biome et pre-push `verify:fast` operationnels.
+- [x] Zed configure au niveau projet pour Biome, tests, build et verification Docker.
 
 ## Documentation livraison
 
@@ -75,7 +82,8 @@ Verification locale du 10 juillet 2026.
 
 - [x] Repo GitHub public cree.
 - [ ] Branches Git poussees.
+- [ ] Pull requests Docker et finitions fusionnees dans `develop`.
 - [ ] CI GitHub distante verte.
 - [ ] Tag `v1.0.0` publie sur `main`.
 - [ ] Demo live accessible et liee depuis le README.
-- [ ] Email de soumission envoye avec lien du repo et CV a jour.
+- [ ] Email de soumission envoye manuellement avec lien du repo et CV a jour.

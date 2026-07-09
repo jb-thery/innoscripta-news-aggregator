@@ -1,7 +1,17 @@
 packages:
   - "."
 
+minimumReleaseAge: 1440
+minimumReleaseAgeExclude:
+  - i18next@26.3.6
+  - posthog-js@1.399.0
+  - react-i18next@17.0.9
+  - vite@8.1.4
+trustPolicy: no-downgrade
+
+overrides:
+  esbuild: 0.28.1
+
 onlyBuiltDependencies:
   - core-js
   - esbuild
-  - msw

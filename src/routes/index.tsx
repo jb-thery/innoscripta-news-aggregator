@@ -1,6 +1,6 @@
 import { keepPreviousData } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
-import { useCallback, useEffect } from "react"
+import { useCallback } from "react"
 import { useTranslation } from "react-i18next"
 import type { SearchArticlesParams } from "@/api/generated/model"
 import { useSearchArticles } from "@/api/generated/news"
@@ -39,14 +39,13 @@ function SearchPage() {
     },
   })
 
-  useEffect(() => {
-    if (hasQuery) {
-      safeCapture("news_search", { query: search.q })
-    }
-  }, [hasQuery, search.q])
-
   const updateSearch = useCallback(
     (change: Partial<SearchState>) => {
+      const query = change.q?.trim()
+      if (query) {
+        safeCapture("news_search", { query_length: query.length })
+      }
+
       void navigate({
         replace: true,
         search: (previous) => ({ ...previous, ...change }),

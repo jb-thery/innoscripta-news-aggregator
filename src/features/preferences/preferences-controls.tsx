@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { CATEGORIES } from "@/lib/categories"
 import { PROVIDERS } from "@/lib/providers"
-import { togglePreference, usePreferences } from "./preferences-context"
+import { togglePreference } from "./preferences"
+import { usePreferences } from "./preferences-context"
 
 export function PreferencesControls() {
   const { t } = useTranslation()

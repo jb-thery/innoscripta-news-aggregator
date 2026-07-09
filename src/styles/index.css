@@ -1223,8 +1223,14 @@ a {
 
   .site-header {
     position: relative;
-    width: min(100% - 1.2rem, 1480px);
+    width: 100%;
     min-height: 72px;
+    padding-inline: 0.6rem;
+  }
+
+  .primary-nav {
+    margin-inline: -0.6rem;
+    padding-inline: 0.6rem;
   }
 
   .wordmark small,
