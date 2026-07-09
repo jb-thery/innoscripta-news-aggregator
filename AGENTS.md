@@ -43,6 +43,7 @@ Ces regles s'appliquent au repo Git de l'etude de cas Innoscripta.
 - `pnpm test`: tests Vitest.
 - `pnpm test:e2e`: smoke Playwright, a lancer hors session navigateur live.
 - `pnpm build`: build client et bundle serveur autonome.
+- `pnpm build:static-demo`: build client autonome avec fixtures locales, sans serveur API.
 - `docker compose up --build`: execution complete en mode mock sans cle.
 
 ## JCode skills disponibles
@@ -90,6 +91,7 @@ Avant implementation, revalider les limites, les endpoints et les conditions d'u
   - typecheck;
   - tests unitaires ou integration;
   - build;
+  - build statique de demonstration;
   - build Docker;
   - smoke test local du container.
 - Mettre a jour `README.md`, `.env.example` et la documentation Docker avec chaque changement qui affecte l'execution.

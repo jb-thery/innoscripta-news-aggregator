@@ -50,26 +50,29 @@ Verification locale du 10 juillet 2026.
 
 - [x] `pnpm check`.
 - [x] `pnpm typecheck`.
-- [x] `pnpm test`, 12 tests verts.
+- [x] `pnpm test`, 14 tests verts.
 - [x] `pnpm test:e2e`, 2 scenarios Chromium verts.
 - [x] `pnpm build`.
+- [x] `pnpm build:static-demo`.
 - [x] `docker build -t innoscripta-news-aggregator:local .`.
 - [x] `docker run` sans cle en mode mock.
 - [x] Smoke container sur `/`, `/api/health` et `/api/search`.
 - [x] Console navigateur sans erreur ni avertissement.
+- [x] Demo statique validee sans requete fetch ou XHR, y compris sur `/feed` apres rechargement.
 - [x] Diff controle avec `git diff --check`.
 
 ## Documentation livraison
 
 - [x] `README.md` explique architecture, installation, local, Docker et variables.
 - [x] `.env.example` liste les variables sans valeur sensible.
-- [x] Modes mock, mixed et live documentes.
+- [x] Modes mock, mixed, live et demo statique documentes.
 - [x] Limitations et suites documentees.
 - [x] Captures production desktop et mobile presentes.
 
 ## Publication
 
-- [ ] Repo GitHub public cree et branches poussees.
+- [x] Repo GitHub public cree.
+- [ ] Branches Git poussees.
 - [ ] CI GitHub distante verte.
 - [ ] Tag `v1.0.0` publie sur `main`.
 - [ ] Demo live accessible et liee depuis le README.

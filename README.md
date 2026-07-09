@@ -2,7 +2,7 @@
 
 Signal Desk is a responsive news aggregator that searches NewsAPI.org, The Guardian and The New York Times through one normalized, resilient interface.
 
-It is built as a frontend case study with React 19, strict TypeScript, TanStack Query and Router, a contract-first Hono BFF, generated API types, deterministic mock data and a production Docker image that works without API keys.
+It is built as a frontend case study with React 19, strict TypeScript, TanStack Query and Router, a contract-first Hono BFF, generated API types, deterministic mock data and production builds for both Docker and serverless static hosting.
 
 ![Signal Desk search results](docs/screenshots/search-desktop.webp)
 
@@ -76,6 +76,7 @@ This separation keeps the UI focused, avoids duplicated API types and allows eac
 | Mock | No provider keys | All adapters use deterministic local fixtures. This is the default Docker experience. |
 | Mixed | Some provider keys | Configured providers are live and missing providers continue with fixtures. |
 | Live | All provider keys | All three adapters call their upstream APIs from the server. |
+| Static demo | `VITE_ENABLE_MOCK_DATA=true` at build time | The browser serves the same normalized fixtures without an API server or API requests. |
 
 Set `MOCK_FAIL_PROVIDER` to `newsapi`, `guardian` or `nytimes` to demonstrate the partial-success UI without changing code.
 
@@ -95,6 +96,7 @@ Copy `.env.example` to `.env` only when live API access is needed. Never expose 
 | `MOCK_FAIL_PROVIDER` | Server | Simulates one provider failure. |
 | `VITE_PUBLIC_POSTHOG_KEY` | Browser public | Enables analytics only when set with a host. |
 | `VITE_PUBLIC_POSTHOG_HOST` | Browser public | PostHog reverse-proxy path, default `/ingest`. |
+| `VITE_ENABLE_MOCK_DATA` | Browser build | Replaces API calls with local fixtures for a serverless demo build. |
 
 ## Commands
 
@@ -105,7 +107,9 @@ pnpm test           # Vitest unit and integration suite
 pnpm test:coverage  # coverage report
 pnpm test:e2e       # Playwright Chromium smoke suite
 pnpm build          # production client and standalone server bundle
+pnpm build:static-demo # serverless client bundle with local fixtures
 pnpm preview        # serve the production build
+pnpm preview:static # serve the latest client bundle on all interfaces
 pnpm generate:api   # OpenAPI document and Orval client
 ```
 
@@ -118,11 +122,12 @@ pnpm exec playwright install chromium
 ## Quality evidence
 
 - Biome check, strict TypeScript and production build pass locally.
-- 12 Vitest tests cover adapters, partial failures, search semantics and preferences.
+- 14 Vitest tests cover adapters, partial failures, search semantics, preferences and static responses.
 - 2 Playwright smoke tests cover URL filters and persisted personalization.
 - The Docker image builds and runs as the non-root `node` user.
 - Container smoke checks confirm the SPA, `/api/health` and three-source mock search.
 - Browser verification covers desktop, mobile, dark mode, German, persistence and partial success.
+- The static demo supports direct route loads and persisted preferences with no fetch or XHR requests.
 - Mobile Lighthouse snapshot: Accessibility 100, Best Practices 100, SEO 100, Agentic Browsing 100.
 
 The mobile capture is available at [docs/screenshots/search-mobile.webp](docs/screenshots/search-mobile.webp).
@@ -140,6 +145,7 @@ The mobile capture is available at [docs/screenshots/search-mobile.webp](docs/sc
 - Mock article images use remote Unsplash URLs, so the text experience remains available if an image host is offline.
 - Upstream plans, quotas and permitted use vary by provider and must be reviewed before production use.
 - Preferences intentionally stay in `localStorage`; account sync is outside this case study.
+- The serverless static demo is intentionally fixture-only; live providers require the Hono runtime.
 - Result pagination and deduplication across syndication partners would be the next data-layer improvements.
 - A production deployment should add request-level rate limiting and server-side response caching.
 

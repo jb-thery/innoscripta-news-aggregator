@@ -12,6 +12,7 @@ Le plan detaille et la tracabilite du brief sont conserves dans `PLAN.md`. Ce do
 - Client, types, hooks et mocks generes avec Orval.
 - Adaptateurs distincts pour NewsAPI.org, The Guardian et New York Times.
 - Fallback mock automatique par provider lorsqu'une cle est absente.
+- Build statique optionnel utilisant les memes fixtures sans serveur API.
 - Preferences persistantes dans `localStorage` et flux personnalise visible.
 - Interface anglais/allemand, themes clair/sombre et responsive mobile.
 - Image Docker multi-stage executant le serveur en utilisateur non-root.
@@ -33,15 +34,17 @@ pnpm typecheck
 pnpm test
 pnpm test:e2e
 pnpm build
+pnpm build:static-demo
 docker build -t innoscripta-news-aggregator .
 docker run --rm -p 3000:3000 innoscripta-news-aggregator
 ```
 
 ## Preuves locales
 
-- 12 tests Vitest verts.
+- 14 tests Vitest verts.
 - 2 scenarios Playwright Chromium verts.
 - Build client et bundle serveur autonome verts.
+- Build statique et navigation directe sur `/feed` valides sans requete fetch ou XHR.
 - Image Docker executee sans cle en mode mock.
 - Smoke container valide sur `/`, `/api/health` et `/api/search`.
 - Audit navigateur mobile: Accessibility 100, Best Practices 100, SEO 100, Agentic Browsing 100.
