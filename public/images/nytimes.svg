@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title">
+  <title id="title">Abstract editorial columns</title>
+  <rect width="1200" height="675" fill="#e7dfd0" />
+  <rect x="120" y="92" width="960" height="491" fill="#fbf8f1" stroke="#151513" stroke-width="5" />
+  <path d="M185 175h830M185 228h480M185 501h830" stroke="#151513" stroke-width="9" />
+  <g fill="#151513">
+    <rect x="185" y="278" width="230" height="170" />
+    <rect x="460" y="278" width="255" height="18" />
+    <rect x="460" y="322" width="255" height="12" opacity=".55" />
+    <rect x="460" y="356" width="210" height="12" opacity=".55" />
+    <rect x="760" y="278" width="255" height="18" />
+    <rect x="760" y="322" width="255" height="12" opacity=".55" />
+    <rect x="760" y="356" width="210" height="12" opacity=".55" />
+  </g>
+  <circle cx="415" cy="278" r="23" fill="#ff542f" />
+</svg>

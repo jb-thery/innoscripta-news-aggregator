@@ -1,3 +1,4 @@
+import { MOCK_ARTICLE_IMAGES } from "../../shared/mock-assets"
 import type { Article, ProviderId } from "../schema"
 
 export const mockArticles = [
@@ -7,8 +8,7 @@ export const mockArticles = [
     description:
       "Technology teams are adding model evaluation and provenance checks before adopting generative systems in regulated workflows.",
     url: "https://newsapi.org/mock/ai-audit-tools",
-    imageUrl:
-      "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80",
+    imageUrl: MOCK_ARTICLE_IMAGES.newsapi,
     source: "NewsAPI.org",
     provider: "newsapi",
     author: "Maya Bell",
@@ -21,8 +21,7 @@ export const mockArticles = [
     description:
       "Finance leaders say better engineering notes are helping teams connect research spend to measurable innovation outcomes.",
     url: "https://newsapi.org/mock/climate-rd-tax",
-    imageUrl:
-      "https://images.unsplash.com/photo-1497436072909-f5e4be1713c8?auto=format&fit=crop&w=1200&q=80",
+    imageUrl: MOCK_ARTICLE_IMAGES.newsapi,
     source: "NewsAPI.org",
     provider: "newsapi",
     author: "Elliot Green",
@@ -35,8 +34,7 @@ export const mockArticles = [
     description:
       "Founders are turning risk classification, audit trails and model cards into practical product operations.",
     url: "https://www.theguardian.com/mock/eu-ai-compliance",
-    imageUrl:
-      "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80",
+    imageUrl: MOCK_ARTICLE_IMAGES.guardian,
     source: "The Guardian",
     provider: "guardian",
     author: "Laura Klein",
@@ -49,8 +47,7 @@ export const mockArticles = [
     description:
       "The pilots combine trusted feeds, human review and strict privacy boundaries to shorten literature monitoring.",
     url: "https://www.theguardian.com/mock/health-research-briefs",
-    imageUrl:
-      "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1200&q=80",
+    imageUrl: MOCK_ARTICLE_IMAGES.guardian,
     source: "The Guardian",
     provider: "guardian",
     author: "Amara Singh",
@@ -63,8 +60,7 @@ export const mockArticles = [
     description:
       "Editors are balancing relevance, transparency and source diversity as readers ask for focused feeds.",
     url: "https://www.nytimes.com/mock/personalization-newsrooms",
-    imageUrl:
-      "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&q=80",
+    imageUrl: MOCK_ARTICLE_IMAGES.nytimes,
     source: "The New York Times",
     provider: "nytimes",
     author: "Jonas Reed",
@@ -77,8 +73,7 @@ export const mockArticles = [
     description:
       "Product managers are tracking experiments, failures and iteration notes to support audit-heavy funding rounds.",
     url: "https://www.nytimes.com/mock/fintech-rd",
-    imageUrl:
-      "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1200&q=80",
+    imageUrl: MOCK_ARTICLE_IMAGES.nytimes,
     source: "The New York Times",
     provider: "nytimes",
     author: "Nora Weiss",
