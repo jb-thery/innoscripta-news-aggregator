@@ -1,0 +1,103 @@
+{
+  "app": {
+    "name": "Signal Desk",
+    "tagline": "Drei Quellen. Ein bewusster Feed."
+  },
+  "nav": {
+    "discover": "Entdecken",
+    "feed": "Mein Feed"
+  },
+  "hero": {
+    "eyebrow": "Unabhängige Quellenübersicht",
+    "title": "Durch den Lärm lesen.",
+    "subtitle": "Durchsuche vertrauenswürdige Medien gemeinsam, vergleiche ihre Berichte und behalte die Signale, die für dich zählen."
+  },
+  "search": {
+    "label": "Artikel suchen",
+    "placeholder": "Zum Beispiel KI, Klima, Fintech...",
+    "hint": "Ergebnisse aktualisieren sich beim Tippen",
+    "results_one": "{{count}} Artikel",
+    "results_other": "{{count}} Artikel",
+    "for": "für „{{query}}“"
+  },
+  "filters": {
+    "title": "Auswahl verfeinern",
+    "show": "Filter anzeigen",
+    "hide": "Filter ausblenden",
+    "from": "Von",
+    "to": "Bis",
+    "category": "Kategorie",
+    "allCategories": "Alle Kategorien",
+    "sources": "Quellen",
+    "author": "Autor enthält",
+    "authorPlaceholder": "Name des Autors",
+    "clear": "Filter zurücksetzen"
+  },
+  "categories": {
+    "technology": "Technologie",
+    "business": "Wirtschaft",
+    "world": "Welt",
+    "health": "Gesundheit",
+    "media": "Medien",
+    "science": "Wissenschaft"
+  },
+  "sources": {
+    "title": "Quellenstatus",
+    "online": "Online",
+    "unavailable": "Nicht verfügbar",
+    "notSelected": "Nicht ausgewählt",
+    "partial": "Einige Quellen sind nicht verfügbar. Die übrigen Ergebnisse bleiben aktuell."
+  },
+  "states": {
+    "loadingTitle": "Nachrichten werden geprüft",
+    "loadingBody": "Die Redaktion sammelt und vereinheitlicht Berichte aus drei Quellen.",
+    "emptyTitle": "Noch kein Signal",
+    "emptyBody": "Versuche einen allgemeineren Suchbegriff oder entferne einen Filter.",
+    "startTitle": "Mit einem Signal beginnen",
+    "startBody": "Gib ein Stichwort ein, um alle verbundenen Medien zu durchsuchen.",
+    "errorTitle": "Die Redaktion konnte nicht aktualisieren",
+    "errorBody": "Prüfe den lokalen Server und versuche es erneut.",
+    "retry": "Erneut versuchen"
+  },
+  "article": {
+    "readOriginal": "Original lesen",
+    "unknownAuthor": "Redaktion",
+    "imageAlt": "Illustration zu {{title}}"
+  },
+  "preferences": {
+    "eyebrow": "Persönliches Briefing",
+    "title": "Baue einen Feed mit eigener Perspektive.",
+    "subtitle": "Wähle vertrauenswürdige Quellen, Themen und Autoren. Die Einstellungen bleiben in diesem Browser.",
+    "sources": "Bevorzugte Quellen",
+    "categories": "Bevorzugte Kategorien",
+    "authors": "Bevorzugte Autoren",
+    "authorPlaceholder": "Autor hinzufügen",
+    "addAuthor": "Hinzufügen",
+    "removeAuthor": "{{author}} entfernen",
+    "saved": "Lokal gespeichert",
+    "emptyTitle": "Dein Briefing braucht eine Präferenz",
+    "emptyBody": "Wähle mindestens eine Quelle oder ein Thema oder füge einen Autor hinzu.",
+    "matching_one": "{{count}} Beitrag passt zu deinem Briefing",
+    "matching_other": "{{count}} Beiträge passen zu deinem Briefing"
+  },
+  "theme": {
+    "light": "Helles Design verwenden",
+    "dark": "Dunkles Design verwenden"
+  },
+  "language": {
+    "label": "Sprache",
+    "english": "English",
+    "german": "Deutsch"
+  },
+  "runtime": {
+    "mock": "Demo-Daten",
+    "live": "Live-Quellen",
+    "mixed": "Gemischte Quellen",
+    "unknown": "Modus wird geprüft"
+  },
+  "footer": {
+    "note": "Eine Contract-First React-Fallstudie für transparente und robuste Nachrichtensuche.",
+    "apiDocs": "API-Dokumentation öffnen",
+    "staticMode": "Statische Demo, kein API-Server erforderlich"
+  }
+}

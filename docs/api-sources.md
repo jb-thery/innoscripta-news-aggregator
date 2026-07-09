@@ -8,13 +8,13 @@ References verifiees le 9 juillet 2026:
 - The Guardian access levels: https://open-platform.theguardian.com/access/
 - New York Times Article Search public spec: https://github.com/nytimes/public_api_specs/blob/master/article_search/article_search_v2.md
 
-## Selection initiale
+## Sources implementees
 
 | Source | Usage dans l'app | Variables | Notes |
 | --- | --- | --- | --- |
-| NewsAPI.org | Recherche generale, top headlines, liste de sources | `NEWS_API_KEY`, `NEWS_API_BASE_URL` | Bon candidat pour recherche par mot-cle, date, source et categorie. Peut aussi exposer BBC via `bbc-news`. |
-| The Guardian Open Platform | Articles Guardian, sections, recherche, contenu archive | `GUARDIAN_API_KEY`, `GUARDIAN_API_BASE_URL` | Cle developpeur non commerciale avec quota documente. Bon candidat pour categories et contenu riche. |
-| New York Times APIs | Recherche d'articles NYT, filtres, facets | `NYT_API_KEY`, `NYT_API_BASE_URL` | Bon candidat pour recherche et filtres par date, section, source ou type de contenu. |
+| NewsAPI.org | Endpoint `/everything`, recherche et dates | `NEWS_API_KEY`, `NEWS_API_BASE_URL` | Le BFF transmet la cle cote serveur et normalise la reponse. |
+| The Guardian Open Platform | Endpoint `/search`, sections et champs enrichis | `GUARDIAN_API_KEY`, `GUARDIAN_API_BASE_URL` | Le BFF demande `trailText`, `thumbnail` et `byline`. |
+| New York Times APIs | Article Search v2, dates et sections | `NYT_API_KEY`, `NYT_API_BASE_URL` | Le BFF adapte les champs `headline`, `byline`, `section_name` et `multimedia`. |
 
 ## Modele de donnees cible
 
@@ -40,19 +40,20 @@ export interface Article {
 Chaque source doit exposer le meme contrat applicatif:
 
 ```ts
-export interface ArticleSearchParams {
-  query: string;
-  fromDate?: string;
-  toDate?: string;
+export interface SearchParams {
+  q: string;
+  from?: string;
+  to?: string;
   category?: string;
-  source?: string;
+  providers?: string;
   author?: string;
 }
 
 export interface ArticleProvider {
   id: Article["provider"];
   label: string;
-  search(params: ArticleSearchParams): Promise<Article[]>;
+  hasLiveCredentials(): boolean;
+  search(params: SearchParams, signal?: AbortSignal): Promise<Article[]>;
 }
 ```
 

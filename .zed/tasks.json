@@ -1,0 +1,22 @@
+[
+  {
+    "label": "Quality: fast verification",
+    "command": "corepack pnpm verify:fast"
+  },
+  {
+    "label": "Test: coverage",
+    "command": "corepack pnpm test:coverage"
+  },
+  {
+    "label": "Test: browser",
+    "command": "corepack pnpm test:e2e"
+  },
+  {
+    "label": "Build: application",
+    "command": "corepack pnpm build"
+  },
+  {
+    "label": "Docker: verify review stack",
+    "command": "mise run docker:verify"
+  }
+]

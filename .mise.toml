@@ -1,0 +1,58 @@
+[tools]
+node = "22.22.3"
+
+[tasks.install]
+description = "Enable Corepack and install the pinned pnpm dependencies"
+run = "corepack enable && pnpm install --frozen-lockfile"
+
+[tasks.local]
+description = "Run the Vite client and Hono server in development mode"
+run = "pnpm dev"
+
+[tasks.check]
+description = "Run Biome formatting and lint checks"
+run = "pnpm check"
+
+[tasks.typecheck]
+description = "Run the strict TypeScript check"
+run = "pnpm typecheck"
+
+[tasks.test]
+description = "Run the Vitest suite"
+run = "pnpm test"
+
+[tasks.build]
+description = "Build the production client and server"
+run = "pnpm build"
+
+[tasks.verify]
+description = "Run the local quality gate"
+run = "pnpm check && pnpm typecheck && pnpm test:coverage && pnpm build"
+
+[tasks."docker:up"]
+description = "Build the local review image and wait until the app is healthy"
+run = "docker compose up --build --wait"
+
+[tasks."docker:down"]
+description = "Stop and remove the local review stack"
+run = "docker compose down --remove-orphans"
+
+[tasks."docker:verify"]
+description = "Build, smoke-test and cleanly stop the local review stack"
+run = '''
+#!/usr/bin/env bash
+set -euo pipefail
+
+app_port="${APP_PORT:-3000}"
+export APP_PORT="$app_port"
+
+cleanup() {
+  docker compose down --remove-orphans
+}
+trap cleanup EXIT
+
+docker compose up --build --wait
+curl -fsS "http://localhost:${app_port}/api/health" >/dev/null
+curl -fsS "http://localhost:${app_port}/api/search?q=AI" >/dev/null
+docker compose ps
+'''
