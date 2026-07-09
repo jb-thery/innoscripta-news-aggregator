@@ -23,8 +23,8 @@ export default defineConfig({
   newsMocks: {
     input: "./openapi.json",
     output: {
-      target: "./src/mocks/generated.ts",
-      schemas: "./src/mocks/model",
+      target: "./src/mocks/generated/news.ts",
+      schemas: "./src/mocks/generated/model",
       client: "fetch",
       httpClient: "fetch",
       mock: {

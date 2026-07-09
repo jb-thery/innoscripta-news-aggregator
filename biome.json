@@ -11,7 +11,7 @@
       "**",
       "!src/routeTree.gen.ts",
       "!src/api/generated",
-      "!src/mocks",
+      "!src/mocks/generated",
       "!openapi.json",
       "!dist",
       "!server-dist",

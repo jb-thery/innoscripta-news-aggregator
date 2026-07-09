@@ -87,9 +87,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       <footer className="site-footer">
         <p>{t("footer.note")}</p>
-        <a href="/docs" target="_blank" rel="noreferrer">
-          {t("footer.apiDocs")}
-        </a>
+        {__STATIC_MOCK__ ? (
+          <span>{t("footer.staticMode")}</span>
+        ) : (
+          <a href="/docs" target="_blank" rel="noreferrer">
+            {t("footer.apiDocs")}
+          </a>
+        )}
       </footer>
     </div>
   )

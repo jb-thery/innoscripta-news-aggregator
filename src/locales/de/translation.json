@@ -97,6 +97,7 @@
   },
   "footer": {
     "note": "Eine Contract-First React-Fallstudie für transparente und robuste Nachrichtensuche.",
-    "apiDocs": "API-Dokumentation öffnen"
+    "apiDocs": "API-Dokumentation öffnen",
+    "staticMode": "Statische Demo, kein API-Server erforderlich"
   }
 }

@@ -97,6 +97,7 @@
   },
   "footer": {
     "note": "A contract-first React case study built for transparent, resilient news discovery.",
-    "apiDocs": "Open API documentation"
+    "apiDocs": "Open API documentation",
+    "staticMode": "Static demo, no API server required"
   }
 }

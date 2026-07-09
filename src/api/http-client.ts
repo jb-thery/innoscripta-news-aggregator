@@ -9,7 +9,9 @@ export class ApiError extends Error {
 }
 
 export async function httpClient<T>(url: string, options?: RequestInit): Promise<T> {
-  const response = await fetch(url, options)
+  const response = __STATIC_MOCK__
+    ? (await import("@/mocks/static-api")).createStaticApiResponse(url)
+    : await fetch(url, options)
 
   if (!response.ok) {
     const message = await response.text()
