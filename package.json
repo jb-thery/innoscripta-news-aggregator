@@ -1,0 +1,15 @@
+{
+  "name": "innoscripta-frontend-case-study",
+  "version": "0.0.0",
+  "private": true,
+  "devDependencies": {
+    "@jcode.labs/ragmir": "^2.5.0"
+  },
+  "pnpm": {
+    "ignoredBuiltDependencies": [
+      "onnxruntime-node",
+      "protobufjs",
+      "sharp"
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+.DS_Store
+
+# Dependencies
+node_modules/
+
+# Builds and caches
+dist/
+server-dist/
+build/
+.vite/
+.cache/
+coverage/
+playwright-report/
+test-results/
+src/routeTree.gen.ts
+openapi.json
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Local editor files
+.idea/
+.vscode/
+.codex/
+
+# Ragmir
+.ragmir/
