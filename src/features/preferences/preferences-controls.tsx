@@ -88,7 +88,12 @@ export function PreferencesControls() {
       <div className="preference-group">
         <h2>{t("preferences.authors")}</h2>
         <form className="author-form" onSubmit={addAuthor}>
+          <label className="sr-only" htmlFor="preference-author">
+            {t("preferences.authorPlaceholder")}
+          </label>
           <Input
+            id="preference-author"
+            name="preferred-author"
             value={author}
             onChange={(event) => setAuthor(event.target.value)}
             placeholder={t("preferences.authorPlaceholder")}
