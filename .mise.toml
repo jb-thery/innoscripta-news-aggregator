@@ -27,7 +27,7 @@ run = "pnpm build"
 
 [tasks.verify]
 description = "Run the local quality gate"
-run = "pnpm check && pnpm typecheck && pnpm test && pnpm build"
+run = "pnpm check && pnpm typecheck && pnpm test:coverage && pnpm build"
 
 [tasks."docker:up"]
 description = "Build the local review image and wait until the app is healthy"
