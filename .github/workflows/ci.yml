@@ -48,6 +48,9 @@ jobs:
       - name: Build application
         run: pnpm build
 
+      - name: Build static demo
+        run: pnpm build:static-demo
+
   browser:
     needs: quality
     runs-on: ubuntu-latest
