@@ -8,13 +8,16 @@ Le plan detaille et la tracabilite du brief sont conserves dans `PLAN.md`. Ce do
 - Recherche et filtres partages dans l'URL via TanStack Router.
 - Cache et etats asynchrones via TanStack Query.
 - BFF Hono same-origin, les cles provider restent cote serveur.
+- Routes Hono, middleware de securite, documentation et proxy analytique separes par responsabilite.
 - Schemas Zod et OpenAPI derives du serveur.
 - Client, types et hooks generes avec Orval.
 - Adaptateurs distincts pour NewsAPI.org, The Guardian et New York Times.
 - Fallback mock automatique par provider lorsqu'une cle est absente.
+- Illustrations mock locales, servies par Vite, GitHub Pages et Docker sans dependance externe.
 - Build statique optionnel utilisant les memes fixtures sans serveur API.
 - Preferences persistantes dans `localStorage` et flux personnalise visible.
 - Interface anglais/allemand, themes clair/sombre et responsive mobile.
+- Feuilles de style segmentees par surface au lieu d'un fichier monolithique.
 - Image Docker multi-stage executant le serveur en utilisateur non-root.
 - Taches `mise` alignees sur le workflow PAC pour installer, verifier, lancer et arreter la stack de revue.
 - PostHog conditionnel, error boundary global et captures sans texte de recherche.
@@ -55,6 +58,6 @@ docker run --rm -p 3000:3000 innoscripta-news-aggregator
 - Arret SIGTERM valide avec un code de sortie `0` et suppression de la stack Compose.
 - Audit navigateur mobile: Accessibility 100, Best Practices 100 et SEO 100.
 
-## Reste lie a la publication
+## Publication
 
-La publication GitHub, la verification de la CI distante et le deploiement de demonstration sont suivis dans `docs/control-checklist.md`. Ils dependent de la creation des surfaces distantes et ne modifient pas l'architecture locale.
+Le depot public, la CI distante, le tag signe `v1.0.0` et la demonstration GitHub Pages sont livres. Le detail des controles et des pull requests est conserve dans `docs/control-checklist.md`.
