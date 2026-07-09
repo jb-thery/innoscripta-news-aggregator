@@ -8,6 +8,9 @@ and The New York Times through one normalized and resilient interface. It is a f
 case study focused on React architecture, typed API integration, partial-failure handling,
 testability, security, and reproducible delivery.
 
+[Open the live static demo](https://jb-thery.github.io/innoscripta-news-aggregator/).
+It uses deterministic fixture data in the browser and requires no API credentials.
+
 ![Signal Desk search results](docs/screenshots/search-desktop.webp)
 
 ## Quick start with Docker
@@ -224,6 +227,9 @@ GitHub Actions separates three jobs:
 - `browser`: Playwright on desktop and mobile Chromium profiles.
 - `container`: image build, health/search probes, and graceful shutdown.
 
+The separate `Deploy static demo` workflow publishes the fixture-only build to GitHub Pages
+after each successful promotion to `main`.
+
 ## Commands
 
 | Command | Purpose |
@@ -235,6 +241,7 @@ GitHub Actions separates three jobs:
 | `pnpm test:coverage` | Run Vitest and enforce coverage thresholds. |
 | `pnpm test:e2e` | Run desktop and mobile Playwright scenarios. |
 | `pnpm build` | Build the SPA and standalone Hono server. |
+| `pnpm build:pages` | Build the GitHub Pages demo with repository base path and hash routing. |
 | `pnpm build:static-demo` | Build the fixture-only serverless SPA. |
 | `pnpm generate:api` | Regenerate OpenAPI and the Orval client. |
 | `pnpm verify:fast` | Run Biome, TypeScript, and Vitest before push. |

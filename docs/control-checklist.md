@@ -83,7 +83,8 @@ Verification locale du 10 juillet 2026.
 - [x] Repo GitHub public cree.
 - [x] Branches Git de travail poussees puis supprimees apres fusion.
 - [x] Pull requests Docker `#2` et finitions `#3` fusionnees dans `develop`.
-- [x] CI GitHub distante verte sur les pull requests `#2` et `#3`.
-- [ ] Tag `v1.0.0` publie sur `main`.
-- [ ] Demo live accessible et liee depuis le README.
+- [x] Release `#4`, back-merge `#5`, demo `#6`/`#7` et correctif routing `#8`/`#9` fusionnes.
+- [x] CI GitHub distante verte sur les pull requests et les branches protegees.
+- [x] Tag signe `v1.0.0` publie sur `main`.
+- [x] Demo live accessible sur GitHub Pages et liee depuis le README.
 - [ ] Email de soumission a envoyer manuellement avec lien du repo et CV a jour, non envoye.
