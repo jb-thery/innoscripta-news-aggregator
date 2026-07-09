@@ -31,6 +31,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Audit dependencies
+        run: pnpm audit --audit-level low
+
       - name: Check generated API client
         run: |
           pnpm generate:api
@@ -42,8 +45,8 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
 
-      - name: Run tests
-        run: pnpm test
+      - name: Run tests with coverage
+        run: pnpm test:coverage
 
       - name: Build application
         run: pnpm build
@@ -89,3 +92,25 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t innoscripta-news-aggregator:ci .
+
+      - name: Smoke-test Docker runtime
+        run: |
+          cleanup() {
+            docker rm --force signal-desk-ci >/dev/null 2>&1 || true
+          }
+          trap cleanup EXIT
+
+          docker run --detach --name signal-desk-ci --publish 3000:3000 innoscripta-news-aggregator:ci
+
+          for attempt in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:3000/api/health >/dev/null; then
+              break
+            fi
+            sleep 1
+          done
+
+          curl --fail --silent http://127.0.0.1:3000/api/health >/dev/null
+          curl --fail --silent "http://127.0.0.1:3000/api/search?q=AI" >/dev/null
+          docker stop --time 10 signal-desk-ci
+          docker rm signal-desk-ci
+          trap - EXIT
