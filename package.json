@@ -23,6 +23,7 @@
     "typecheck": "tsc --noEmit",
     "check": "biome check .",
     "check:fix": "biome check --write .",
+    "verify:fast": "pnpm check && pnpm typecheck && pnpm test",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest",

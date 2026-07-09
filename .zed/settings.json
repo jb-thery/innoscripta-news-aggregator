@@ -1,0 +1,74 @@
+{
+  "format_on_save": "on",
+  "languages": {
+    "CSS": {
+      "formatter": {
+        "language_server": {
+          "name": "biome"
+        }
+      }
+    },
+    "JavaScript": {
+      "code_actions_on_format": {
+        "source.fixAll.biome": true,
+        "source.organizeImports.biome": true
+      },
+      "formatter": {
+        "language_server": {
+          "name": "biome"
+        }
+      }
+    },
+    "JSON": {
+      "formatter": {
+        "language_server": {
+          "name": "biome"
+        }
+      }
+    },
+    "JSONC": {
+      "formatter": {
+        "language_server": {
+          "name": "biome"
+        }
+      }
+    },
+    "JSX": {
+      "code_actions_on_format": {
+        "source.fixAll.biome": true,
+        "source.organizeImports.biome": true
+      },
+      "formatter": {
+        "language_server": {
+          "name": "biome"
+        }
+      }
+    },
+    "TSX": {
+      "code_actions_on_format": {
+        "source.fixAll.biome": true,
+        "source.organizeImports.biome": true
+      },
+      "formatter": {
+        "language_server": {
+          "name": "biome"
+        }
+      }
+    },
+    "TypeScript": {
+      "code_actions_on_format": {
+        "source.fixAll.biome": true,
+        "source.organizeImports.biome": true
+      },
+      "formatter": {
+        "language_server": {
+          "name": "biome"
+        }
+      }
+    }
+  },
+  "preferred_line_length": 100,
+  "remove_trailing_whitespace_on_save": true,
+  "soft_wrap": "preferred_line_length",
+  "tab_size": 2
+}

@@ -37,12 +37,12 @@
     "rules": {
       "preset": "recommended",
       "correctness": {
-        "noUnusedImports": "warn",
+        "noUnusedImports": "error",
         "useHookAtTopLevel": "error"
       },
       "style": {
         "useConst": "error",
-        "useImportType": "warn"
+        "useImportType": "error"
       }
     }
   },
