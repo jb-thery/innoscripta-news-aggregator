@@ -23,11 +23,11 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "types": ["vite/client", "vitest/globals"],
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@server/*": ["server/*"]
+      "@/*": ["./src/*"],
+      "@server/*": ["./server/*"],
+      "@shared/*": ["./shared/*"]
     }
   },
-  "include": ["src", "server/schema.ts", "server/providers/types.ts", "vite.config.ts"]
+  "include": ["src", "server/schema.ts", "server/providers/types.ts", "shared", "vite.config.ts"]
 }
