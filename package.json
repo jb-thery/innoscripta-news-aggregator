@@ -1,6 +1,7 @@
 {
   "name": "innoscripta-news-aggregator",
   "version": "1.0.0",
+  "homepage": "https://jb-thery.github.io/innoscripta-news-aggregator/",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@10.34.4",
