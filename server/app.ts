@@ -27,6 +27,9 @@ const contentSecurityPolicy = (path: string) => {
   const styleSources = isApiDocumentation
     ? "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net"
     : "style-src 'self' 'unsafe-inline'"
+  const connectSources = isApiDocumentation
+    ? "connect-src 'self' https://cdn.jsdelivr.net"
+    : "connect-src 'self'"
 
   return [
     "default-src 'self'",
@@ -34,7 +37,7 @@ const contentSecurityPolicy = (path: string) => {
     styleSources,
     "img-src 'self' https: data:",
     "font-src 'self' data:",
-    "connect-src 'self'",
+    connectSources,
     "object-src 'none'",
     "frame-ancestors 'none'",
     "base-uri 'self'",

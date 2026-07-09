@@ -119,5 +119,6 @@ describe("news BFF", () => {
 
     expect(policy).toContain("script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net")
     expect(policy).toContain("style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net")
+    expect(policy).toContain("connect-src 'self' https://cdn.jsdelivr.net")
   })
 })
