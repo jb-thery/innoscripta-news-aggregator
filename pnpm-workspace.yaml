@@ -7,4 +7,3 @@ trustPolicy: no-downgrade
 onlyBuiltDependencies:
   - core-js
   - esbuild
-  - msw
