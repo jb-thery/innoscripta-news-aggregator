@@ -11,10 +11,20 @@ It is built as a frontend case study with React 19, strict TypeScript, TanStack 
 The fastest path uses Docker. No API key is required because the server automatically serves realistic fixtures when credentials are absent.
 
 ```bash
-docker compose up --build
+docker compose up --build --wait
 ```
 
 Open [http://localhost:3000](http://localhost:3000). The OpenAPI documentation is available at [http://localhost:3000/docs](http://localhost:3000/docs).
+
+The repository also exposes the same `mise` task workflow used by the PAC local review stack:
+
+```bash
+mise trust && mise install
+mise run install
+mise run docker:up
+```
+
+Use `APP_PORT=4174 mise run docker:up` when port `3000` is already occupied. Stop and remove only this review stack with `mise run docker:down`.
 
 For local development:
 
@@ -93,6 +103,7 @@ Copy `.env.example` to `.env` only when live API access is needed. Never expose 
 | `GUARDIAN_API_BASE_URL` | Server | Optional Guardian endpoint override. |
 | `NYT_API_BASE_URL` | Server | Optional NYT endpoint override. |
 | `PORT` | Server | Runtime port, default `3000`. |
+| `APP_PORT` | Docker host | Published host port, default `3000`; the container still listens on `3000`. |
 | `MOCK_FAIL_PROVIDER` | Server | Simulates one provider failure. |
 | `VITE_PUBLIC_POSTHOG_KEY` | Browser public | Enables analytics only when set with a host. |
 | `VITE_PUBLIC_POSTHOG_HOST` | Browser public | PostHog reverse-proxy path, default `/ingest`. |
@@ -111,7 +122,11 @@ pnpm build:static-demo # serverless client bundle with local fixtures
 pnpm preview        # serve the production build
 pnpm preview:static # serve the latest client bundle on all interfaces
 pnpm generate:api   # OpenAPI document and Orval client
+mise run verify     # PAC-style local quality gate
+mise run docker:verify # build, smoke-test and cleanly remove the review stack
 ```
+
+`mise run docker:verify` waits for the image healthcheck, probes `/api/health` and `/api/search`, and always runs `docker compose down --remove-orphans`, including after a failed probe.
 
 Install Chromium once before the first local E2E run if needed:
 
@@ -125,7 +140,7 @@ pnpm exec playwright install chromium
 - 14 Vitest tests cover adapters, partial failures, search semantics, preferences and static responses.
 - 2 Playwright smoke tests cover URL filters and persisted personalization.
 - The Docker image builds and runs as the non-root `node` user.
-- Container smoke checks confirm the SPA, `/api/health` and three-source mock search.
+- Container smoke checks confirm the SPA, `/api/health` and three-source mock search before a clean SIGTERM shutdown.
 - Browser verification covers desktop, mobile, dark mode, German, persistence and partial success.
 - The static demo supports direct route loads and persisted preferences with no fetch or XHR requests.
 - Mobile Lighthouse snapshot: Accessibility 100, Best Practices 100, SEO 100, Agentic Browsing 100.

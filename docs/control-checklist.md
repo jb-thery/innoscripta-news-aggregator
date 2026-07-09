@@ -57,6 +57,8 @@ Verification locale du 10 juillet 2026.
 - [x] `docker build -t innoscripta-news-aggregator:local .`.
 - [x] `docker run` sans cle en mode mock.
 - [x] Smoke container sur `/`, `/api/health` et `/api/search`.
+- [x] Container non-root, healthcheck Compose et arret SIGTERM avec code `0`.
+- [x] `mise run docker:verify` reconstruit, teste et supprime la stack de revue.
 - [x] Console navigateur sans erreur ni avertissement.
 - [x] Demo statique validee sans requete fetch ou XHR, y compris sur `/feed` apres rechargement.
 - [x] Diff controle avec `git diff --check`.
