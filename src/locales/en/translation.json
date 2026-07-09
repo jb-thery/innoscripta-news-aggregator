@@ -1,0 +1,102 @@
+{
+  "app": {
+    "name": "Signal Desk",
+    "tagline": "Three sources. One deliberate feed."
+  },
+  "nav": {
+    "discover": "Discover",
+    "feed": "My feed"
+  },
+  "hero": {
+    "eyebrow": "Independent source intelligence",
+    "title": "Read across the noise.",
+    "subtitle": "Search trusted publishers together, compare their coverage and keep the signals that matter to you."
+  },
+  "search": {
+    "label": "Search articles",
+    "placeholder": "Try AI, climate, fintech...",
+    "hint": "Results update while you type",
+    "results_one": "{{count}} article",
+    "results_other": "{{count}} articles",
+    "for": "for “{{query}}”"
+  },
+  "filters": {
+    "title": "Refine the desk",
+    "show": "Show filters",
+    "hide": "Hide filters",
+    "from": "From",
+    "to": "To",
+    "category": "Category",
+    "allCategories": "All categories",
+    "sources": "Sources",
+    "author": "Author contains",
+    "authorPlaceholder": "Reporter name",
+    "clear": "Reset filters"
+  },
+  "categories": {
+    "technology": "Technology",
+    "business": "Business",
+    "world": "World",
+    "health": "Health",
+    "media": "Media",
+    "science": "Science"
+  },
+  "sources": {
+    "title": "Source pulse",
+    "online": "Online",
+    "unavailable": "Unavailable",
+    "notSelected": "Not selected",
+    "partial": "Some sources are unavailable. The rest of your results are still current."
+  },
+  "states": {
+    "loadingTitle": "Scanning the wires",
+    "loadingBody": "The desk is gathering and normalizing coverage from three publishers.",
+    "emptyTitle": "No signal yet",
+    "emptyBody": "Try a broader keyword or remove one of the filters.",
+    "startTitle": "Start with a signal",
+    "startBody": "Enter a keyword to search all connected publishers.",
+    "errorTitle": "The desk could not refresh",
+    "errorBody": "Check the local server and try the request again.",
+    "retry": "Try again"
+  },
+  "article": {
+    "readOriginal": "Read original",
+    "unknownAuthor": "Editorial desk",
+    "imageAlt": "Illustration for {{title}}"
+  },
+  "preferences": {
+    "eyebrow": "Personal briefing",
+    "title": "Build a feed with a point of view.",
+    "subtitle": "Choose the sources, topics and authors you trust. Preferences stay in this browser.",
+    "sources": "Preferred sources",
+    "categories": "Preferred categories",
+    "authors": "Preferred authors",
+    "authorPlaceholder": "Add an author",
+    "addAuthor": "Add",
+    "removeAuthor": "Remove {{author}}",
+    "saved": "Saved locally",
+    "emptyTitle": "Your briefing needs a preference",
+    "emptyBody": "Select at least one source or topic, or add an author to shape this feed.",
+    "matching_one": "{{count}} story matches your briefing",
+    "matching_other": "{{count}} stories match your briefing"
+  },
+  "theme": {
+    "light": "Use light theme",
+    "dark": "Use dark theme"
+  },
+  "language": {
+    "label": "Language",
+    "english": "English",
+    "german": "Deutsch"
+  },
+  "runtime": {
+    "mock": "Demo data",
+    "live": "Live sources",
+    "mixed": "Mixed sources",
+    "unknown": "Checking mode"
+  },
+  "footer": {
+    "note": "A contract-first React case study built for transparent, resilient news discovery.",
+    "apiDocs": "Open API documentation"
+  }
+}
