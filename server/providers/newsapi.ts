@@ -1,5 +1,6 @@
 import { z } from "@hono/zod-openapi"
 import { ArticleSchema, type SearchParams } from "../schema"
+import { PROVIDER_RESULT_LIMIT } from "./constants"
 import { filterArticles } from "./filter"
 import { getFixtureArticles } from "./fixtures"
 import type { ArticleProvider, ProviderRuntimeConfig } from "./types"
@@ -23,22 +24,22 @@ const newsApiResponseSchema = z.object({
 })
 
 export function createNewsApiProvider(config: ProviderRuntimeConfig): ArticleProvider {
-  const provider = {
-    id: "newsapi" as const,
-    label: "NewsAPI.org",
+  const providerId = "newsapi" as const
+  const provider: ArticleProvider = {
+    id: providerId,
     hasLiveCredentials: () => Boolean(config.apiKey),
     async search(params: SearchParams, signal?: AbortSignal) {
-      if (config.failProvider === provider.id) {
+      if (config.failProvider === providerId) {
         throw new Error("Simulated NewsAPI provider failure")
       }
 
       if (!config.apiKey) {
-        return filterArticles(getFixtureArticles(provider.id), params)
+        return filterArticles(getFixtureArticles(providerId), params)
       }
 
       const url = new URL(`${config.baseUrl}/everything`)
       url.searchParams.set("q", params.q || "technology OR business OR science")
-      url.searchParams.set("pageSize", "20")
+      url.searchParams.set("pageSize", PROVIDER_RESULT_LIMIT)
       url.searchParams.set("sortBy", "publishedAt")
       url.searchParams.set("language", "en")
       url.searchParams.set("apiKey", config.apiKey)
@@ -51,7 +52,7 @@ export function createNewsApiProvider(config: ProviderRuntimeConfig): ArticlePro
         url.searchParams.set("to", params.to)
       }
 
-      const response = await fetch(url, { signal })
+      const response = await fetch(url, signal ? { signal } : undefined)
       if (!response.ok) {
         throw new Error(`NewsAPI returned ${response.status}`)
       }
@@ -65,7 +66,7 @@ export function createNewsApiProvider(config: ProviderRuntimeConfig): ArticlePro
           url: article.url,
           imageUrl: article.urlToImage ?? null,
           source: article.source?.name ?? "NewsAPI.org",
-          provider: provider.id,
+          provider: providerId,
           author: article.author ?? null,
           category: params.category ?? null,
           publishedAt: new Date(article.publishedAt).toISOString(),
@@ -74,7 +75,7 @@ export function createNewsApiProvider(config: ProviderRuntimeConfig): ArticlePro
 
       return filterArticles(articles, params)
     },
-  } satisfies ArticleProvider
+  }
 
   return provider
 }

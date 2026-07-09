@@ -2,7 +2,6 @@ import type { Article, ProviderId, SearchParams } from "../schema"
 
 export interface ArticleProvider {
   id: ProviderId
-  label: string
   hasLiveCredentials(): boolean
   search(params: SearchParams, signal?: AbortSignal): Promise<Article[]>
 }
