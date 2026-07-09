@@ -5,6 +5,7 @@ import react from "@vitejs/plugin-react"
 import { defineConfig } from "vite"
 
 export default defineConfig({
+  base: process.env.VITE_BASE_PATH ?? "/",
   define: {
     __STATIC_MOCK__: JSON.stringify(process.env.VITE_ENABLE_MOCK_DATA === "true"),
   },

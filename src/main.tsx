@@ -14,8 +14,11 @@ import { AnalyticsProvider } from "@/lib/analytics-provider"
 import { queryClient } from "@/lib/query-client"
 import { routeTree } from "./routeTree.gen"
 
+const routerBasePath = import.meta.env.BASE_URL.replace(/\/+$/, "") || "/"
+
 const router = createRouter({
   routeTree,
+  basepath: routerBasePath,
   context: { queryClient },
   defaultPreload: "intent",
   scrollRestoration: true,

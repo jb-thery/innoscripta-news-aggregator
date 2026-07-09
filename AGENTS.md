@@ -45,6 +45,7 @@ Ces regles s'appliquent au repo Git de l'etude de cas Innoscripta.
 - `pnpm test:coverage`: tests Vitest avec seuils de couverture obligatoires.
 - `pnpm test:e2e`: smoke Playwright, a lancer hors session navigateur live.
 - `pnpm build`: build client et bundle serveur autonome.
+- `pnpm build:pages`: build statique GitHub Pages avec le base path du repo et fallback SPA.
 - `pnpm build:static-demo`: build client autonome avec fixtures locales, sans serveur API.
 - `mise run verify`: Biome, TypeScript, couverture et build de production.
 - `mise run docker:up`: build et demarrage du container jusqu'au healthcheck.
