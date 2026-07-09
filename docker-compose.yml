@@ -1,9 +1,15 @@
+name: signal-desk
+
 services:
   web:
     build: .
+    init: true
+    environment:
+      HOST: 0.0.0.0
+      PORT: "3000"
     ports:
-      - "3000:3000"
+      - "${APP_PORT:-3000}:3000"
     env_file:
       - path: .env
         required: false
-    restart: unless-stopped
+    stop_grace_period: 10s

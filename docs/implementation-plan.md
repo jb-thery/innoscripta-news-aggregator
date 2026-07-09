@@ -16,6 +16,7 @@ Le plan detaille et la tracabilite du brief sont conserves dans `PLAN.md`. Ce do
 - Preferences persistantes dans `localStorage` et flux personnalise visible.
 - Interface anglais/allemand, themes clair/sombre et responsive mobile.
 - Image Docker multi-stage executant le serveur en utilisateur non-root.
+- Taches `mise` alignees sur le workflow PAC pour installer, verifier, lancer et arreter la stack de revue.
 
 ## Parcours de donnees
 
@@ -35,6 +36,7 @@ pnpm test
 pnpm test:e2e
 pnpm build
 pnpm build:static-demo
+mise run docker:verify
 docker build -t innoscripta-news-aggregator .
 docker run --rm -p 3000:3000 innoscripta-news-aggregator
 ```
@@ -47,6 +49,7 @@ docker run --rm -p 3000:3000 innoscripta-news-aggregator
 - Build statique et navigation directe sur `/feed` valides sans requete fetch ou XHR.
 - Image Docker executee sans cle en mode mock.
 - Smoke container valide sur `/`, `/api/health` et `/api/search`.
+- Arret SIGTERM valide avec un code de sortie `0` et suppression de la stack Compose.
 - Audit navigateur mobile: Accessibility 100, Best Practices 100, SEO 100, Agentic Browsing 100.
 
 ## Reste lie a la publication
