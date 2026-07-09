@@ -194,6 +194,7 @@ provider credentials to a `VITE_` variable.
 | `VITE_PUBLIC_POSTHOG_KEY` | Browser public | Enables analytics only when a host is also configured. |
 | `VITE_PUBLIC_POSTHOG_HOST` | Browser public | Same-origin PostHog proxy path, normally `/ingest`. |
 | `VITE_ENABLE_MOCK_DATA` | Build-time public | Enables the serverless fixture-only build. |
+| `VITE_API_PORT` | Local browser | Hono port used by the Vite development proxy, default `3000`. |
 
 ## Security and observability
 
@@ -214,8 +215,8 @@ Current local evidence:
 - 41 Vitest tests across provider normalization, filtering, preferences, analytics,
   API behavior, partial failure, and static responses.
 - Enforced coverage minimums: 80% statements, lines, and functions; 65% branches.
-- Current broad TypeScript logic coverage: 81.45% statements, 80.91% lines, 84% functions,
-  and 67.03% branches.
+- Current broad TypeScript logic coverage: 82.29% statements, 81.81% lines, 84.81% functions,
+  and 66.48% branches.
 - 6 Playwright scenarios across desktop Chromium and a Pixel 5 viewport.
 - Production SPA, standalone Hono server, and fixture-only static builds.
 - Multi-stage Docker build, non-root runtime, healthcheck, API smoke tests, and clean SIGTERM.
@@ -257,7 +258,9 @@ pnpm exec playwright install chromium
 ## Repository map
 
 ```text
-server/                     Hono routes, OpenAPI schemas, and provider adapters
+server/                     Hono assembly, focused routes, middleware, and provider adapters
+shared/                     Typed application, API path, and fixture asset constants
+public/images/              Self-hosted deterministic fixture artwork
 src/api/generated/          Orval-generated models and TanStack Query hooks
 src/components/             Application shell, reusable UI, and render boundary
 src/features/search/        URL-backed search state and filters
@@ -265,6 +268,7 @@ src/features/preferences/   Preference domain, context, persistence, and feed lo
 src/lib/                    Analytics, i18n, query client, and shared metadata
 src/mocks/                  Fixture-only static API implementation
 src/routes/                 TanStack Router route components
+src/styles/                 CSS entry point and responsibility-based partials
 tests/e2e/                  Desktop and mobile Playwright scenarios
 docs/                       Brief, source notes, checklist, and screenshots
 ```
@@ -273,7 +277,7 @@ docs/                       Brief, source notes, checklist, and screenshots
 
 - Preferences remain local because account sync and authentication are outside the brief.
 - The static demo is fixture-only; live providers require the Hono runtime.
-- Remote fixture images may fail independently while article text remains usable.
+- Mock mode uses self-hosted fixture artwork; live provider image failures fall back to a branded placeholder.
 - Provider plans, quotas, and permitted use must be reviewed before production deployment.
 - A production rollout should add server-side response caching and request rate limiting.
 - Pagination and cross-publisher deduplication are natural next data-layer improvements.

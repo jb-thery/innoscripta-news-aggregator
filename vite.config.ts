@@ -3,6 +3,9 @@ import tailwindcss from "@tailwindcss/vite"
 import { tanstackRouter } from "@tanstack/router-plugin/vite"
 import react from "@vitejs/plugin-react"
 import { defineConfig } from "vite"
+import { API_PATHS } from "./shared/paths"
+
+const apiTarget = `http://localhost:${process.env.VITE_API_PORT ?? "3000"}`
 
 export default defineConfig({
   base: process.env.VITE_BASE_PATH ?? "/",
@@ -15,30 +18,31 @@ export default defineConfig({
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
       "@server": fileURLToPath(new URL("./server", import.meta.url)),
+      "@shared": fileURLToPath(new URL("./shared", import.meta.url)),
     },
   },
   server: {
     port: 5173,
     proxy: {
-      "/api": {
-        target: "http://localhost:3000",
+      [API_PATHS.root]: {
+        target: apiTarget,
         changeOrigin: true,
       },
-      "/openapi.json": {
-        target: "http://localhost:3000",
+      [API_PATHS.openApi]: {
+        target: apiTarget,
         changeOrigin: true,
       },
-      "/docs": {
-        target: "http://localhost:3000",
+      [API_PATHS.docs]: {
+        target: apiTarget,
         changeOrigin: true,
       },
-      "/ingest": {
+      [API_PATHS.analytics]: {
         target: "https://eu.i.posthog.com",
         changeOrigin: true,
         secure: true,
         rewrite: (path) => path.replace(/^\/ingest/, ""),
       },
-      "/ingest/static": {
+      [API_PATHS.analyticsAssets]: {
         target: "https://eu-assets.i.posthog.com",
         changeOrigin: true,
         secure: true,

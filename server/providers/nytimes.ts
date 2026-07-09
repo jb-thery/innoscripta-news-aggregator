@@ -44,17 +44,17 @@ const toImageUrl = (multimedia: z.infer<typeof nytMultimediaSchema>[] | undefine
 }
 
 export function createNytimesProvider(config: ProviderRuntimeConfig): ArticleProvider {
-  const provider = {
-    id: "nytimes" as const,
-    label: "New York Times",
+  const providerId = "nytimes" as const
+  const provider: ArticleProvider = {
+    id: providerId,
     hasLiveCredentials: () => Boolean(config.apiKey),
     async search(params: SearchParams, signal?: AbortSignal) {
-      if (config.failProvider === provider.id) {
+      if (config.failProvider === providerId) {
         throw new Error("Simulated New York Times provider failure")
       }
 
       if (!config.apiKey) {
-        return filterArticles(getFixtureArticles(provider.id), params)
+        return filterArticles(getFixtureArticles(providerId), params)
       }
 
       const url = new URL(`${config.baseUrl}/articlesearch.json`)
@@ -76,7 +76,7 @@ export function createNytimesProvider(config: ProviderRuntimeConfig): ArticlePro
         url.searchParams.set("fq", `section_name:("${params.category}")`)
       }
 
-      const response = await fetch(url, { signal })
+      const response = await fetch(url, signal ? { signal } : undefined)
       if (!response.ok) {
         throw new Error(`New York Times returned ${response.status}`)
       }
@@ -90,7 +90,7 @@ export function createNytimesProvider(config: ProviderRuntimeConfig): ArticlePro
           url: article.web_url,
           imageUrl: toImageUrl(article.multimedia),
           source: article.source ?? "The New York Times",
-          provider: provider.id,
+          provider: providerId,
           author: article.byline?.original ?? null,
           category: article.section_name ?? null,
           publishedAt: new Date(article.pub_date).toISOString(),
@@ -99,7 +99,7 @@ export function createNytimesProvider(config: ProviderRuntimeConfig): ArticlePro
 
       return filterArticles(articles, params)
     },
-  } satisfies ArticleProvider
+  }
 
   return provider
 }

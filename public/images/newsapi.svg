@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title">
+  <title id="title">Abstract technology signal</title>
+  <defs>
+    <linearGradient id="background" x1="0" x2="1" y1="0" y2="1">
+      <stop stop-color="#15203c" />
+      <stop offset="1" stop-color="#2850e8" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#background)" />
+  <g fill="none" stroke="#f3efe5" stroke-width="3" opacity=".52">
+    <circle cx="240" cy="338" r="150" />
+    <circle cx="240" cy="338" r="105" />
+    <path d="M390 338h560M680 110v455M510 190l340 296M850 190 510 486" />
+  </g>
+  <circle cx="680" cy="338" r="34" fill="#ff542f" />
+  <circle cx="950" cy="338" r="16" fill="#f3efe5" />
+</svg>

@@ -1,10 +1,11 @@
 import { SearchResponseSchema } from "@server/schema"
+import { API_PATHS } from "@shared/paths"
 import { describe, expect, it } from "vitest"
 import { createStaticApiResponse } from "./static-api"
 
 describe("static demo API", () => {
   it("should report mock health without a server", async () => {
-    const response = createStaticApiResponse("/api/health")
+    const response = createStaticApiResponse(API_PATHS.health)
 
     expect(await response.json()).toMatchObject({ status: "ok", mode: "mock" })
   })
@@ -16,7 +17,9 @@ describe("static demo API", () => {
   })
 
   it("should return normalized search results without a server", async () => {
-    const response = createStaticApiResponse("/api/search?q=AI&providers=newsapi,guardian,nytimes")
+    const response = createStaticApiResponse(
+      `${API_PATHS.search}?q=AI&providers=newsapi,guardian,nytimes`,
+    )
 
     const payload = SearchResponseSchema.parse(await response.json())
 
@@ -24,7 +27,7 @@ describe("static demo API", () => {
   })
 
   it("should preserve provider selection in source statuses", async () => {
-    const response = createStaticApiResponse("/api/search?q=AI&providers=guardian")
+    const response = createStaticApiResponse(`${API_PATHS.search}?q=AI&providers=guardian`)
 
     const payload = SearchResponseSchema.parse(await response.json())
 

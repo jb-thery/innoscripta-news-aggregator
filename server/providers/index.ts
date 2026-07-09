@@ -1,4 +1,5 @@
 import { type ProviderId, ProviderIdSchema } from "../schema"
+import { DEFAULT_PROVIDER_BASE_URLS } from "./constants"
 import { createGuardianProvider } from "./guardian"
 import { createNewsApiProvider } from "./newsapi"
 import { createNytimesProvider } from "./nytimes"
@@ -16,17 +17,17 @@ export function createProviders(): ArticleProvider[] {
 
   return [
     createNewsApiProvider({
-      baseUrl: process.env.NEWS_API_BASE_URL ?? "https://newsapi.org/v2",
+      baseUrl: process.env.NEWS_API_BASE_URL ?? DEFAULT_PROVIDER_BASE_URLS.newsapi,
       apiKey: process.env.NEWS_API_KEY,
       failProvider,
     }),
     createGuardianProvider({
-      baseUrl: process.env.GUARDIAN_API_BASE_URL ?? "https://content.guardianapis.com",
+      baseUrl: process.env.GUARDIAN_API_BASE_URL ?? DEFAULT_PROVIDER_BASE_URLS.guardian,
       apiKey: process.env.GUARDIAN_API_KEY,
       failProvider,
     }),
     createNytimesProvider({
-      baseUrl: process.env.NYT_API_BASE_URL ?? "https://api.nytimes.com/svc/search/v2",
+      baseUrl: process.env.NYT_API_BASE_URL ?? DEFAULT_PROVIDER_BASE_URLS.nytimes,
       apiKey: process.env.NYT_API_KEY,
       failProvider,
     }),

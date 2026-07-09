@@ -1,5 +1,7 @@
 import { z } from "zod"
 
+z.config({ jitless: true })
+
 const PreferencesSchema = z.object({
   sources: z.array(z.enum(["newsapi", "guardian", "nytimes"])),
   categories: z.array(z.string()),

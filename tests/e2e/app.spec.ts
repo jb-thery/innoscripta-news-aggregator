@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test"
+import { APP_PATHS } from "../../shared/paths"
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
@@ -22,7 +23,7 @@ test("should search and filter articles with shareable URL state", async ({ page
 })
 
 test("should persist personalized feed preferences after reload", async ({ page }) => {
-  await page.goto("/feed")
+  await page.goto(APP_PATHS.feed)
 
   const guardianPreference = page.getByRole("button", { name: "The Guardian" })
   await guardianPreference.click()

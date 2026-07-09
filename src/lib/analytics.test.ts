@@ -1,3 +1,4 @@
+import { API_PATHS } from "@shared/paths"
 import posthog from "posthog-js"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
@@ -30,7 +31,7 @@ describe("analytics client", () => {
 
   it("should capture events when analytics is configured", async () => {
     vi.stubEnv("VITE_PUBLIC_POSTHOG_KEY", "test-key")
-    vi.stubEnv("VITE_PUBLIC_POSTHOG_HOST", "/ingest")
+    vi.stubEnv("VITE_PUBLIC_POSTHOG_HOST", API_PATHS.analytics)
     const { safeCapture } = await import("./analytics")
 
     safeCapture("news_search", { query_length: 4 })
@@ -50,7 +51,7 @@ describe("analytics client", () => {
 
   it("should report exceptions when analytics is configured", async () => {
     vi.stubEnv("VITE_PUBLIC_POSTHOG_KEY", "test-key")
-    vi.stubEnv("VITE_PUBLIC_POSTHOG_HOST", "/ingest")
+    vi.stubEnv("VITE_PUBLIC_POSTHOG_HOST", API_PATHS.analytics)
     const { reportError } = await import("./analytics")
     const error = new Error("render failed")
 
