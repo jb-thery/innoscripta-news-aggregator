@@ -30,5 +30,3 @@ const updateDocumentLanguage = (language: string) => {
 
 updateDocumentLanguage(i18n.resolvedLanguage ?? "en")
 i18n.on("languageChanged", updateDocumentLanguage)
-
-export { i18n }

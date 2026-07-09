@@ -78,7 +78,7 @@ export const SearchParamsSchema = z
 
 export type SearchParams = z.infer<typeof SearchParamsSchema>
 
-export const SourceStatusSchema = z
+const SourceStatusSchema = z
   .object({
     provider: ProviderIdSchema,
     ok: z.boolean().openapi({ example: true }),
@@ -104,5 +104,3 @@ export const HealthResponseSchema = z
     timestamp: z.string().datetime(),
   })
   .openapi("HealthResponse")
-
-export type HealthResponse = z.infer<typeof HealthResponseSchema>
