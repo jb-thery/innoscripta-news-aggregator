@@ -13,20 +13,21 @@ browser fixtures and requires no API credentials.
 
 ## AI-assisted engineering, human-owned delivery
 
-This project demonstrates how I use AI professionally. I combine the speed of Codex
-and Claude Code with nine years of engineering experience to define architecture,
-control scope, challenge generated solutions, and validate every change. AI proposes
-and accelerates implementation. I remain accountable for requirements, trade-offs,
-security, testing, maintainability, and the final merge decision.
+This project demonstrates how I, Jean-Baptiste Thery, use AI professionally. I combine
+the speed of Codex and Claude Code with nine years of engineering experience to define
+architecture, control scope, challenge generated solutions, and validate every change.
+AI proposes and accelerates implementation. I remain accountable for requirements,
+trade-offs, security, testing, maintainability, and the final merge decision.
 
 | Tool | Role in my workflow |
 | --- | --- |
-| JCode Skills | My private, self-maintained repository of reusable engineering workflows. I refine it as I learn from real delivery work. |
+| Personal engineering skills | My private, self-maintained repository of reusable engineering workflows. I refine it as I learn from real delivery work. |
 | Ragmir | My local-first retrieval library. I use it to analyze confidential source material locally and derive anonymized, traceable specifications without publishing the original brief. |
+| GitNexus | Builds a local code graph for architecture discovery, dependency tracing, and impact analysis before non-trivial changes. |
 | Codex and Claude Code | Generate and refactor scoped implementations and test scaffolding from explicit constraints. |
 | Agent Browser and Chrome DevTools MCP | Validate rendered behavior through the DOM, console, network, storage, accessibility tree, and responsive viewports. |
 
-The JCode workflows used around this project stay deliberately focused:
+The reusable workflows I maintain for this project stay deliberately focused:
 
 | Skill | Responsibility |
 | --- | --- |
@@ -122,6 +123,7 @@ generates the browser client, and CI rejects generated-client drift.
 | Sources | NewsAPI, Guardian, and NYT adapters with per-source fixture fallback |
 | Accessibility and i18n | Semantic HTML, keyboard focus, reduced motion, English and German |
 | Quality | Biome, TypeScript, Vitest, Playwright, React Doctor, commitlint, Husky |
+| Code intelligence | GitNexus local code graph for architecture and impact analysis |
 | Delivery | Node 22, `mise`, multi-stage Docker, GitHub Actions, GitHub Pages |
 
 More detail is available in [the architecture note](docs/architecture.md) and
@@ -137,6 +139,8 @@ More detail is available in [the architecture note](docs/architecture.md) and
 - Telemetry records page paths, query length rather than query text, and captured application errors.
 - A React error boundary, provider status strip, and `/api/health` expose client and runtime health.
 - CI and Docker smoke tests verify health, search behavior, static delivery, and graceful shutdown.
+- Bundled DM Sans and Newsreader files ship with their required [OFL 1.1 notices](apps/frontend/public/THIRD_PARTY_NOTICES.txt).
+- GitNexus is optional local-only tooling under PolyForm Noncommercial 1.0.0; it is fetched on demand and excluded from application dependencies, Docker, and runtime delivery.
 
 This is review-grade observability, not a claim of a staffed production monitoring
 service. A production rollout would add alerting, server traces, rate limiting, and
@@ -182,6 +186,8 @@ date-stamped evidence lives in [the control checklist](docs/control-checklist.md
 | `mise exec -- pnpm test:e2e` | Run desktop and mobile Playwright journeys. |
 | `mise exec -- pnpm build:static-demo` | Build the fixture-only browser demo. |
 | `mise exec -- pnpm generate:api` | Regenerate OpenAPI and the Orval client. |
+| `mise exec -- pnpm gitnexus:analyze` | Build or refresh the ignored local GitNexus index. |
+| `mise exec -- pnpm gitnexus:status` | Show whether the code graph matches the checkout. |
 
 The repository pins Node `22.22.3` and pnpm `10.34.4`. Use `mise exec -- pnpm`
 or `corepack pnpm` instead of an unrelated global pnpm version.
@@ -192,22 +198,28 @@ or `corepack pnpm` instead of an unrelated global pnpm version.
 | --- | --- |
 | Mock | No provider keys, all adapters return local fixtures. |
 | Mixed | Configured sources are live, remaining sources use fixtures. |
-| Live | All three adapters call their upstream APIs from Hono. |
+| Live | All three credentials are present, so the adapters attempt their upstream APIs from Hono. |
 | Static demo | The browser uses fixtures without a server or API requests. |
 
-Copy [`.env.example`](.env.example) to `.env` only when configuration is needed.
-Server secrets use `NEWS_API_KEY`, `GUARDIAN_API_KEY`, and `NYT_API_KEY`.
+Docker Compose reads an ignored `.env` copied from [`.env.example`](.env.example).
+For `mise run local`, export `NEWS_API_KEY`, `GUARDIAN_API_KEY`, and `NYT_API_KEY`
+in the shell before starting the stack. Vite environment files do not inject these
+server secrets into the Hono process. Never commit real values.
+
 Public PostHog settings use `VITE_PUBLIC_POSTHOG_KEY` and
 `VITE_PUBLIC_POSTHOG_HOST`. Set `MOCK_FAIL_PROVIDER` to demonstrate partial
-failure without changing code.
+failure without changing code. The dated checklist does not claim a three-provider
+live smoke because no real provider credentials were used for that verification.
 
 ## Deliberate trade-offs
 
 - Preferences remain local because account sync and authentication are outside the brief.
 - The static demo is fixture-only; live providers require the Hono runtime.
+- NewsAPI `/everything` exposes no category field, so precise category behavior for that
+  live adapter needs a classification or endpoint strategy before production use.
 - Provider quotas and permitted use must be reviewed before production deployment.
 - Pagination and cross-publisher deduplication remain natural data-layer extensions.
 
 The durable, anonymized requirements are preserved in
-[the case study brief](docs/case-study-brief.md). Identifying source documents are
-intentionally not tracked.
+[the case study brief](docs/case-study-brief.md). The original identifying case-study
+PDF is intentionally not tracked.

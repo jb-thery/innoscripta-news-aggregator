@@ -4,6 +4,7 @@ Signal Desk is a React and TypeScript news aggregator case study. It combines no
 
 ## Useful links
 
-- [Application](/)
-- [OpenAPI documentation](/docs)
-- [OpenAPI contract](/openapi.json)
+- [Application](./)
+- [Source repository](https://github.com/jb-thery/signal-desk)
+- OpenAPI UI: `/docs` in the local or Docker Hono runtime only.
+- OpenAPI contract: `/openapi.json` in the local or Docker Hono runtime only.

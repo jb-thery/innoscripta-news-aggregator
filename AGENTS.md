@@ -7,7 +7,7 @@ Ces regles s'appliquent au depot Git Signal Desk.
 - Construire et maintenir un agregateur de news React + TypeScript livre avec son BFF.
 - Ne pas commit, push ou creer de remote sans demande explicite.
 - Le brief anonymise est la source produit autoritaire: `docs/case-study-brief.md`.
-- Ne pas reintegrer de nom d'entreprise, de document source identifiant ou de marque d'evaluateur dans le depot.
+- Ne pas reintegrer le PDF original, le nom d'entreprise ou la marque d'evaluateur dans le depot.
 - Le texte PAC est un contexte conserve: `source-materials/portail-academique-screen-map.md`. Ne pas en faire une exigence produit de l'agregateur de news sans instruction explicite.
 
 ## Communication et fichiers
@@ -22,7 +22,7 @@ Ces regles s'appliquent au depot Git Signal Desk.
 ## Securite
 
 - Ne jamais commiter de secret, de cle API, de token ou de fichier `.env`.
-- Garder les vrais secrets dans `.env.local`, un secret manager ou les variables Docker/CI.
+- Garder les vrais secrets dans un `.env` ignore pour Docker, des variables exportees pour le runtime local, un secret manager ou les variables CI.
 - `.env.example` doit contenir uniquement des noms de variables et des valeurs factices non sensibles.
 - Les cles NewsAPI, Guardian et NYT ne doivent pas etre exposees dans le bundle navigateur.
 - Si une API exige une cle secrete, passer par un proxy local, un serveur minimal, une route backend ou un mode mock documente.
@@ -42,6 +42,7 @@ Ces regles s'appliquent au depot Git Signal Desk.
 - BFF: Hono contract-first dans `apps/backend`, OpenAPI partage et client Orval genere dans `apps/frontend`.
 - Runtime: un container Node sert la SPA et `/api` sur le port 3000.
 - Configuration frontend: Vite charge les variables publiques `VITE_*` depuis la racine du monorepo; Docker les recoit au build, les secrets fournisseurs restent au runtime.
+- Intelligence de code: GitNexus 1.6.9 est execute a la demande pour construire un graphe local ignore, sans entrer dans les dependances ou l'image de l'application.
 
 ## Commandes de reference
 
@@ -59,10 +60,18 @@ Ces regles s'appliquent au depot Git Signal Desk.
 - `mise run stop`: arret et suppression de la stack Docker locale.
 - `mise run verify`: Biome, TypeScript, couverture et build de production.
 - `mise run docker:verify`: build, smoke `/api/health` et `/api/search`, puis arret propre.
+- `pnpm gitnexus:analyze`: construire ou actualiser l'index GitNexus local sans injecter de fichiers de contexte.
+- `pnpm gitnexus:status`: verifier l'etat de l'index GitNexus pour le checkout courant.
 
-## JCode skills disponibles
+## GitNexus
 
-Les skills du repo `jcode-agent-skills` sont installees localement et peuvent etre utilisees dans ce dossier quand elles correspondent a la tache:
+- Garder `.gitnexus/` ignore: l'index est local, volumineux et entierement regenerable.
+- Actualiser l'index avant une exploration d'architecture ou une analyse d'impact non triviale.
+- Utiliser l'integration MCP du projet dans `.codex/config.toml`; ne pas lancer `gitnexus setup`, qui modifierait la configuration globale de la machine.
+
+## Skills maintenues par Jean-Baptiste Thery
+
+Les skills privees maintenues par Jean-Baptiste Thery sont installees localement et peuvent etre utilisees dans ce dossier quand elles correspondent a la tache:
 
 - `docs-cartographer`: synchroniser README, docs et consignes agent avec l'etat reel du dossier.
 - `dependency-tune-up`: auditer ou mettre a jour les dependances JavaScript/TypeScript.

@@ -30,6 +30,17 @@ Les routes et schémas Hono produisent `openapi.json`. Orval génère ensuite le
 fonctions fetch et hooks TanStack Query du frontend. La CI régénère ce client et refuse
 toute dérive non suivie.
 
+## Routes principales
+
+| Route | Responsabilité |
+| --- | --- |
+| `/` | Recherche, filtres URL et résultats normalisés |
+| `/feed` | Préférences et flux personnalisé |
+| `/api/health` | Santé du runtime et mode de configuration `mock`, `mixed` ou `live` |
+| `/api/search` | Recherche agrégée et statut réel de chaque fournisseur |
+| `/docs` et `/openapi.json` | Swagger UI et contrat OpenAPI du runtime Hono |
+| `/ingest/*` | Proxy PostHog optionnel et same-origin |
+
 ## État et personnalisation
 
 - Les recherches et filtres restent dans l'URL pour être partageables.
@@ -55,10 +66,11 @@ applications et copie uniquement leurs bundles dans une image Node non-root.
 - Les valeurs publiques `VITE_*` sont chargées depuis la racine du monorepo.
 - Compose transmet les valeurs PostHog publiques au build Docker, sans y inclure les
   secrets fournisseurs.
-- Le BFF ajoute les en-têtes de sécurité, expose `/api/health` et maintient un statut
-  par source.
-- PostHog reste optionnel et chargé dynamiquement après hydratation. L'error boundary et les smokes CI/Docker complètent la preuve
-  de santé sans prétendre remplacer un dispositif de production.
+- Le BFF ajoute les en-têtes de sécurité. `/api/health` décrit la configuration et
+  `/api/search` fournit le statut réel de chaque source interrogée.
+- PostHog reste optionnel et chargé dynamiquement après le montage client. L'error
+  boundary et les smokes CI/Docker complètent la preuve de santé sans prétendre
+  remplacer un dispositif de production.
 
 ## Validation
 

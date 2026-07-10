@@ -9,3 +9,7 @@ args = [
   "rgr",
   "serve-mcp",
 ]
+
+[mcp_servers.gitnexus]
+command = "mise"
+args = ["exec", "--", "pnpm", "run", "gitnexus", "mcp"]

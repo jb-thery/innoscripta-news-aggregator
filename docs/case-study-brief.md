@@ -1,6 +1,8 @@
 # Case Study Brief
 
-Ce document est la synthese anonymisee du brief original. Les documents source identifiants ne sont volontairement pas suivis dans le depot.
+Ce document est la synthese anonymisee du brief original. Le PDF original identifiant de
+l'etude de cas n'est volontairement pas suivi dans le depot. Le contexte PAC conserve
+separement sous `source-materials/` ne constitue pas une exigence de cet agregateur.
 
 Date de verification locale: 9 juillet 2026.
 

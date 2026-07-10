@@ -4,7 +4,7 @@ Vérification locale du 10 juillet 2026.
 
 ## Source et cadrage
 
-- [x] Les documents source identifiants de l'étude de cas ne sont pas suivis dans le dépôt.
+- [x] Le PDF original identifiant de l'étude de cas n'est pas suivi dans le dépôt.
 - [x] Les exigences durables sont conservées dans `docs/case-study-brief.md`.
 - [x] La méthodologie IA du README est présentée comme un différenciateur professionnel, pas comme une exigence inventée du brief.
 - [x] `PLAN.md` reste ignoré et non suivi par Git.
@@ -17,7 +17,7 @@ Vérification locale du 10 juillet 2026.
 - [x] Flux personnalisé visible et persistant après rechargement.
 - [x] Validation accessible des doublons d'auteur, traduite en anglais et allemand.
 - [x] États chargement, vide, erreur et succès partiel.
-- [x] Liens vers six articles réellement publiés, sans destination `/mock/` en 404.
+- [x] Six destinations éditeur HTTPS dans les fixtures, sans URL `/mock/`; les tests vérifient les liens sans garantir la disponibilité externe permanente.
 - [x] Interface anglais/allemand et thèmes clair/sombre.
 
 ## Sources de données
@@ -27,6 +27,7 @@ Vérification locale du 10 juillet 2026.
 - [x] New York Times intégré avec fallback mock explicite.
 - [x] Chaque fournisseur est normalisé vers le schéma `Article`.
 - [x] Une indisponibilité fournisseur conserve les autres résultats.
+- [ ] Smoke live simultané des trois fournisseurs avec de vraies clés, non exécuté faute d'identifiants locaux.
 
 ## Sécurité et configuration
 
@@ -36,9 +37,10 @@ Vérification locale du 10 juillet 2026.
 - [x] Vite charge les valeurs publiques `VITE_*` depuis la racine du monorepo.
 - [x] Compose transmet uniquement les valeurs PostHog publiques comme arguments de build.
 - [x] Le serveur applique CSP et les en-têtes de sécurité documentés.
-- [x] `pnpm audit --audit-level low` ne remonte aucune vulnérabilité connue.
+- [x] `pnpm audit --audit-level low` ne remonte aucune vulnérabilité connue dans les dépendances applicatives verrouillées.
 - [x] PostHog reste désactivé et hors du chemin initial sans configuration, et ne capture pas le texte recherché.
 - [x] Le conteneur s'exécute avec l'utilisateur non-root `node`.
+- [x] Les polices DM Sans et Newsreader sont distribuées avec leurs avis OFL 1.1 dans le build public.
 
 ## UI et accessibilité
 
@@ -62,7 +64,8 @@ Vérification locale du 10 juillet 2026.
 - [x] Vitest sépare les suites Node et jsdom.
 - [x] `preview` et `preview:static` construisent leurs artefacts avant démarrage.
 - [x] Node `22.22.3` et pnpm `10.34.4` sont épinglés.
-- [x] Les configurations partagées `.zed` et `.codex` sont suivies, sans secret, avec Ragmir épinglé et exécutable.
+- [x] Les configurations partagées `.zed` et `.codex` sont suivies, sans secret, avec Ragmir et GitNexus épinglés et exécutables.
+- [x] GitNexus reste un outil local à la demande, exclu des dépendances, du contexte Docker et du runtime applicatif.
 
 ## Qualité et validation
 
@@ -84,9 +87,6 @@ Vérification locale du 10 juillet 2026.
 - [x] README public recentré sur la candidature et la méthodologie IA responsable.
 - [x] Stack, observabilité, CI, sécurité, règles d'ingénierie et commandes principales documentées.
 - [x] `docs/architecture.md` remplace l'ancien document nommé comme un plan.
+- [x] Captures desktop et mobile régénérées depuis le preview de production avec les fixtures actuelles.
 - [x] Les chiffres de validation détaillés ne sont conservés que dans cette checklist datée.
 - [x] Le workflow Pages attend une CI `main` réussie avant déploiement.
-- [x] La branche `feature/architecture-improvements` est volontairement conservée.
-- [x] Les changements sont regroupés en commits locaux signés sur la branche de travail.
-- [x] Aucun push n'est effectué sans autorisation explicite.
-- [ ] La CI distante de ces commits sera disponible après un prochain push autorisé.

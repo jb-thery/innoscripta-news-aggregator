@@ -35,6 +35,9 @@
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
+    "gitnexus": "pnpm --allow-build=@ladybugdb/core --allow-build=gitnexus --allow-build=tree-sitter --allow-build=tree-sitter-javascript --allow-build=tree-sitter-typescript dlx gitnexus@1.6.9",
+    "gitnexus:analyze": "pnpm run gitnexus analyze --index-only",
+    "gitnexus:status": "pnpm run gitnexus status",
     "prepare": "husky"
   },
   "devDependencies": {
