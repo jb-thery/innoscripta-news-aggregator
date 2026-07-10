@@ -30,6 +30,7 @@ yarn-error.log*
 .idea/
 .vscode/
 .codex/
+PLAN.md
 
 # Ragmir
 .ragmir/
