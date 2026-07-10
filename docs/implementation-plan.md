@@ -42,6 +42,9 @@ pnpm test:coverage
 pnpm test:e2e
 pnpm build
 pnpm build:static-demo
+mise run local
+mise run docker
+mise run stop
 mise run docker:verify
 docker build -t innoscripta-news-aggregator .
 docker run --rm -p 3000:3000 innoscripta-news-aggregator
