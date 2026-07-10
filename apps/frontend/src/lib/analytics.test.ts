@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 vi.mock("posthog-js", () => ({
   default: {
+    init: vi.fn(),
     capture: vi.fn(),
     captureException: vi.fn(),
   },
@@ -24,7 +25,7 @@ describe("analytics client", () => {
     vi.stubEnv("VITE_PUBLIC_POSTHOG_HOST", "")
     const { safeCapture } = await import("./analytics")
 
-    safeCapture("news_search")
+    await safeCapture("news_search")
 
     expect(posthog.capture).not.toHaveBeenCalled()
   })
@@ -34,8 +35,12 @@ describe("analytics client", () => {
     vi.stubEnv("VITE_PUBLIC_POSTHOG_HOST", API_PATHS.analytics)
     const { safeCapture } = await import("./analytics")
 
-    safeCapture("news_search", { query_length: 4 })
+    await safeCapture("news_search", { query_length: 4 })
 
+    expect(posthog.init).toHaveBeenCalledWith(
+      "test-key",
+      expect.objectContaining({ api_host: "/ingest" }),
+    )
     expect(posthog.capture).toHaveBeenCalledWith("news_search", { query_length: 4 })
   })
 
@@ -44,7 +49,7 @@ describe("analytics client", () => {
     vi.stubEnv("VITE_PUBLIC_POSTHOG_HOST", "")
     const { reportError } = await import("./analytics")
 
-    reportError(new Error("render failed"))
+    await reportError(new Error("render failed"))
 
     expect(posthog.captureException).not.toHaveBeenCalled()
   })
@@ -55,7 +60,7 @@ describe("analytics client", () => {
     const { reportError } = await import("./analytics")
     const error = new Error("render failed")
 
-    reportError(error)
+    await reportError(error)
 
     expect(posthog.captureException).toHaveBeenCalledWith(error)
   })
