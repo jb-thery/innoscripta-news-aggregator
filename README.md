@@ -22,7 +22,7 @@ trade-offs, security, testing, maintainability, and the final merge decision.
 | Tool | Role in my workflow |
 | --- | --- |
 | Personal engineering skills | My private, self-maintained repository of reusable engineering workflows. I refine it as I learn from real delivery work. |
-| Ragmir | My local-first retrieval library. I use it to analyze confidential source material locally and derive anonymized, traceable specifications without publishing the original brief. |
+| [Ragmir](https://ragmir.com) | My open-source, local-first RAG library ([jcode-works/jcode-ragmir](https://github.com/jcode-works/jcode-ragmir)). I use it to analyze confidential source material locally and derive anonymized, traceable specifications without publishing the original brief. |
 | GitNexus | Builds a local code graph for architecture discovery, dependency tracing, and impact analysis before non-trivial changes. |
 | Codex and Claude Code | Generate and refactor scoped implementations and test scaffolding from explicit constraints. |
 | Agent Browser and Chrome DevTools MCP | Validate rendered behavior through the DOM, console, network, storage, accessibility tree, and responsive viewports. |
