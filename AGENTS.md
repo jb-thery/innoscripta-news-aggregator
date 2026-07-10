@@ -63,6 +63,13 @@ Ces regles s'appliquent au depot Git Signal Desk.
 - `pnpm gitnexus:analyze`: construire ou actualiser l'index GitNexus local sans injecter de fichiers de contexte.
 - `pnpm gitnexus:status`: verifier l'etat de l'index GitNexus pour le checkout courant.
 
+## Releases
+
+- Semantic-release s'execute en dernier job de la CI, uniquement sur push `main` ou `develop`.
+- `develop` publie une pre-release de staging, `main` une release de production (git flow).
+- Config dans `package.json` (`release`): commit-analyzer, release-notes-generator et le plugin GitHub, sans publication npm.
+- Ne pas committer de bump de version: les versions vivent dans les tags Git et les GitHub Releases.
+
 ## GitNexus
 
 - Garder `.gitnexus/` ignore: l'index est local, volumineux et entierement regenerable.
