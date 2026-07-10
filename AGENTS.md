@@ -47,10 +47,11 @@ Ces regles s'appliquent au repo Git de l'etude de cas Innoscripta.
 - `pnpm build`: build client et bundle serveur autonome.
 - `pnpm build:pages`: build statique GitHub Pages avec base path et routing hash.
 - `pnpm build:static-demo`: build client autonome avec fixtures locales, sans serveur API.
+- `mise run local`: installation des dependances et lancement Vite 5173 + Hono 3001.
+- `mise run docker`: build et lancement du container sur le port hote 4174.
+- `mise run stop`: arret et suppression de la stack Docker locale.
 - `mise run verify`: Biome, TypeScript, couverture et build de production.
-- `mise run docker:up`: build et demarrage du container jusqu'au healthcheck.
 - `mise run docker:verify`: build, smoke `/api/health` et `/api/search`, puis arret propre.
-- `mise run docker:down`: arret et suppression de la stack de revue locale.
 
 ## JCode skills disponibles
 

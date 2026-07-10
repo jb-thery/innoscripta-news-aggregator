@@ -1,5 +1,17 @@
 [
   {
+    "label": "Stack: local development",
+    "command": "mise run local"
+  },
+  {
+    "label": "Stack: Docker",
+    "command": "mise run docker"
+  },
+  {
+    "label": "Stack: stop Docker",
+    "command": "mise run stop"
+  },
+  {
     "label": "Quality: fast verification",
     "command": "corepack pnpm verify:fast"
   },

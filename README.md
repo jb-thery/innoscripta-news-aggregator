@@ -13,39 +13,48 @@ It uses deterministic fixture data in the browser and requires no API credential
 
 ![Signal Desk search results](docs/screenshots/search-desktop.webp)
 
-## Quick start with Docker
+## Quick start
 
-No API key is required. Without credentials, each provider serves deterministic fixtures
-through the same server contract used in live mode.
-
-```bash
-docker compose up --build --wait
-```
-
-Open [http://localhost:3000](http://localhost:3000). The OpenAPI document and Swagger UI
-are available at [http://localhost:3000/openapi.json](http://localhost:3000/openapi.json)
-and [http://localhost:3000/docs](http://localhost:3000/docs).
-
-```bash
-docker compose down --remove-orphans
-```
-
-The review workflow can also be run through `mise`:
+No API key is required. On the first run, trust the repository configuration and install
+the pinned Node runtime:
 
 ```bash
 mise trust
 mise install
-mise run install
-mise run docker:verify
 ```
 
-`mise run docker:verify` builds the image, waits for its healthcheck, probes health and
-search, then removes only the `signal-desk` Compose stack. Set `APP_PORT=4174` if port
-`3000` is occupied.
+Then choose one of the two primary commands.
+
+Local development with Vite and Hono:
+
+```bash
+mise run local
+```
+
+Open [http://localhost:5173](http://localhost:5173). Dependencies are installed automatically.
+
+Docker review stack:
+
+```bash
+mise run docker
+```
+
+Open [http://localhost:4174](http://localhost:4174). The OpenAPI document and Swagger UI
+are available at [http://localhost:4174/openapi.json](http://localhost:4174/openapi.json)
+and [http://localhost:4174/docs](http://localhost:4174/docs).
+
+Stop the Docker stack with:
+
+```bash
+mise run stop
+```
+
+The legacy names `mise run docker:up` and `mise run docker:down` remain available as aliases.
+Set `PORT`, `VITE_API_PORT`, or `APP_PORT` before a command only when custom ports are needed.
 
 ## Local development
 
-Requirements: Node 22, Corepack, and optionally `mise`.
+Requirements without `mise`: Node 22 and Corepack.
 
 ```bash
 corepack enable
@@ -53,9 +62,10 @@ corepack pnpm install --frozen-lockfile
 corepack pnpm dev
 ```
 
-Vite serves [http://localhost:5173](http://localhost:5173) and proxies same-origin calls
-to Hono on port `3000`. For live providers in local development, export the server
-variables before `pnpm dev`. Docker Compose reads them from an ignored `.env` file.
+Vite serves [http://localhost:5173](http://localhost:5173). With `mise run local`, it proxies
+same-origin calls to Hono on port `3001`; raw `pnpm dev` keeps the server default on port
+`3000`. For live providers, export the server variables before starting the stack. Docker
+Compose reads them from an ignored `.env` file.
 
 ## Product behavior
 
@@ -235,6 +245,11 @@ after each successful promotion to `main`.
 
 | Command | Purpose |
 | --- | --- |
+| `mise run local` | Install dependencies and start Vite plus Hono locally. |
+| `mise run docker` | Build and start the healthy Docker stack on port `4174`. |
+| `mise run stop` | Stop and remove the project Docker stack. |
+| `mise run verify` | Run coverage plus the complete production build. |
+| `mise run docker:verify` | Build, smoke-test, and remove the Docker stack. |
 | `pnpm dev` | Run Vite and Hono in watch mode. |
 | `pnpm check` | Verify Biome formatting, imports, and lint rules. |
 | `pnpm typecheck` | Run strict TypeScript without emitting files. |
@@ -246,8 +261,6 @@ after each successful promotion to `main`.
 | `pnpm build:static-demo` | Build the fixture-only serverless SPA. |
 | `pnpm generate:api` | Regenerate OpenAPI and the Orval client. |
 | `pnpm verify:fast` | Run Biome, TypeScript, and Vitest before push. |
-| `mise run verify` | Run coverage plus the complete production build. |
-| `mise run docker:verify` | Build, smoke-test, and remove the review stack. |
 
 Install Chromium once before a local E2E run if needed:
 
