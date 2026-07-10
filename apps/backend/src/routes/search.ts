@@ -7,6 +7,7 @@ import {
   SearchResponseSchema,
   type SourceStatus,
 } from "@signal-desk/contracts"
+import { dedupeArticles, rankArticles } from "@signal-desk/news-domain"
 import type { ArticleProvider } from "../providers/types"
 
 const searchRoute = createRoute({
@@ -74,10 +75,9 @@ export function registerSearchRoute(app: OpenAPIHono, providers: ArticleProvider
       .filter((provider) => !selectedProviders.has(provider.id))
       .map((provider) => sourceStatus(provider.id, true, "Not selected"))
 
+    const mergedArticles = settled.flatMap((result) => result.articles)
     const payload = SearchResponseSchema.parse({
-      articles: settled
-        .flatMap((result) => result.articles)
-        .sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt)),
+      articles: dedupeArticles(rankArticles(mergedArticles, params)),
       sources: [...settled.map((result) => result.status), ...inactiveStatuses],
     } satisfies SearchResponse)
 

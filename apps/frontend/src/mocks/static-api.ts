@@ -1,5 +1,10 @@
 import { API_PATHS } from "@signal-desk/contracts"
-import { filterArticles, mockArticles } from "@signal-desk/news-domain"
+import {
+  dedupeArticles,
+  filterArticles,
+  mockArticles,
+  rankArticles,
+} from "@signal-desk/news-domain"
 import type { ProviderId, SourceStatus } from "@/api/generated/model"
 
 const PROVIDER_IDS: ProviderId[] = ["newsapi", "guardian", "nytimes"]
@@ -40,12 +45,13 @@ export function createStaticApiResponse(url: string): Response {
     ...getOptionalParam(requestUrl, "author"),
     ...(providers ? { providers } : {}),
   }
-  const articles = filterArticles(
+  const filtered = filterArticles(
     mockArticles
       .filter((article) => selectedProviders.has(article.provider))
       .map((article) => ({ ...article })),
     params,
   )
+  const articles = dedupeArticles(rankArticles(filtered, params))
   const sources: SourceStatus[] = PROVIDER_IDS.map((provider) => ({
     provider,
     ok: true,
