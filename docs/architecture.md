@@ -9,7 +9,7 @@ reste la source produit autoritaire dans `docs/case-study-brief.md`.
 apps/frontend/          SPA React, routes, fonctionnalités et tests navigateur
 apps/backend/           BFF Hono, sécurité, OpenAPI et adaptateurs fournisseurs
 packages/contracts/     Schémas Zod et chemins partagés
-packages/news-domain/   Filtrage, fixtures et ressources de démonstration
+packages/news-domain/   Filtrage, classement, déduplication, fixtures et démonstration
 packages/ui/            Primitives visuelles typées
 ```
 
@@ -24,11 +24,17 @@ expose un script `typecheck`.
 3. Hono interroge les adaptateurs NewsAPI, Guardian et NYT en parallèle.
 4. Chaque adaptateur normalise sa réponse vers le schéma `Article`.
 5. Une erreur fournisseur reste isolée et n'annule pas les autres résultats.
-6. TanStack Query met en cache la réponse et expose les états asynchrones à React.
+6. Les résultats fusionnés sont classés par pertinence puis dédupliqués entre sources.
+7. TanStack Query met en cache la réponse et expose les états asynchrones à React.
 
 Les routes et schémas Hono produisent `openapi.json`. Orval génère ensuite les types,
 fonctions fetch et hooks TanStack Query du frontend. La CI régénère ce client et refuse
 toute dérive non suivie.
+
+Le classement pondère les correspondances par champ (titre, description, métadonnées),
+ajoute un bonus de phrase exacte et de couverture des termes, et n'utilise la récence
+que comme départage. La déduplication rapproche les articles par URL ou titre canonique.
+Ces fonctions pures de `news-domain` s'appliquent au BFF Hono et à la démo statique.
 
 ## Routes principales
 
@@ -79,6 +85,8 @@ applications et copie uniquement leurs bundles dans une image Node non-root.
 - Playwright couvre les parcours React sur profils desktop et mobile.
 - Le typecheck inclut les workspaces, les configurations racine et les specs E2E.
 - GitHub Pages se déclenche uniquement après une CI `main` réussie.
+- Semantic-release publie une pré-release de staging depuis `develop` et une release de
+  production depuis `main`, en dernier job de la CI une fois les gates franchis.
 
 Les résultats datés des contrôles sont conservés dans
 `docs/control-checklist.md`.

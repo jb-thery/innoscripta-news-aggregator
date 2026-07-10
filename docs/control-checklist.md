@@ -12,6 +12,7 @@ Vérification locale du 10 juillet 2026.
 ## Fonctionnel
 
 - [x] Recherche par mot-clé avec debounce, conservation du focus et synchronisation après navigation arrière.
+- [x] Résultats classés par pertinence entre sources, récence en départage, et dédupliqués par URL ou titre canonique.
 - [x] Filtres date, catégorie, source et auteur dans l'URL.
 - [x] Préférences de sources, catégories et auteurs.
 - [x] Flux personnalisé visible et persistant après rechargement.
@@ -70,9 +71,9 @@ Vérification locale du 10 juillet 2026.
 ## Qualité et validation
 
 - [x] `mise run verify`: Biome, TypeScript, couverture et build de production.
-- [x] 43 tests Vitest verts dans 11 fichiers.
+- [x] 53 tests Vitest verts dans 12 fichiers.
 - [x] Seuils de couverture: 80% statements/lines/functions et 65% branches.
-- [x] Couverture logique TypeScript: 85,14% statements, 84,77% lines, 85,36% functions et 66,66% branches.
+- [x] Couverture logique TypeScript: 87,46% statements, 87,09% lines, 87,09% functions et 70,61% branches.
 - [x] `pnpm test:e2e`: 5 parcours sur desktop et mobile Chromium, soit 10 exécutions vertes.
 - [x] `pnpm build:static-demo` et `pnpm build:pages`.
 - [x] `mise run docker:verify`: build, healthcheck, recherche API et nettoyage.
@@ -90,3 +91,4 @@ Vérification locale du 10 juillet 2026.
 - [x] Captures desktop et mobile régénérées depuis le preview de production avec les fixtures actuelles.
 - [x] Les chiffres de validation détaillés ne sont conservés que dans cette checklist datée.
 - [x] Le workflow Pages attend une CI `main` réussie avant déploiement.
+- [x] Semantic-release en dernier job de CI: pré-release staging depuis `develop`, release production depuis `main`, validé en dry-run local.

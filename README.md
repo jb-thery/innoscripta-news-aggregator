@@ -86,6 +86,7 @@ keys are provided, the same build calls the live upstream APIs instead.
 ## Product behavior
 
 - Debounced keyword search with shareable URL filters.
+- Relevance-ranked results merged across sources and de-duplicated, with recency as the tie-breaker.
 - Date, category, provider, and author filtering.
 - Personalized feed by preferred sources, categories, and authors.
 - Browser-local preferences, language, and theme with no account required.
@@ -111,8 +112,10 @@ flowchart LR
 ```
 
 Provider requests run in parallel and isolate failures, so one unavailable source does
-not discard successful results. Hono routes generate the OpenAPI document, Orval
-generates the browser client, and CI rejects generated-client drift.
+not discard successful results. Merged results are ranked by query relevance and
+de-duplicated across sources before display, with recency as the tie-breaker. Hono
+routes generate the OpenAPI document, Orval generates the browser client, and CI rejects
+generated-client drift.
 
 | Concern | Choice |
 | --- | --- |
@@ -124,7 +127,7 @@ generates the browser client, and CI rejects generated-client drift.
 | Accessibility and i18n | Semantic HTML, keyboard focus, reduced motion, English and German |
 | Quality | Biome, TypeScript, Vitest, Playwright, React Doctor, commitlint, Husky |
 | Code intelligence | GitNexus local code graph for architecture and impact analysis |
-| Delivery | Node 22, `mise`, multi-stage Docker, GitHub Actions, GitHub Pages |
+| Delivery | Node 22, `mise`, multi-stage Docker, GitHub Actions, GitHub Pages, semantic-release |
 
 More detail is available in [the architecture note](docs/architecture.md) and
 [the API source note](docs/api-sources.md).
@@ -160,9 +163,11 @@ Local and CI gates cover:
 - production, static-demo, and GitHub Pages builds;
 - non-root Docker build, health/search probes, and clean SIGTERM.
 
-GitHub Actions separates `quality`, `browser`, and `container` jobs. The static
-demo deploys from `main` only after the complete CI workflow succeeds. Exact,
-date-stamped evidence lives in [the control checklist](docs/control-checklist.md).
+GitHub Actions separates `quality`, `browser`, and `container` jobs. Once those gates
+pass on a push, semantic-release publishes a staging pre-release from `develop` and a
+production release from `main`, following the git-flow branches. The static demo deploys
+from `main` only after the complete CI workflow succeeds. Exact, date-stamped evidence
+lives in [the control checklist](docs/control-checklist.md).
 
 ## Engineering rules
 
@@ -218,7 +223,7 @@ live smoke because no real provider credentials were used for that verification.
 - NewsAPI `/everything` exposes no category field, so precise category behavior for that
   live adapter needs a classification or endpoint strategy before production use.
 - Provider quotas and permitted use must be reviewed before production deployment.
-- Pagination and cross-publisher deduplication remain natural data-layer extensions.
+- Pagination remains a natural data-layer extension.
 
 The durable, anonymized requirements are preserved in
 [the case study brief](docs/case-study-brief.md). The original identifying case-study
