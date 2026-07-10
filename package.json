@@ -40,6 +40,29 @@
     "gitnexus:status": "pnpm run gitnexus status",
     "prepare": "husky"
   },
+  "release": {
+    "branches": [
+      {
+        "name": "main"
+      },
+      {
+        "name": "develop",
+        "prerelease": true
+      }
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      [
+        "@semantic-release/github",
+        {
+          "successComment": false,
+          "failComment": false,
+          "releasedLabels": false
+        }
+      ]
+    ]
+  },
   "devDependencies": {
     "@biomejs/biome": "2.5.3",
     "@commitlint/cli": "^21.0.0",

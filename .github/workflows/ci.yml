@@ -117,3 +117,41 @@ jobs:
           docker stop --time 10 signal-desk-ci
           docker rm signal-desk-ci
           trap - EXIT
+
+  # Semantic release runs last, only after every gate passes on a push:
+  # develop publishes a staging pre-release, main publishes a production release.
+  # continue-on-error keeps a release hiccup from blocking the static-demo deploy.
+  release:
+    name: Release
+    needs: [quality, browser, container]
+    if: >-
+      github.event_name == 'push' &&
+      (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    continue-on-error: true
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Set up Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Run semantic-release
+        run: npx --yes semantic-release@24
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
