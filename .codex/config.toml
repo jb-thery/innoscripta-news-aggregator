@@ -1,0 +1,15 @@
+[mcp_servers.ragmir]
+command = "npx"
+args = [
+  "--yes",
+  "--package",
+  "@jcode.labs/ragmir@2.5.0",
+  "--package",
+  "saxen@11.0.2",
+  "rgr",
+  "serve-mcp",
+]
+
+[mcp_servers.gitnexus]
+command = "mise"
+args = ["exec", "--", "pnpm", "run", "gitnexus", "mcp"]

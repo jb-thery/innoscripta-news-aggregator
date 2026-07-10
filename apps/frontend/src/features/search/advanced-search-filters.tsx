@@ -25,7 +25,9 @@ export function AdvancedSearchFilters({
         <span>{translate("filters.from")}</span>
         <Input
           id="filter-from"
+          name="from"
           type="date"
+          autoComplete="off"
           value={value.from ?? ""}
           onChange={(event) => onChange({ from: event.target.value || undefined })}
         />
@@ -35,7 +37,9 @@ export function AdvancedSearchFilters({
         <span>{translate("filters.to")}</span>
         <Input
           id="filter-to"
+          name="to"
           type="date"
+          autoComplete="off"
           value={value.to ?? ""}
           onChange={(event) => onChange({ to: event.target.value || undefined })}
         />
@@ -45,6 +49,7 @@ export function AdvancedSearchFilters({
         <span>{translate("filters.category")}</span>
         <select
           id="filter-category"
+          name="category"
           className="input"
           value={value.category ?? ""}
           onChange={(event) => onChange({ category: event.target.value || undefined })}
@@ -62,8 +67,10 @@ export function AdvancedSearchFilters({
         <span>{translate("filters.author")}</span>
         <Input
           id="filter-author"
+          name="author"
           value={value.author ?? ""}
           onChange={(event) => onChange({ author: event.target.value || undefined })}
+          autoComplete="off"
           placeholder={translate("filters.authorPlaceholder")}
         />
       </label>
@@ -75,6 +82,8 @@ export function AdvancedSearchFilters({
             <label className="check-pill" key={provider.id}>
               <input
                 type="checkbox"
+                name="providers"
+                value={provider.id}
                 checked={selectedProviders.has(provider.id)}
                 onChange={() => onToggleProvider(provider.id)}
               />

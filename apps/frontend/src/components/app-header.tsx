@@ -19,16 +19,16 @@ export function AppHeader() {
   return (
     <header className="site-header">
       <Link className="wordmark" to={APP_PATHS.discover} search={DEFAULT_SEARCH}>
-        <span className="wordmark__mark" aria-hidden="true">
+        <span className="wordmark__mark" aria-hidden="true" translate="no">
           SD
         </span>
         <span>
-          <strong>{t("app.name")}</strong>
+          <strong translate="no">{t("app.name")}</strong>
           <small>{t("app.tagline")}</small>
         </span>
       </Link>
 
-      <nav className="primary-nav" aria-label="Primary navigation">
+      <nav className="primary-nav" aria-label={t("nav.label")}>
         <Link
           className="nav-link"
           activeProps={{ className: "nav-link nav-link--active" }}
@@ -48,7 +48,11 @@ export function AppHeader() {
       </nav>
 
       <div className="header-actions">
-        <Badge tone={mode === "live" ? "success" : "neutral"} className="runtime-badge">
+        <Badge
+          tone={mode === "live" ? "success" : "neutral"}
+          className="runtime-badge"
+          aria-live="polite"
+        >
           <span className="status-dot" aria-hidden="true" />
           {t(`runtime.${mode}`)}
         </Badge>
@@ -63,8 +67,8 @@ export function AppHeader() {
             value={language}
             onChange={(event) => void i18n.changeLanguage(event.target.value)}
           >
-            <option value="en">EN</option>
-            <option value="de">DE</option>
+            <option value="en">{t("language.english")}</option>
+            <option value="de">{t("language.german")}</option>
           </select>
         </label>
 

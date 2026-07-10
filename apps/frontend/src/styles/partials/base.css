@@ -41,6 +41,8 @@ a,
 input,
 select {
   outline-offset: 4px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: color-mix(in srgb, var(--electric) 18%, transparent);
 }
 
 :focus-visible {
@@ -66,4 +68,23 @@ a {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 100;
+  top: 0.75rem;
+  left: 0.75rem;
+  padding: 0.65rem 0.9rem;
+  background: var(--ink);
+  color: var(--paper);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-150%);
+}
+
+.skip-link:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
 }

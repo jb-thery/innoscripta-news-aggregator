@@ -30,5 +30,13 @@
   {
     "label": "Docker: verify review stack",
     "command": "mise run docker:verify"
+  },
+  {
+    "label": "Code graph: refresh GitNexus",
+    "command": "mise exec -- pnpm gitnexus:analyze"
+  },
+  {
+    "label": "Code graph: GitNexus status",
+    "command": "mise exec -- pnpm gitnexus:status"
   }
 ]

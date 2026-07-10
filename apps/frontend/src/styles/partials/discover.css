@@ -32,6 +32,7 @@
   font-weight: 470;
   letter-spacing: -0.065em;
   line-height: 0.82;
+  text-wrap: balance;
 }
 
 .hero-copy > p:last-child,
@@ -143,6 +144,10 @@
   font-size: clamp(1.45rem, 3vw, 2.3rem);
 }
 
+.search-field:focus-within {
+  border-bottom-color: var(--electric);
+}
+
 .search-field__hint {
   color: var(--ink-muted);
   font-size: 0.7rem;
@@ -168,25 +173,9 @@
 .filter-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  max-height: 0;
-  padding: 0 1rem;
-  border-top: 1px solid transparent;
-  gap: 1rem;
-  opacity: 0;
-  overflow: hidden;
-  pointer-events: none;
-  transition:
-    max-height 260ms ease,
-    opacity 180ms ease,
-    padding 260ms ease;
-}
-
-.filter-grid--open {
-  max-height: 420px;
   padding: 1.2rem 1rem 1.4rem;
-  border-color: var(--line);
-  opacity: 1;
-  pointer-events: auto;
+  border-top: 1px solid var(--line);
+  gap: 1rem;
 }
 
 .field-label,
@@ -243,6 +232,11 @@
   border-color: var(--ink);
   background: var(--ink);
   color: var(--paper);
+}
+
+.check-pill:hover span {
+  border-color: var(--line-strong);
+  color: var(--ink);
 }
 
 .check-pill input:focus-visible + span {
@@ -335,6 +329,7 @@
 .results-heading span {
   color: var(--ink-muted);
   font-size: 0.82rem;
+  overflow-wrap: anywhere;
 }
 
 .article-grid {

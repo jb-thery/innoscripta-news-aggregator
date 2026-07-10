@@ -3,10 +3,31 @@ import { defineConfig } from "vitest/config"
 
 export default defineConfig({
   test: {
-    environment: "jsdom",
     globals: true,
-    setupFiles: ["./apps/frontend/src/test/setup.ts"],
     exclude: ["apps/frontend/e2e/**", "**/node_modules/**", "**/dist/**"],
+    projects: [
+      {
+        extends: true,
+        test: {
+          name: "node",
+          environment: "node",
+          include: [
+            "apps/backend/src/**/*.test.ts",
+            "packages/contracts/src/**/*.test.ts",
+            "packages/news-domain/src/**/*.test.ts",
+          ],
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: "browser",
+          environment: "jsdom",
+          include: ["apps/frontend/src/**/*.test.{ts,tsx}", "packages/ui/src/**/*.test.{ts,tsx}"],
+          setupFiles: ["./apps/frontend/src/test/setup.ts"],
+        },
+      },
+    ],
     coverage: {
       include: [
         "apps/backend/src/**/*.ts",
@@ -17,6 +38,7 @@ export default defineConfig({
       ],
       exclude: [
         "**/*.test.ts",
+        "**/*.tsx",
         "**/src/index.ts",
         "apps/backend/src/index.ts",
         "apps/backend/src/openapi.ts",

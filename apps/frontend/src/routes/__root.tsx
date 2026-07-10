@@ -1,6 +1,7 @@
 import type { QueryClient } from "@tanstack/react-query"
 import { createRootRouteWithContext, Outlet, useRouterState } from "@tanstack/react-router"
 import { lazy, Suspense, useEffect } from "react"
+import { useTranslation } from "react-i18next"
 import { AppShell } from "@/components/app-shell"
 import { safeCapture } from "@/lib/analytics"
 
@@ -18,18 +19,26 @@ const DevelopmentTools = import.meta.env.DEV
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: RootComponent,
-  notFoundComponent: () => (
-    <div className="state-panel">
-      <h1>Page not found</h1>
-    </div>
-  ),
+  notFoundComponent: NotFoundPage,
 })
+
+function NotFoundPage() {
+  const { t } = useTranslation()
+
+  return (
+    <div className="state-panel">
+      <h1>{t("states.notFound")}</h1>
+    </div>
+  )
+}
 
 function RootComponent() {
   const pathname = useRouterState({ select: (state) => state.location.pathname })
 
   useEffect(() => {
-    safeCapture("$pageview", { $current_url: new URL(pathname, window.location.origin).toString() })
+    void safeCapture("$pageview", {
+      $current_url: new URL(pathname, window.location.origin).toString(),
+    })
   }, [pathname])
 
   return (

@@ -4,17 +4,19 @@
     "tagline": "Drei Quellen. Ein bewusster Feed."
   },
   "nav": {
+    "label": "Hauptnavigation",
     "discover": "Entdecken",
     "feed": "Mein Feed"
   },
   "hero": {
     "eyebrow": "Unabhängige Quellenübersicht",
     "title": "Durch den Lärm lesen.",
-    "subtitle": "Durchsuche vertrauenswürdige Medien gemeinsam, vergleiche ihre Berichte und behalte die Signale, die für dich zählen."
+    "subtitle": "Durchsuche vertrauenswürdige Medien gemeinsam, vergleiche ihre Berichte und behalte die Signale, die für dich zählen.",
+    "sourcesSummary": "Quellen / eine Ansicht"
   },
   "search": {
     "label": "Artikel suchen",
-    "placeholder": "Zum Beispiel KI, Klima, Fintech...",
+    "placeholder": "Zum Beispiel KI, Klima, Fintech…",
     "hint": "Ergebnisse aktualisieren sich beim Tippen",
     "results_one": "{{count}} Artikel",
     "results_other": "{{count}} Artikel",
@@ -30,7 +32,7 @@
     "allCategories": "Alle Kategorien",
     "sources": "Quellen",
     "author": "Autor enthält",
-    "authorPlaceholder": "Name des Autors",
+    "authorPlaceholder": "Name des Autors…",
     "clear": "Filter zurücksetzen"
   },
   "categories": {
@@ -49,7 +51,7 @@
     "partial": "Einige Quellen sind nicht verfügbar. Die übrigen Ergebnisse bleiben aktuell."
   },
   "states": {
-    "loadingTitle": "Nachrichten werden geprüft",
+    "loadingTitle": "Nachrichten werden geprüft…",
     "loadingBody": "Die Redaktion sammelt und vereinheitlicht Berichte aus drei Quellen.",
     "emptyTitle": "Noch kein Signal",
     "emptyBody": "Versuche einen allgemeineren Suchbegriff oder entferne einen Filter.",
@@ -57,7 +59,10 @@
     "startBody": "Gib ein Stichwort ein, um alle verbundenen Medien zu durchsuchen.",
     "errorTitle": "Die Redaktion konnte nicht aktualisieren",
     "errorBody": "Prüfe den lokalen Server und versuche es erneut.",
-    "retry": "Erneut versuchen"
+    "retry": "Erneut versuchen",
+    "notFound": "Seite nicht gefunden",
+    "fatalError": "Signal Desk konnte diese Ansicht nicht anzeigen.",
+    "reload": "Anwendung neu laden"
   },
   "article": {
     "readOriginal": "Original lesen",
@@ -71,14 +76,16 @@
     "sources": "Bevorzugte Quellen",
     "categories": "Bevorzugte Kategorien",
     "authors": "Bevorzugte Autoren",
-    "authorPlaceholder": "Autor hinzufügen",
-    "addAuthor": "Hinzufügen",
+    "authorPlaceholder": "Autor hinzufügen…",
+    "addAuthor": "Autor hinzufügen",
+    "authorDuplicate": "Dieser Autor ist bereits in deinem Feed.",
     "removeAuthor": "{{author}} entfernen",
     "saved": "Lokal gespeichert",
     "emptyTitle": "Dein Briefing braucht eine Präferenz",
     "emptyBody": "Wähle mindestens eine Quelle oder ein Thema oder füge einen Autor hinzu.",
     "matching_one": "{{count}} Beitrag passt zu deinem Briefing",
-    "matching_other": "{{count}} Beiträge passen zu deinem Briefing"
+    "matching_other": "{{count}} Beiträge passen zu deinem Briefing",
+    "signalCount": "kuratierte Signale"
   },
   "theme": {
     "light": "Helles Design verwenden",
@@ -94,6 +101,9 @@
     "live": "Live-Quellen",
     "mixed": "Gemischte Quellen",
     "unknown": "Modus wird geprüft"
+  },
+  "accessibility": {
+    "skipToContent": "Zum Inhalt springen"
   },
   "footer": {
     "note": "Eine Contract-First React-Fallstudie für transparente und robuste Nachrichtensuche.",

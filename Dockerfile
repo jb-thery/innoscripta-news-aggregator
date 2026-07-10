@@ -1,4 +1,4 @@
-FROM node:22-slim AS builder
+FROM node:22.22.3-slim AS builder
 
 WORKDIR /app
 ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
@@ -13,9 +13,13 @@ COPY packages/ui/package.json packages/ui/package.json
 RUN pnpm install --frozen-lockfile
 
 COPY . .
-RUN pnpm build
+ARG VITE_PUBLIC_POSTHOG_KEY=""
+ARG VITE_PUBLIC_POSTHOG_HOST="/ingest"
+RUN VITE_PUBLIC_POSTHOG_KEY="$VITE_PUBLIC_POSTHOG_KEY" \
+  VITE_PUBLIC_POSTHOG_HOST="$VITE_PUBLIC_POSTHOG_HOST" \
+  pnpm build
 
-FROM node:22-slim AS runner
+FROM node:22.22.3-slim AS runner
 
 WORKDIR /app
 ENV NODE_ENV=production \
