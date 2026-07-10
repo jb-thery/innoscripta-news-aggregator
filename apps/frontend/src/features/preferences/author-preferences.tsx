@@ -11,6 +11,7 @@ interface AuthorPreferencesProps {
 export function AuthorPreferences({ authors, onChange }: AuthorPreferencesProps) {
   const { t } = useTranslation()
   const [author, setAuthor] = useState("")
+  const [hasDuplicateError, setHasDuplicateError] = useState(false)
 
   const addAuthor = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -19,12 +20,17 @@ export function AuthorPreferences({ authors, onChange }: AuthorPreferencesProps)
       (savedAuthor) => savedAuthor.toLowerCase() === normalizedAuthor.toLowerCase(),
     )
 
-    if (!normalizedAuthor || alreadySaved) {
+    if (!normalizedAuthor) {
+      return
+    }
+    if (alreadySaved) {
+      setHasDuplicateError(true)
       return
     }
 
     onChange([...authors, normalizedAuthor])
     setAuthor("")
+    setHasDuplicateError(false)
   }
 
   return (
@@ -38,14 +44,26 @@ export function AuthorPreferences({ authors, onChange }: AuthorPreferencesProps)
           id="preference-author"
           name="preferred-author"
           value={author}
-          onChange={(event) => setAuthor(event.target.value)}
+          onChange={(event) => {
+            setAuthor(event.target.value)
+            setHasDuplicateError(false)
+          }}
           placeholder={t("preferences.authorPlaceholder")}
+          autoComplete="off"
+          aria-describedby={hasDuplicateError ? "preference-author-error" : undefined}
+          aria-invalid={hasDuplicateError}
+          required
         />
         <Button type="submit" size="small">
           <Plus size={16} aria-hidden="true" />
           {t("preferences.addAuthor")}
         </Button>
       </form>
+      {hasDuplicateError ? (
+        <p className="field-error" id="preference-author-error" role="status">
+          {t("preferences.authorDuplicate")}
+        </p>
+      ) : null}
       {authors.length > 0 ? (
         <div className="author-list">
           {authors.map((savedAuthor) => (

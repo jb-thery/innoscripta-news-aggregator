@@ -4,17 +4,19 @@
     "tagline": "Three sources. One deliberate feed."
   },
   "nav": {
+    "label": "Primary navigation",
     "discover": "Discover",
     "feed": "My feed"
   },
   "hero": {
     "eyebrow": "Independent source intelligence",
     "title": "Read across the noise.",
-    "subtitle": "Search trusted publishers together, compare their coverage and keep the signals that matter to you."
+    "subtitle": "Search trusted publishers together, compare their coverage and keep the signals that matter to you.",
+    "sourcesSummary": "sources / one view"
   },
   "search": {
     "label": "Search articles",
-    "placeholder": "Try AI, climate, fintech...",
+    "placeholder": "Try AI, climate, fintech…",
     "hint": "Results update while you type",
     "results_one": "{{count}} article",
     "results_other": "{{count}} articles",
@@ -30,7 +32,7 @@
     "allCategories": "All categories",
     "sources": "Sources",
     "author": "Author contains",
-    "authorPlaceholder": "Reporter name",
+    "authorPlaceholder": "Reporter name…",
     "clear": "Reset filters"
   },
   "categories": {
@@ -49,7 +51,7 @@
     "partial": "Some sources are unavailable. The rest of your results are still current."
   },
   "states": {
-    "loadingTitle": "Scanning the wires",
+    "loadingTitle": "Scanning the wires…",
     "loadingBody": "The desk is gathering and normalizing coverage from three publishers.",
     "emptyTitle": "No signal yet",
     "emptyBody": "Try a broader keyword or remove one of the filters.",
@@ -57,7 +59,10 @@
     "startBody": "Enter a keyword to search all connected publishers.",
     "errorTitle": "The desk could not refresh",
     "errorBody": "Check the local server and try the request again.",
-    "retry": "Try again"
+    "retry": "Try again",
+    "notFound": "Page not found",
+    "fatalError": "Signal Desk could not render this view.",
+    "reload": "Reload the application"
   },
   "article": {
     "readOriginal": "Read original",
@@ -71,14 +76,16 @@
     "sources": "Preferred sources",
     "categories": "Preferred categories",
     "authors": "Preferred authors",
-    "authorPlaceholder": "Add an author",
-    "addAuthor": "Add",
+    "authorPlaceholder": "Add an author…",
+    "addAuthor": "Add author",
+    "authorDuplicate": "This author is already in your feed.",
     "removeAuthor": "Remove {{author}}",
     "saved": "Saved locally",
     "emptyTitle": "Your briefing needs a preference",
     "emptyBody": "Select at least one source or topic, or add an author to shape this feed.",
     "matching_one": "{{count}} story matches your briefing",
-    "matching_other": "{{count}} stories match your briefing"
+    "matching_other": "{{count}} stories match your briefing",
+    "signalCount": "curated signals"
   },
   "theme": {
     "light": "Use light theme",
@@ -94,6 +101,9 @@
     "live": "Live sources",
     "mixed": "Mixed sources",
     "unknown": "Checking mode"
+  },
+  "accessibility": {
+    "skipToContent": "Skip to content"
   },
   "footer": {
     "note": "A contract-first React case study built for transparent, resilient news discovery.",

@@ -46,6 +46,11 @@
   cursor: pointer;
 }
 
+.fatal-error button:hover {
+  background: transparent;
+  color: var(--ink);
+}
+
 @keyframes card-in {
   from {
     opacity: 0;

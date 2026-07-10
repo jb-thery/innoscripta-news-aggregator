@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router"
+import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useSearchArticles } from "@/api/generated/news"
 import { ArticleGrid } from "@/components/article-grid"
@@ -14,7 +15,7 @@ export const Route = createFileRoute("/feed")({
 })
 
 function PersonalizedFeedPage() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { preferences } = usePreferences()
   const isConfigured = hasPreferences(preferences)
   const result = useSearchArticles(
@@ -26,6 +27,14 @@ function PersonalizedFeedPage() {
     },
   )
   const articles = result.data ? applyPreferences(result.data.articles, preferences) : []
+  const articleCount = useMemo(
+    () =>
+      new Intl.NumberFormat(i18n.resolvedLanguage ?? i18n.language, {
+        minimumIntegerDigits: 2,
+        useGrouping: false,
+      }).format(articles.length),
+    [articles.length, i18n.language, i18n.resolvedLanguage],
+  )
 
   return (
     <div className="feed-page">
@@ -36,8 +45,8 @@ function PersonalizedFeedPage() {
           <p>{t("preferences.subtitle")}</p>
         </div>
         <div className="feed-header__index" aria-hidden="true">
-          <strong>{String(articles.length).padStart(2, "0")}</strong>
-          <span>curated signals</span>
+          <strong>{articleCount}</strong>
+          <span>{t("preferences.signalCount")}</span>
         </div>
       </header>
 

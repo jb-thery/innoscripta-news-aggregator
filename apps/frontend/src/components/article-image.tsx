@@ -32,7 +32,10 @@ export function ArticleImage({ imageUrl, title, provider, eager }: ArticleImageP
       className="article-card__image"
       src={resolvedUrl}
       alt={title}
+      width={1200}
+      height={800}
       loading={eager ? "eager" : "lazy"}
+      fetchPriority={eager ? "high" : "auto"}
       onError={() => setFailedUrl(resolvedUrl)}
     />
   )
