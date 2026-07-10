@@ -3,7 +3,7 @@ command = "npx"
 args = [
   "--yes",
   "--package",
-  "@jcode.labs/ragmir@2.5.0",
+  "@jcode.labs/ragmir@2.7.0",
   "--package",
   "saxen@11.0.2",
   "rgr",
