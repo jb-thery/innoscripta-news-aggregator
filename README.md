@@ -1,6 +1,6 @@
 # Signal Desk
 
-[![CI](https://github.com/jb-thery/innoscripta-news-aggregator/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/jb-thery/innoscripta-news-aggregator/actions/workflows/ci.yml)
+[![CI](https://github.com/jb-thery/signal-desk/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/jb-thery/signal-desk/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 Signal Desk is a responsive news aggregator that searches NewsAPI.org, The Guardian,
@@ -8,44 +8,53 @@ and The New York Times through one normalized and resilient interface. It is a f
 case study focused on React architecture, typed API integration, partial-failure handling,
 testability, security, and reproducible delivery.
 
-[Open the live static demo](https://jb-thery.github.io/innoscripta-news-aggregator/).
+[Open the live static demo](https://jb-thery.github.io/signal-desk/).
 It uses deterministic fixture data in the browser and requires no API credentials.
 
 ![Signal Desk search results](docs/screenshots/search-desktop.webp)
 
-## Quick start with Docker
+## Quick start
 
-No API key is required. Without credentials, each provider serves deterministic fixtures
-through the same server contract used in live mode.
-
-```bash
-docker compose up --build --wait
-```
-
-Open [http://localhost:3000](http://localhost:3000). The OpenAPI document and Swagger UI
-are available at [http://localhost:3000/openapi.json](http://localhost:3000/openapi.json)
-and [http://localhost:3000/docs](http://localhost:3000/docs).
-
-```bash
-docker compose down --remove-orphans
-```
-
-The review workflow can also be run through `mise`:
+No API key is required. On the first run, trust the repository configuration and install
+the pinned Node runtime:
 
 ```bash
 mise trust
 mise install
-mise run install
-mise run docker:verify
 ```
 
-`mise run docker:verify` builds the image, waits for its healthcheck, probes health and
-search, then removes only the `signal-desk` Compose stack. Set `APP_PORT=4174` if port
-`3000` is occupied.
+Then choose one of the two primary commands.
+
+Local development with Vite and Hono:
+
+```bash
+mise run local
+```
+
+Open [http://localhost:5173](http://localhost:5173). Dependencies are installed automatically.
+
+Docker review stack:
+
+```bash
+mise run docker
+```
+
+Open [http://localhost:4174](http://localhost:4174). The OpenAPI document and Swagger UI
+are available at [http://localhost:4174/openapi.json](http://localhost:4174/openapi.json)
+and [http://localhost:4174/docs](http://localhost:4174/docs).
+
+Stop the Docker stack with:
+
+```bash
+mise run stop
+```
+
+The legacy names `mise run docker:up` and `mise run docker:down` remain available as aliases.
+Set `PORT`, `VITE_API_PORT`, or `APP_PORT` before a command only when custom ports are needed.
 
 ## Local development
 
-Requirements: Node 22, Corepack, and optionally `mise`.
+Requirements without `mise`: Node 22 and Corepack.
 
 ```bash
 corepack enable
@@ -53,9 +62,10 @@ corepack pnpm install --frozen-lockfile
 corepack pnpm dev
 ```
 
-Vite serves [http://localhost:5173](http://localhost:5173) and proxies same-origin calls
-to Hono on port `3000`. For live providers in local development, export the server
-variables before `pnpm dev`. Docker Compose reads them from an ignored `.env` file.
+Vite serves [http://localhost:5173](http://localhost:5173). With `mise run local`, it proxies
+same-origin calls to Hono on port `3001`; raw `pnpm dev` keeps the server default on port
+`3000`. For live providers, export the server variables before starting the stack. Docker
+Compose reads them from an ignored `.env` file.
 
 ## Product behavior
 
@@ -69,6 +79,10 @@ variables before `pnpm dev`. Docker Compose reads them from an ignored `.env` fi
 - Live, mixed, mock, and serverless static-demo modes.
 
 ## Architecture and data flow
+
+The codebase is a pnpm monorepo. Applications own deployable runtime code, while reusable
+contracts, domain logic, fixtures, and UI primitives live in workspace packages. Dependencies
+flow from `apps/*` to `packages/*`; packages never import application code.
 
 ```mermaid
 flowchart TB
@@ -93,6 +107,12 @@ flowchart TB
 
   Contract["Orval-generated fetch client and types"]
 
+  subgraph Packages["Reusable workspace packages"]
+    ApiContracts["contracts: schemas and API paths"]
+    NewsDomain["news-domain: filtering and fixtures"]
+    UI["ui: typed visual primitives"]
+  end
+
   subgraph Runtime["Node 22 and Hono BFF"]
     SearchAPI["GET /api/search"]
     HealthAPI["GET /api/health"]
@@ -114,6 +134,10 @@ flowchart TB
   end
 
   Query --> Contract --> SearchAPI
+  Shell --> UI
+  Contract --> ApiContracts
+  SearchAPI --> ApiContracts
+  SearchAPI --> NewsDomain
   Shell --> HealthAPI
   Analytics --> Ingest
   SearchAPI --> NewsAPI
@@ -215,12 +239,12 @@ Current local evidence:
 - 41 Vitest tests across provider normalization, filtering, preferences, analytics,
   API behavior, partial failure, and static responses.
 - Enforced coverage minimums: 80% statements, lines, and functions; 65% branches.
-- Current broad TypeScript logic coverage: 82.29% statements, 81.81% lines, 84.81% functions,
+- Current broad TypeScript logic coverage: 82.59% statements, 82.14% lines, 84.81% functions,
   and 66.48% branches.
 - 6 Playwright scenarios across desktop Chromium and a Pixel 5 viewport.
 - Production SPA, standalone Hono server, and fixture-only static builds.
 - Multi-stage Docker build, non-root runtime, healthcheck, API smoke tests, and clean SIGTERM.
-- Mobile browser check: Accessibility 100, Best Practices 100, and SEO 100.
+- Mobile browser proof: semantic controls, no horizontal overflow, clean console, and healthy API responses.
 
 GitHub Actions separates three jobs:
 
@@ -235,6 +259,11 @@ after each successful promotion to `main`.
 
 | Command | Purpose |
 | --- | --- |
+| `mise run local` | Install dependencies and start Vite plus Hono locally. |
+| `mise run docker` | Build and start the healthy Docker stack on port `4174`. |
+| `mise run stop` | Stop and remove the project Docker stack. |
+| `mise run verify` | Run coverage plus the complete production build. |
+| `mise run docker:verify` | Build, smoke-test, and remove the Docker stack. |
 | `pnpm dev` | Run Vite and Hono in watch mode. |
 | `pnpm check` | Verify Biome formatting, imports, and lint rules. |
 | `pnpm typecheck` | Run strict TypeScript without emitting files. |
@@ -246,8 +275,6 @@ after each successful promotion to `main`.
 | `pnpm build:static-demo` | Build the fixture-only serverless SPA. |
 | `pnpm generate:api` | Regenerate OpenAPI and the Orval client. |
 | `pnpm verify:fast` | Run Biome, TypeScript, and Vitest before push. |
-| `mise run verify` | Run coverage plus the complete production build. |
-| `mise run docker:verify` | Build, smoke-test, and remove the review stack. |
 
 Install Chromium once before a local E2E run if needed:
 
@@ -258,19 +285,14 @@ pnpm exec playwright install chromium
 ## Repository map
 
 ```text
-server/                     Hono assembly, focused routes, middleware, and provider adapters
-shared/                     Typed application, API path, and fixture asset constants
-public/images/              Self-hosted deterministic fixture artwork
-src/api/generated/          Orval-generated models and TanStack Query hooks
-src/components/             Application shell, reusable UI, and render boundary
-src/features/search/        URL-backed search state and filters
-src/features/preferences/   Preference domain, context, persistence, and feed logic
-src/lib/                    Analytics, i18n, query client, and shared metadata
-src/mocks/                  Fixture-only static API implementation
-src/routes/                 TanStack Router route components
-src/styles/                 CSS entry point and responsibility-based partials
-tests/e2e/                  Desktop and mobile Playwright scenarios
-docs/                       Brief, source notes, checklist, and screenshots
+apps/frontend/              React SPA, Vite configuration, public assets, and browser tests
+apps/backend/               Hono API, provider adapters, security middleware, and Node bundle
+packages/contracts/         Zod/OpenAPI schemas and shared application/API paths
+packages/news-domain/       Shared filtering, deterministic fixtures, and fixture assets
+packages/ui/                Reusable typed UI primitives and their CSS contract
+docs/                       Anonymized brief, implementation notes, checklist, and screenshots
+Dockerfile                  Production build for the frontend and backend workspace apps
+pnpm-workspace.yaml         Workspace membership and dependency security policy
 ```
 
 ## Deliberate trade-offs
@@ -282,5 +304,5 @@ docs/                       Brief, source notes, checklist, and screenshots
 - A production rollout should add server-side response caching and request rate limiting.
 - Pagination and cross-publisher deduplication are natural next data-layer improvements.
 
-The original assignment is preserved at
-[`source-materials/cs-frontend-developer-2025.pdf`](source-materials/cs-frontend-developer-2025.pdf).
+The identifying source documents are intentionally not tracked. The durable, anonymized
+requirements are preserved in [`docs/case-study-brief.md`](docs/case-study-brief.md).

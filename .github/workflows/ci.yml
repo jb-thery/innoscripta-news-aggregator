@@ -94,7 +94,7 @@ jobs:
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: Build Docker image
-        run: docker build -t innoscripta-news-aggregator:ci .
+        run: docker build -t signal-desk:ci .
 
       - name: Smoke-test Docker runtime
         run: |
@@ -103,7 +103,7 @@ jobs:
           }
           trap cleanup EXIT
 
-          docker run --detach --name signal-desk-ci --publish 3000:3000 innoscripta-news-aggregator:ci
+          docker run --detach --name signal-desk-ci --publish 3000:3000 signal-desk:ci
 
           for attempt in {1..30}; do
             if curl --fail --silent http://127.0.0.1:3000/api/health >/dev/null; then

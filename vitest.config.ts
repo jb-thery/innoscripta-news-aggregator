@@ -5,18 +5,25 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     globals: true,
-    setupFiles: ["./src/test/setup.ts"],
-    exclude: ["tests/e2e/**", "node_modules/**", "dist/**", "server-dist/**"],
+    setupFiles: ["./apps/frontend/src/test/setup.ts"],
+    exclude: ["apps/frontend/e2e/**", "**/node_modules/**", "**/dist/**"],
     coverage: {
-      include: ["server/**/*.ts", "src/**/*.ts"],
+      include: [
+        "apps/backend/src/**/*.ts",
+        "apps/frontend/src/**/*.ts",
+        "packages/contracts/src/**/*.ts",
+        "packages/news-domain/src/**/*.ts",
+        "packages/ui/src/**/*.ts",
+      ],
       exclude: [
         "**/*.test.ts",
-        "server/index.ts",
-        "server/openapi.ts",
-        "src/api/generated/**",
-        "src/routeTree.gen.ts",
-        "src/test/**",
-        "src/vite-env.d.ts",
+        "**/src/index.ts",
+        "apps/backend/src/index.ts",
+        "apps/backend/src/openapi.ts",
+        "apps/frontend/src/api/generated/**",
+        "apps/frontend/src/routeTree.gen.ts",
+        "apps/frontend/src/test/**",
+        "apps/frontend/src/vite-env.d.ts",
       ],
       reporter: ["text", "html", "json-summary"],
       thresholds: {
@@ -29,9 +36,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url)),
-      "@server": fileURLToPath(new URL("./server", import.meta.url)),
-      "@shared": fileURLToPath(new URL("./shared", import.meta.url)),
+      "@": fileURLToPath(new URL("./apps/frontend/src", import.meta.url)),
     },
   },
 })

@@ -5,7 +5,6 @@ node_modules/
 
 # Builds and caches
 dist/
-server-dist/
 build/
 .vite/
 .cache/
@@ -30,6 +29,7 @@ yarn-error.log*
 .idea/
 .vscode/
 .codex/
+PLAN.md
 
 # Ragmir
 .ragmir/

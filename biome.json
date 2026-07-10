@@ -9,11 +9,10 @@
   "files": {
     "includes": [
       "**",
-      "!src/routeTree.gen.ts",
-      "!src/api/generated",
-      "!openapi.json",
-      "!dist",
-      "!server-dist",
+      "!apps/frontend/src/routeTree.gen.ts",
+      "!apps/frontend/src/api/generated",
+      "!packages/contracts/openapi.json",
+      "!**/dist",
       "!coverage",
       "!playwright-report",
       "!test-results"

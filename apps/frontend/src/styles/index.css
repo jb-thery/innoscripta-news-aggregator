@@ -1,0 +1,12 @@
+@import "tailwindcss";
+@import "@signal-desk/ui/styles.css";
+@import "./partials/tokens.css";
+@import "./partials/base.css";
+@import "./partials/shell.css";
+@import "./partials/discover.css";
+@import "./partials/articles.css";
+@import "./partials/feed.css";
+@import "./partials/footer.css";
+@import "./partials/responsive.css";
+
+@custom-variant dark (&:is(.dark *));

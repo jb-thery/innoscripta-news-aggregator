@@ -6,8 +6,17 @@ description = "Enable Corepack and install the pinned pnpm dependencies"
 run = "corepack enable && pnpm install --frozen-lockfile"
 
 [tasks.local]
-description = "Run the Vite client and Hono server in development mode"
-run = "pnpm dev"
+description = "Start the local development stack (Vite 5173, Hono 3001)"
+depends = ["install"]
+run = '''
+#!/usr/bin/env bash
+set -euo pipefail
+
+export PORT="${PORT:-3001}"
+export VITE_API_PORT="${VITE_API_PORT:-$PORT}"
+
+pnpm dev
+'''
 
 [tasks.check]
 description = "Run Biome formatting and lint checks"
@@ -29,12 +38,22 @@ run = "pnpm build"
 description = "Run the local quality gate"
 run = "pnpm check && pnpm typecheck && pnpm test:coverage && pnpm build"
 
-[tasks."docker:up"]
-description = "Build the local review image and wait until the app is healthy"
-run = "docker compose up --build --wait"
+[tasks.docker]
+alias = "docker:up"
+description = "Start the Docker stack at http://localhost:4174"
+run = '''
+#!/usr/bin/env bash
+set -euo pipefail
 
-[tasks."docker:down"]
-description = "Stop and remove the local review stack"
+export APP_PORT="${APP_PORT:-4174}"
+
+docker compose up --build --wait
+printf 'Signal Desk is running at http://localhost:%s\n' "$APP_PORT"
+'''
+
+[tasks.stop]
+alias = "docker:down"
+description = "Stop and remove the Docker stack"
 run = "docker compose down --remove-orphans"
 
 [tasks."docker:verify"]
@@ -43,7 +62,7 @@ run = '''
 #!/usr/bin/env bash
 set -euo pipefail
 
-app_port="${APP_PORT:-3000}"
+app_port="${APP_PORT:-4174}"
 export APP_PORT="$app_port"
 
 cleanup() {

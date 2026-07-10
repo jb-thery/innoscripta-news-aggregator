@@ -1,5 +1,6 @@
 packages:
-  - "."
+  - "apps/*"
+  - "packages/*"
 
 minimumReleaseAge: 1440
 minimumReleaseAgeExclude:
@@ -10,7 +11,9 @@ minimumReleaseAgeExclude:
 trustPolicy: no-downgrade
 
 overrides:
+  chokidar: 4.0.1
   esbuild: 0.28.1
+  semver: 7.7.3
 
 onlyBuiltDependencies:
   - core-js

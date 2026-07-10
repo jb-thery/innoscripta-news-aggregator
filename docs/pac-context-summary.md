@@ -2,7 +2,7 @@
 
 Source: `source-materials/portail-academique-screen-map.md`.
 
-Ce document resume le texte colle fourni avec la demande. Il est conserve pour contexte, mais il ne fait pas partie du perimetre obligatoire du case study Innoscripta sauf demande explicite.
+Ce document resume le texte colle fourni avec la demande. Il est conserve pour contexte, mais il ne fait pas partie du perimetre obligatoire de l'agregateur de news sauf demande explicite.
 
 ## Modele mental PAC
 

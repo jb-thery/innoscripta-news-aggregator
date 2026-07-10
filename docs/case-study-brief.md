@@ -1,6 +1,6 @@
 # Case Study Brief
 
-Source principale: `source-materials/cs-frontend-developer-2025.pdf`, extrait texte disponible dans `source-materials/cs-frontend-developer-2025.txt`.
+Ce document est la synthese anonymisee du brief original. Les documents source identifiants ne sont volontairement pas suivis dans le depot.
 
 Date de verification locale: 9 juillet 2026.
 
