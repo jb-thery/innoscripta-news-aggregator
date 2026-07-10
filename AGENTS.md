@@ -1,12 +1,13 @@
-# AGENTS.md - Innoscripta Frontend Case Study
+# AGENTS.md - Signal Desk
 
-Ces regles s'appliquent au repo Git de l'etude de cas Innoscripta.
+Ces regles s'appliquent au depot Git Signal Desk.
 
 ## Perimetre
 
-- Construire une application frontend React + TypeScript pour l'etude de cas Innoscripta.
+- Construire et maintenir un agregateur de news React + TypeScript livre avec son BFF.
 - Ne pas commit, push ou creer de remote sans demande explicite.
-- Le brief PDF est la source autoritaire: `source-materials/cs-frontend-developer-2025.pdf`.
+- Le brief anonymise est la source produit autoritaire: `docs/case-study-brief.md`.
+- Ne pas reintegrer de nom d'entreprise, de document source identifiant ou de marque d'evaluateur dans le depot.
 - Le texte PAC est un contexte conserve: `source-materials/portail-academique-screen-map.md`. Ne pas en faire une exigence produit de l'agregateur de news sans instruction explicite.
 
 ## Communication et fichiers
@@ -28,12 +29,16 @@ Ces regles s'appliquent au repo Git de l'etude de cas Innoscripta.
 ## Stack actuelle
 
 - Frontend: React 19 + TypeScript strict + Vite 8.
+- Monorepo: workspace pnpm avec `apps/frontend`, `apps/backend` et packages reutilisables sous `packages/`.
+- Contrats et chemins partages: `packages/contracts`.
+- Filtrage et fixtures partages: `packages/news-domain`.
+- Primitives UI reutilisables: `packages/ui`.
 - Package manager: `pnpm` 10.34.4 via Corepack.
 - Runtime local: Node 22.22.3 et commandes partagees via `mise`.
 - Styling: Tailwind CSS v4 et CSS editorial mobile-first.
 - Etat: URL pour recherche/filtres partageables, `localStorage` pour preferences utilisateur.
 - Donnees: TanStack Query, TanStack Router, schema `Article` Zod et un adaptateur serveur par source.
-- BFF: Hono contract-first, OpenAPI et client Orval genere.
+- BFF: Hono contract-first dans `apps/backend`, OpenAPI partage et client Orval genere dans `apps/frontend`.
 - Runtime: un container Node sert la SPA et `/api` sur le port 3000.
 
 ## Commandes de reference
@@ -72,7 +77,7 @@ Les skills du repo `jcode-agent-skills` sont installees localement et peuvent et
 
 ## Sources de news recommandees
 
-Utiliser au moins trois sources issues du brief:
+Utiliser au moins trois sources issues du brief anonymise:
 
 - NewsAPI.org;
 - The Guardian Open Platform;

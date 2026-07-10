@@ -1,6 +1,6 @@
 # Signal Desk
 
-[![CI](https://github.com/jb-thery/innoscripta-news-aggregator/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/jb-thery/innoscripta-news-aggregator/actions/workflows/ci.yml)
+[![CI](https://github.com/jb-thery/signal-desk/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/jb-thery/signal-desk/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 Signal Desk is a responsive news aggregator that searches NewsAPI.org, The Guardian,
@@ -8,7 +8,7 @@ and The New York Times through one normalized and resilient interface. It is a f
 case study focused on React architecture, typed API integration, partial-failure handling,
 testability, security, and reproducible delivery.
 
-[Open the live static demo](https://jb-thery.github.io/innoscripta-news-aggregator/).
+[Open the live static demo](https://jb-thery.github.io/signal-desk/).
 It uses deterministic fixture data in the browser and requires no API credentials.
 
 ![Signal Desk search results](docs/screenshots/search-desktop.webp)
@@ -80,6 +80,10 @@ Compose reads them from an ignored `.env` file.
 
 ## Architecture and data flow
 
+The codebase is a pnpm monorepo. Applications own deployable runtime code, while reusable
+contracts, domain logic, fixtures, and UI primitives live in workspace packages. Dependencies
+flow from `apps/*` to `packages/*`; packages never import application code.
+
 ```mermaid
 flowchart TB
   subgraph Browser["Browser: React 19 SPA"]
@@ -103,6 +107,12 @@ flowchart TB
 
   Contract["Orval-generated fetch client and types"]
 
+  subgraph Packages["Reusable workspace packages"]
+    ApiContracts["contracts: schemas and API paths"]
+    NewsDomain["news-domain: filtering and fixtures"]
+    UI["ui: typed visual primitives"]
+  end
+
   subgraph Runtime["Node 22 and Hono BFF"]
     SearchAPI["GET /api/search"]
     HealthAPI["GET /api/health"]
@@ -124,6 +134,10 @@ flowchart TB
   end
 
   Query --> Contract --> SearchAPI
+  Shell --> UI
+  Contract --> ApiContracts
+  SearchAPI --> ApiContracts
+  SearchAPI --> NewsDomain
   Shell --> HealthAPI
   Analytics --> Ingest
   SearchAPI --> NewsAPI
@@ -225,12 +239,12 @@ Current local evidence:
 - 41 Vitest tests across provider normalization, filtering, preferences, analytics,
   API behavior, partial failure, and static responses.
 - Enforced coverage minimums: 80% statements, lines, and functions; 65% branches.
-- Current broad TypeScript logic coverage: 82.29% statements, 81.81% lines, 84.81% functions,
+- Current broad TypeScript logic coverage: 82.59% statements, 82.14% lines, 84.81% functions,
   and 66.48% branches.
 - 6 Playwright scenarios across desktop Chromium and a Pixel 5 viewport.
 - Production SPA, standalone Hono server, and fixture-only static builds.
 - Multi-stage Docker build, non-root runtime, healthcheck, API smoke tests, and clean SIGTERM.
-- Mobile browser check: Accessibility 100, Best Practices 100, and SEO 100.
+- Mobile browser proof: semantic controls, no horizontal overflow, clean console, and healthy API responses.
 
 GitHub Actions separates three jobs:
 
@@ -271,19 +285,14 @@ pnpm exec playwright install chromium
 ## Repository map
 
 ```text
-server/                     Hono assembly, focused routes, middleware, and provider adapters
-shared/                     Typed application, API path, and fixture asset constants
-public/images/              Self-hosted deterministic fixture artwork
-src/api/generated/          Orval-generated models and TanStack Query hooks
-src/components/             Application shell, reusable UI, and render boundary
-src/features/search/        URL-backed search state and filters
-src/features/preferences/   Preference domain, context, persistence, and feed logic
-src/lib/                    Analytics, i18n, query client, and shared metadata
-src/mocks/                  Fixture-only static API implementation
-src/routes/                 TanStack Router route components
-src/styles/                 CSS entry point and responsibility-based partials
-tests/e2e/                  Desktop and mobile Playwright scenarios
-docs/                       Brief, source notes, checklist, and screenshots
+apps/frontend/              React SPA, Vite configuration, public assets, and browser tests
+apps/backend/               Hono API, provider adapters, security middleware, and Node bundle
+packages/contracts/         Zod/OpenAPI schemas and shared application/API paths
+packages/news-domain/       Shared filtering, deterministic fixtures, and fixture assets
+packages/ui/                Reusable typed UI primitives and their CSS contract
+docs/                       Anonymized brief, implementation notes, checklist, and screenshots
+Dockerfile                  Production build for the frontend and backend workspace apps
+pnpm-workspace.yaml         Workspace membership and dependency security policy
 ```
 
 ## Deliberate trade-offs
@@ -295,5 +304,5 @@ docs/                       Brief, source notes, checklist, and screenshots
 - A production rollout should add server-side response caching and request rate limiting.
 - Pagination and cross-publisher deduplication are natural next data-layer improvements.
 
-The original assignment is preserved at
-[`source-materials/cs-frontend-developer-2025.pdf`](source-materials/cs-frontend-developer-2025.pdf).
+The identifying source documents are intentionally not tracked. The durable, anonymized
+requirements are preserved in [`docs/case-study-brief.md`](docs/case-study-brief.md).

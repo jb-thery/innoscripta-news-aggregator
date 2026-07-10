@@ -4,9 +4,8 @@ Verification locale du 10 juillet 2026.
 
 ## Source et cadrage
 
-- [x] Le PDF original est conserve dans `source-materials/`.
-- [x] Le texte extrait du PDF est conserve dans `source-materials/`.
-- [x] Les exigences du PDF sont couvertes dans `docs/case-study-brief.md` et `PLAN.md`.
+- [x] Les documents source identifiants ne sont pas suivis dans le depot.
+- [x] Les exigences durables sont couvertes dans `docs/case-study-brief.md`.
 - [x] La carte PAC est conservee et identifiee comme contexte hors perimetre.
 
 ## Fonctionnel
@@ -49,7 +48,7 @@ Verification locale du 10 juillet 2026.
 - [x] Badge de runtime, selecteur de langue et bouton de theme alignes a 44 px sur desktop.
 - [x] Images des trois providers servies localement et chargees en `200` dans le container Docker.
 - [x] Texte des cartes lisible sans troncature bloquante.
-- [x] Lighthouse mobile: Accessibility 100 et Best Practices 100.
+- [x] Preuve navigateur mobile: structure accessible, absence d'overflow horizontal et console propre.
 
 ## Qualite et validation
 
@@ -57,11 +56,11 @@ Verification locale du 10 juillet 2026.
 - [x] `pnpm typecheck`.
 - [x] `pnpm test:coverage`, 41 tests verts.
 - [x] Seuils de couverture: 80% statements/lines/functions et 65% branches.
-- [x] Couverture mesuree: 82.29% statements, 81.81% lines, 84.81% functions et 66.48% branches.
+- [x] Couverture mesuree: 82.59% statements, 82.14% lines, 84.81% functions et 66.48% branches.
 - [x] `pnpm test:e2e`, 6 scenarios verts sur desktop Chromium et Pixel 5.
 - [x] `pnpm build`.
 - [x] `pnpm build:static-demo`.
-- [x] `docker build -t innoscripta-news-aggregator:local .`.
+- [x] `docker build -t signal-desk:local .`.
 - [x] `docker run` sans cle en mode mock.
 - [x] Smoke container sur `/`, `/api/health` et `/api/search`.
 - [x] Container non-root, healthcheck Compose et arret SIGTERM avec code `0`.
