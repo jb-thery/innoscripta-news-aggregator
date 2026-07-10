@@ -14,7 +14,8 @@ Ces regles s'appliquent au depot Git Signal Desk.
 
 - Repondre a l'utilisateur en francais.
 - Ecrire le code, les identifiants, les commentaires, les noms de fichiers et les commits en anglais.
-- Garder les documents de projet en francais sauf contenu utilisateur ou API en anglais.
+- Garder les documents de projet en francais, sauf le README public et le contenu utilisateur ou API en anglais.
+- Le README peut nommer les outils IA et workflows utilises afin de documenter explicitement la methodologie professionnelle demandee pour cette candidature.
 - Ne jamais utiliser de tiret long U+2014.
 - Preferer des diffs courts, lisibles et strictement lies a la demande.
 
@@ -40,6 +41,7 @@ Ces regles s'appliquent au depot Git Signal Desk.
 - Donnees: TanStack Query, TanStack Router, schema `Article` Zod et un adaptateur serveur par source.
 - BFF: Hono contract-first dans `apps/backend`, OpenAPI partage et client Orval genere dans `apps/frontend`.
 - Runtime: un container Node sert la SPA et `/api` sur le port 3000.
+- Configuration frontend: Vite charge les variables publiques `VITE_*` depuis la racine du monorepo; Docker les recoit au build, les secrets fournisseurs restent au runtime.
 
 ## Commandes de reference
 
@@ -97,6 +99,11 @@ Avant implementation, revalider les limites, les endpoints et les conditions d'u
 ## Qualite et validation
 
 - Appliquer KISS, DRY et des responsabilites separees sans abstraction speculative.
+- Appliquer SOLID uniquement aux frontieres qui le justifient et YAGNI avant toute generalisation.
+- Remplacer les magic strings et magic numbers significatifs par des constantes ou contrats partages.
+- Supprimer le code mort, duplique, obsolete, commente ou de debug au lieu de le conserver.
+- Refuser l'over-engineering, les couches generiques sans besoin actuel et les tests de couverture superficiels.
+- Mesurer la couverture Vitest sur la logique TypeScript non generee et couvrir les composants/routes par les parcours Playwright.
 - Preferer les tests de comportement sur les fonctions de normalisation, filtrage et preferences.
 - Avant de declarer une livraison prete, executer les plus petits controles pertinents:
   - format/lint;
