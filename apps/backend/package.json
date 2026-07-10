@@ -1,0 +1,29 @@
+{
+  "name": "@signal-desk/backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsup --config tsup.config.ts",
+    "preview": "node dist/index.js",
+    "generate:openapi": "tsx src/openapi.ts",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@hono/node-server": "^2.0.8",
+    "@hono/swagger-ui": "^0.6.1",
+    "@hono/zod-openapi": "^1.4.0",
+    "@signal-desk/contracts": "workspace:*",
+    "@signal-desk/news-domain": "workspace:*",
+    "hono": "^4.12.28",
+    "zod": "^4.1.13"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsup": "^8.5.1",
+    "tsx": "^4.21.0",
+    "typescript": "~6.0.3",
+    "vitest": "^4.1.10"
+  }
+}

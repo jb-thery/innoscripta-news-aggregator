@@ -4,8 +4,8 @@
 .codex
 .artifacts
 node_modules
-dist
-server-dist
+**/node_modules
+**/dist
 coverage
 playwright-report
 test-results

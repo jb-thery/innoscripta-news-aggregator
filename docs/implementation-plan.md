@@ -1,10 +1,13 @@
 # Etat d'implementation
 
-Le plan detaille et la tracabilite du brief sont conserves dans `PLAN.md`. Ce document decrit l'etat reel du depot apres implementation.
+Ce document decrit l'etat reel du depot apres implementation. Le brief durable et anonymise est conserve dans `docs/case-study-brief.md`.
 
 ## Architecture livree
 
 - SPA React 19 + TypeScript strict construite avec Vite 8.
+- Monorepo pnpm avec applications deployables dans `apps/` et code reutilisable dans `packages/`.
+- Frontend isole dans `apps/frontend` et backend Hono isole dans `apps/backend`.
+- Contrats, logique de domaine partagee et primitives UI exposes par des packages workspace.
 - Recherche et filtres partages dans l'URL via TanStack Router.
 - Cache et etats asynchrones via TanStack Query.
 - BFF Hono same-origin, les cles provider restent cote serveur.
@@ -46,8 +49,8 @@ mise run local
 mise run docker
 mise run stop
 mise run docker:verify
-docker build -t innoscripta-news-aggregator .
-docker run --rm -p 3000:3000 innoscripta-news-aggregator
+docker build -t signal-desk .
+docker run --rm -p 3000:3000 signal-desk
 ```
 
 ## Preuves locales
@@ -59,7 +62,7 @@ docker run --rm -p 3000:3000 innoscripta-news-aggregator
 - Image Docker executee sans cle en mode mock.
 - Smoke container valide sur `/`, `/api/health` et `/api/search`.
 - Arret SIGTERM valide avec un code de sortie `0` et suppression de la stack Compose.
-- Audit navigateur mobile: Accessibility 100, Best Practices 100 et SEO 100.
+- Preuve navigateur mobile: controles semantiques, absence d'overflow horizontal, console propre et API saine.
 
 ## Publication
 

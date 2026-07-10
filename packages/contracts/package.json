@@ -1,0 +1,19 @@
+{
+  "name": "@signal-desk/contracts",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@hono/zod-openapi": "^1.4.0",
+    "zod": "^4.1.13"
+  },
+  "devDependencies": {
+    "typescript": "~6.0.3"
+  }
+}

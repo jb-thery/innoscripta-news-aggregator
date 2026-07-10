@@ -1,0 +1,49 @@
+{
+  "name": "@signal-desk/frontend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "build:pages": "VITE_BASE_PATH=/signal-desk/ VITE_HASH_ROUTING=true pnpm run build:static-demo",
+    "build:static-demo": "VITE_ENABLE_MOCK_DATA=true vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "generate:api": "orval --config orval.config.ts",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@fontsource-variable/dm-sans": "^5.2.8",
+    "@fontsource-variable/newsreader": "^5.2.10",
+    "@signal-desk/contracts": "workspace:*",
+    "@signal-desk/news-domain": "workspace:*",
+    "@signal-desk/ui": "workspace:*",
+    "@tanstack/react-query": "^5.101.0",
+    "@tanstack/react-query-devtools": "^5.101.0",
+    "@tanstack/react-router": "^1.170.17",
+    "@tanstack/react-router-devtools": "^1.167.0",
+    "i18next": "^26.3.6",
+    "i18next-browser-languagedetector": "^8.2.1",
+    "lucide-react": "^0.555.0",
+    "posthog-js": "^1.399.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "react-i18next": "^17.0.9",
+    "zod": "^4.1.13"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.2",
+    "@tanstack/router-plugin": "^1.168.19",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.3",
+    "orval": "^8.20.0",
+    "tailwindcss": "^4.3.2",
+    "typescript": "~6.0.3",
+    "vite": "^8.1.4",
+    "vitest": "^4.1.10"
+  }
+}
