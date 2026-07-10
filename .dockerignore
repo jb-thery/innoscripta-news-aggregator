@@ -1,6 +1,7 @@
 .git
 .github
 .ragmir
+.gitnexus
 .codex
 .artifacts
 node_modules

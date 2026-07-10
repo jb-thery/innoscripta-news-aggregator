@@ -28,8 +28,12 @@ yarn-error.log*
 # Local editor files
 .idea/
 .vscode/
-.codex/
+.codex/*
+!.codex/config.toml
 PLAN.md
 
 # Ragmir
 .ragmir/
+
+# GitNexus
+.gitnexus/

@@ -4,305 +4,222 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 Signal Desk is a responsive news aggregator that searches NewsAPI.org, The Guardian,
-and The New York Times through one normalized and resilient interface. It is a frontend
-case study focused on React architecture, typed API integration, partial-failure handling,
-testability, security, and reproducible delivery.
+and The New York Times through one normalized, resilient interface. This case study
+demonstrates React architecture, typed API integration, partial-failure handling,
+security, testing, and reproducible delivery.
 
-[Open the live static demo](https://jb-thery.github.io/signal-desk/).
-It uses deterministic fixture data in the browser and requires no API credentials.
+[Open the live static demo](https://jb-thery.github.io/signal-desk/). It uses deterministic
+browser fixtures and requires no API credentials.
+
+## AI-assisted engineering, human-owned delivery
+
+This project demonstrates how I, Jean-Baptiste Thery, use AI professionally. I combine
+the speed of Codex and Claude Code with nine years of engineering experience to define
+architecture, control scope, challenge generated solutions, and validate every change.
+AI proposes and accelerates implementation. I remain accountable for requirements,
+trade-offs, security, testing, maintainability, and the final merge decision.
+
+| Tool | Role in my workflow |
+| --- | --- |
+| Personal engineering skills | My private, self-maintained repository of reusable engineering workflows. I refine it as I learn from real delivery work. |
+| Ragmir | My local-first retrieval library. I use it to analyze confidential source material locally and derive anonymized, traceable specifications without publishing the original brief. |
+| GitNexus | Builds a local code graph for architecture discovery, dependency tracing, and impact analysis before non-trivial changes. |
+| Codex and Claude Code | Generate and refactor scoped implementations and test scaffolding from explicit constraints. |
+| Agent Browser and Chrome DevTools MCP | Validate rendered behavior through the DOM, console, network, storage, accessibility tree, and responsive viewports. |
+
+The reusable workflows I maintain for this project stay deliberately focused:
+
+| Skill | Responsibility |
+| --- | --- |
+| `docs-cartographer` | Reconciles documentation with repository and runtime evidence. |
+| `browser-proof` | Captures browser behavior, console, network, accessibility, and viewport proof. |
+| `dependency-tune-up` | Reviews dependency freshness, compatibility, and supply-chain risk. |
+| `issue-forensics` | Moves from a reported symptom to root cause, scoped fix, and evidence. |
+| `commit-surgeon` | Prepares reviewable, atomic changes only after local checks pass. |
+| `skill-scout` and `skill-garage` | Vet and maintain third-party skills before adoption. |
+| `ship` and `release-pilot` | Automate pull requests, CI checkpoints, promotion, and live verification. |
+
+My delivery loop is evidence-driven:
+
+1. Extract acceptance criteria, anonymize source material, and define boundaries.
+2. Generate a constrained first implementation.
+3. Run formatting, strict TypeScript, unit tests, and coverage.
+4. Exercise the behavior in a real browser and iterate from runtime evidence.
+5. Lock regressions with focused Vitest and Playwright coverage.
+6. Prepare small Git changes, pull requests, and CI gates.
+7. Review the diff and test the result myself as the final human reviewer.
+
+No generated change is accepted solely because an AI tool or automated check reports
+success. Third-party skills are also screened for source reputation, adoption,
+security signals, project relevance, and overlap before use.
 
 ![Signal Desk search results](docs/screenshots/search-desktop.webp)
 
 ## Quick start
 
-No API key is required. On the first run, trust the repository configuration and install
-the pinned Node runtime:
+One-time toolchain setup:
 
 ```bash
 mise trust
 mise install
 ```
 
-Then choose one of the two primary commands.
+Then choose one primary command.
 
-Local development with Vite and Hono:
+Local development, Vite on `5173` and Hono on `3001`:
 
 ```bash
 mise run local
 ```
 
-Open [http://localhost:5173](http://localhost:5173). Dependencies are installed automatically.
-
-Docker review stack:
+Docker review stack, published on `4174` after its healthcheck passes:
 
 ```bash
 mise run docker
 ```
 
-Open [http://localhost:4174](http://localhost:4174). The OpenAPI document and Swagger UI
-are available at [http://localhost:4174/openapi.json](http://localhost:4174/openapi.json)
-and [http://localhost:4174/docs](http://localhost:4174/docs).
-
-Stop the Docker stack with:
-
-```bash
-mise run stop
-```
-
-The legacy names `mise run docker:up` and `mise run docker:down` remain available as aliases.
-Set `PORT`, `VITE_API_PORT`, or `APP_PORT` before a command only when custom ports are needed.
-
-## Local development
-
-Requirements without `mise`: Node 22 and Corepack.
-
-```bash
-corepack enable
-corepack pnpm install --frozen-lockfile
-corepack pnpm dev
-```
-
-Vite serves [http://localhost:5173](http://localhost:5173). With `mise run local`, it proxies
-same-origin calls to Hono on port `3001`; raw `pnpm dev` keeps the server default on port
-`3000`. For live providers, export the server variables before starting the stack. Docker
-Compose reads them from an ignored `.env` file.
+Stop the Docker stack with `mise run stop`. Both start commands install the pinned
+pnpm dependencies when needed. No provider key is required for local review because
+every real adapter has a deterministic fixture fallback. When the three server-side
+keys are provided, the same build calls the live upstream APIs instead.
 
 ## Product behavior
 
-- Debounced keyword search with shareable URL state.
-- Date, category, provider, and author filters.
+- Debounced keyword search with shareable URL filters.
+- Date, category, provider, and author filtering.
 - Personalized feed by preferred sources, categories, and authors.
 - Browser-local preferences, language, and theme with no account required.
-- English and German UI with locale-aware dates.
+- English and German UI with locale-aware dates and numbers.
 - Loading, empty, error, and per-provider partial-success states.
 - Responsive desktop and mobile layouts with semantic controls and visible focus.
 - Live, mixed, mock, and serverless static-demo modes.
 
-## Architecture and data flow
+## Architecture
 
-The codebase is a pnpm monorepo. Applications own deployable runtime code, while reusable
-contracts, domain logic, fixtures, and UI primitives live in workspace packages. Dependencies
-flow from `apps/*` to `packages/*`; packages never import application code.
+The pnpm monorepo keeps deployable apps separate from reusable contracts, domain
+logic, fixtures, and UI primitives. Workspace packages never import application code.
 
 ```mermaid
-flowchart TB
-  subgraph Browser["Browser: React 19 SPA"]
-    Shell["App shell: theme, i18n, runtime status"]
-    SearchUI["Search route and URL filters"]
-    FeedUI["Personalized feed"]
-    Router["TanStack Router"]
-    Query["TanStack Query cache"]
-    Storage["localStorage preferences"]
-    Boundary["Global React error boundary"]
-    Analytics["Gated PostHog client"]
-
-    Shell --> SearchUI
-    Shell --> FeedUI
-    SearchUI --> Router
-    Router -->|"validated search state"| Query
-    FeedUI --> Storage
-    FeedUI --> Query
-    Boundary --> Analytics
-  end
-
-  Contract["Orval-generated fetch client and types"]
-
-  subgraph Packages["Reusable workspace packages"]
-    ApiContracts["contracts: schemas and API paths"]
-    NewsDomain["news-domain: filtering and fixtures"]
-    UI["ui: typed visual primitives"]
-  end
-
-  subgraph Runtime["Node 22 and Hono BFF"]
-    SearchAPI["GET /api/search"]
-    HealthAPI["GET /api/health"]
-    OpenAPI["OpenAPI 3 and Swagger UI"]
-    Ingest["Same-origin /ingest proxy"]
-  end
-
-  subgraph Providers["ArticleProvider adapters"]
-    NewsAPI["NewsAPI.org"]
-    Guardian["The Guardian"]
-    NYT["New York Times"]
-    Fixtures["Deterministic fixtures when a key is absent"]
-  end
-
-  subgraph Delivery["Delivery and verification"]
-    Docker["Multi-stage non-root Docker image"]
-    Static["Serverless static demo build"]
-    CI["GitHub Actions: quality, browser, container"]
-  end
-
-  Query --> Contract --> SearchAPI
-  Shell --> UI
-  Contract --> ApiContracts
-  SearchAPI --> ApiContracts
-  SearchAPI --> NewsDomain
-  Shell --> HealthAPI
-  Analytics --> Ingest
-  SearchAPI --> NewsAPI
-  SearchAPI --> Guardian
-  SearchAPI --> NYT
-  NewsAPI --> Fixtures
-  Guardian --> Fixtures
-  NYT --> Fixtures
-  OpenAPI --> Contract
-  Docker --> Runtime
-  Docker --> Browser
-  Static --> Browser
-  CI -. verifies .-> Browser
-  CI -. verifies .-> Runtime
+flowchart LR
+  UI["React SPA"] --> Client["Orval-generated client"]
+  Client --> BFF["Hono BFF"]
+  Contracts["Zod + OpenAPI contracts"] --> Client
+  Contracts --> BFF
+  Domain["News domain + fixtures"] --> BFF
+  BFF --> Adapters["Provider adapters"]
+  Adapters --> Sources["NewsAPI · Guardian · NYT"]
 ```
 
-The provider layer uses the Adapter pattern. Each `ArticleProvider` translates one
-upstream response into the Zod-backed `Article` contract. Provider requests run in
-parallel and isolate errors, so one failed source does not discard successful results.
-
-The API is contract-first:
-
-1. Hono routes and Zod schemas produce `openapi.json`.
-2. Orval generates models, fetch functions, and TanStack Query hooks.
-3. CI regenerates the client and fails if committed output has drifted.
-
-This keeps source-specific code at the BFF boundary, browser code independent of API
-payload shapes, and provider secrets outside the client bundle.
-
-SOLID, DRY, and KISS are applied at concrete boundaries: one responsibility per adapter,
-one generated contract shared by server and browser, small route components, URL state for
-shareable filters, and `localStorage` only for user-owned preferences. There is no generic
-repository layer or speculative provider framework.
-
-## Stack
+Provider requests run in parallel and isolate failures, so one unavailable source does
+not discard successful results. Hono routes generate the OpenAPI document, Orval
+generates the browser client, and CI rejects generated-client drift.
 
 | Concern | Choice |
 | --- | --- |
-| UI | React 19, TypeScript 6 strict mode, Vite 8 |
-| Routing and state | TanStack Router, URL filters, `localStorage` preferences |
-| Server state | TanStack Query with bounded retry and cache policies |
-| API | Hono, Zod OpenAPI, Orval-generated fetch client |
-| Data sources | NewsAPI, Guardian, and NYT adapters with fixture fallback |
-| Styling | Tailwind CSS 4, CSS tokens, CVA-based components |
-| Localization | i18next and react-i18next, English and German |
-| Observability | Environment-gated PostHog and a global React error boundary |
-| Quality | Biome, strict TypeScript, Vitest, Playwright, commitlint, Husky |
-| Delivery | Node 22, Docker Compose, `mise`, GitHub Actions |
+| Monorepo | pnpm workspaces with `apps/*` and `packages/*` |
+| Frontend | React 19, strict TypeScript 6, Vite 8, Tailwind CSS 4 |
+| Navigation and data | TanStack Router, TanStack Query, URL state, `localStorage` preferences |
+| API and contracts | Hono, Zod OpenAPI, Orval-generated fetch hooks |
+| Sources | NewsAPI, Guardian, and NYT adapters with per-source fixture fallback |
+| Accessibility and i18n | Semantic HTML, keyboard focus, reduced motion, English and German |
+| Quality | Biome, TypeScript, Vitest, Playwright, React Doctor, commitlint, Husky |
+| Code intelligence | GitNexus local code graph for architecture and impact analysis |
+| Delivery | Node 22, `mise`, multi-stage Docker, GitHub Actions, GitHub Pages |
 
-## Runtime modes
-
-| Mode | Trigger | Behavior |
-| --- | --- | --- |
-| Mock | No provider keys | All adapters return local fixtures. This is the default review mode. |
-| Mixed | Some provider keys | Configured sources are live; the others continue with fixtures. |
-| Live | All provider keys | All adapters call their upstream APIs from the server. |
-| Static demo | `VITE_ENABLE_MOCK_DATA=true` during build | The browser uses fixtures without a server or API requests. |
-
-Set `MOCK_FAIL_PROVIDER` to `newsapi`, `guardian`, or `nytimes` to demonstrate partial
-success without changing code.
-
-## Configuration
-
-Copy `.env.example` to `.env` only for Docker or other runtime configuration. Never add
-provider credentials to a `VITE_` variable.
-
-| Variable | Scope | Purpose |
-| --- | --- | --- |
-| `NEWS_API_KEY` | Server secret | NewsAPI.org credential. |
-| `GUARDIAN_API_KEY` | Server secret | Guardian Open Platform credential. |
-| `NYT_API_KEY` | Server secret | New York Times API credential. |
-| `NEWS_API_BASE_URL` | Server | Optional NewsAPI endpoint override. |
-| `GUARDIAN_API_BASE_URL` | Server | Optional Guardian endpoint override. |
-| `NYT_API_BASE_URL` | Server | Optional NYT endpoint override. |
-| `PORT` | Server | Container/runtime port, default `3000`. |
-| `APP_PORT` | Docker host | Published host port, default `3000`. |
-| `MOCK_FAIL_PROVIDER` | Server | Simulates one provider failure. |
-| `VITE_PUBLIC_POSTHOG_KEY` | Browser public | Enables analytics only when a host is also configured. |
-| `VITE_PUBLIC_POSTHOG_HOST` | Browser public | Same-origin PostHog proxy path, normally `/ingest`. |
-| `VITE_ENABLE_MOCK_DATA` | Build-time public | Enables the serverless fixture-only build. |
-| `VITE_API_PORT` | Local browser | Hono port used by the Vite development proxy, default `3000`. |
+More detail is available in [the architecture note](docs/architecture.md) and
+[the API source note](docs/api-sources.md).
 
 ## Security and observability
 
-- Provider credentials exist only in server runtime variables.
-- `.env` files are excluded from Git and Docker build context.
-- The browser calls the same-origin BFF, never secret-bearing provider endpoints.
-- Hono sets CSP, frame, referrer, permissions, object, and content-type protections.
-- Swagger receives a route-specific jsDelivr allowance; the SPA does not allow inline scripts.
-- PostHog is disabled unless both public variables are present and uses `/ingest` when enabled.
-- Pageviews contain only the pathname; search events contain query length, not search text.
-- `capture_exceptions` handles global failures and the root error boundary captures React errors.
-- pnpm enforces release age and trust-downgrade checks; CI fails on any known audit finding.
+- Provider credentials stay in server runtime variables and never enter the browser bundle.
+- Vite exposes only public `VITE_*` values from the root environment configuration.
+- Docker passes optional public PostHog settings as build arguments; provider keys remain runtime-only.
+- Hono applies CSP, frame, referrer, permissions, object, and content-type protections.
+- PostHog is disabled and excluded from the initial path unless its public key and host are configured.
+- Telemetry records page paths, query length rather than query text, and captured application errors.
+- A React error boundary, provider status strip, and `/api/health` expose client and runtime health.
+- CI and Docker smoke tests verify health, search behavior, static delivery, and graceful shutdown.
+- Bundled DM Sans and Newsreader files ship with their required [OFL 1.1 notices](apps/frontend/public/THIRD_PARTY_NOTICES.txt).
+- GitNexus is optional local-only tooling under PolyForm Noncommercial 1.0.0; it is fetched on demand and excluded from application dependencies, Docker, and runtime delivery.
 
-## Quality gates
+This is review-grade observability, not a claim of a staffed production monitoring
+service. A production rollout would add alerting, server traces, rate limiting, and
+response caching.
 
-Current local evidence:
+## Quality and delivery
 
-- 41 Vitest tests across provider normalization, filtering, preferences, analytics,
-  API behavior, partial failure, and static responses.
-- Enforced coverage minimums: 80% statements, lines, and functions; 65% branches.
-- Current broad TypeScript logic coverage: 82.59% statements, 82.14% lines, 84.81% functions,
-  and 66.48% branches.
-- 6 Playwright scenarios across desktop Chromium and a Pixel 5 viewport.
-- Production SPA, standalone Hono server, and fixture-only static builds.
-- Multi-stage Docker build, non-root runtime, healthcheck, API smoke tests, and clean SIGTERM.
-- Mobile browser proof: semantic controls, no horizontal overflow, clean console, and healthy API responses.
+Local and CI gates cover:
 
-GitHub Actions separates three jobs:
+- dependency auditing at `low` severity or higher;
+- generated OpenAPI client drift;
+- Biome formatting and lint;
+- strict TypeScript across every workspace, root tooling, and Playwright tests;
+- Vitest projects separated between Node and jsdom;
+- enforced coverage thresholds on non-generated TypeScript logic;
+- Playwright journeys on desktop and mobile Chromium for search, preferences, localization, layout and article links;
+- production, static-demo, and GitHub Pages builds;
+- non-root Docker build, health/search probes, and clean SIGTERM.
 
-- `quality`: dependency audit, generated-client drift, Biome, TypeScript, coverage, and builds.
-- `browser`: Playwright on desktop and mobile Chromium profiles.
-- `container`: image build, health/search probes, and graceful shutdown.
+GitHub Actions separates `quality`, `browser`, and `container` jobs. The static
+demo deploys from `main` only after the complete CI workflow succeeds. Exact,
+date-stamped evidence lives in [the control checklist](docs/control-checklist.md).
 
-The separate `Deploy static demo` workflow publishes the fixture-only build to GitHub Pages
-after each successful promotion to `main`.
+## Engineering rules
 
-## Commands
+- Apply KISS and YAGNI before adding abstractions or configuration.
+- Use DRY and SOLID at proven boundaries such as provider adapters and contracts.
+- Keep strict types at system boundaries and avoid `any`, ignored errors, and unsafe casts.
+- Replace meaningful magic strings and numbers with named constants or shared contracts.
+- Remove dead, duplicated, obsolete, commented-out, or debug code.
+- Prefer focused components and behavior tests over speculative frameworks.
+- Treat secrets, accessibility, localization, generated code, and human review as release gates.
+
+## Useful commands
 
 | Command | Purpose |
 | --- | --- |
-| `mise run local` | Install dependencies and start Vite plus Hono locally. |
-| `mise run docker` | Build and start the healthy Docker stack on port `4174`. |
-| `mise run stop` | Stop and remove the project Docker stack. |
-| `mise run verify` | Run coverage plus the complete production build. |
+| `mise run local` | Install dependencies and start Vite plus Hono. |
+| `mise run docker` | Build and start the healthy Docker stack on `4174`. |
+| `mise run stop` | Stop and remove the local Docker stack. |
+| `mise run verify` | Run Biome, TypeScript, coverage, and the production build. |
 | `mise run docker:verify` | Build, smoke-test, and remove the Docker stack. |
-| `pnpm dev` | Run Vite and Hono in watch mode. |
-| `pnpm check` | Verify Biome formatting, imports, and lint rules. |
-| `pnpm typecheck` | Run strict TypeScript without emitting files. |
-| `pnpm test` | Run the Vitest suite. |
-| `pnpm test:coverage` | Run Vitest and enforce coverage thresholds. |
-| `pnpm test:e2e` | Run desktop and mobile Playwright scenarios. |
-| `pnpm build` | Build the SPA and standalone Hono server. |
-| `pnpm build:pages` | Build the GitHub Pages demo with repository base path and hash routing. |
-| `pnpm build:static-demo` | Build the fixture-only serverless SPA. |
-| `pnpm generate:api` | Regenerate OpenAPI and the Orval client. |
-| `pnpm verify:fast` | Run Biome, TypeScript, and Vitest before push. |
+| `mise exec -- pnpm test:e2e` | Run desktop and mobile Playwright journeys. |
+| `mise exec -- pnpm build:static-demo` | Build the fixture-only browser demo. |
+| `mise exec -- pnpm generate:api` | Regenerate OpenAPI and the Orval client. |
+| `mise exec -- pnpm gitnexus:analyze` | Build or refresh the ignored local GitNexus index. |
+| `mise exec -- pnpm gitnexus:status` | Show whether the code graph matches the checkout. |
 
-Install Chromium once before a local E2E run if needed:
+The repository pins Node `22.22.3` and pnpm `10.34.4`. Use `mise exec -- pnpm`
+or `corepack pnpm` instead of an unrelated global pnpm version.
 
-```bash
-pnpm exec playwright install chromium
-```
+## Runtime modes and configuration
 
-## Repository map
+| Mode | Behavior |
+| --- | --- |
+| Mock | No provider keys, all adapters return local fixtures. |
+| Mixed | Configured sources are live, remaining sources use fixtures. |
+| Live | All three credentials are present, so the adapters attempt their upstream APIs from Hono. |
+| Static demo | The browser uses fixtures without a server or API requests. |
 
-```text
-apps/frontend/              React SPA, Vite configuration, public assets, and browser tests
-apps/backend/               Hono API, provider adapters, security middleware, and Node bundle
-packages/contracts/         Zod/OpenAPI schemas and shared application/API paths
-packages/news-domain/       Shared filtering, deterministic fixtures, and fixture assets
-packages/ui/                Reusable typed UI primitives and their CSS contract
-docs/                       Anonymized brief, implementation notes, checklist, and screenshots
-Dockerfile                  Production build for the frontend and backend workspace apps
-pnpm-workspace.yaml         Workspace membership and dependency security policy
-```
+Docker Compose reads an ignored `.env` copied from [`.env.example`](.env.example).
+For `mise run local`, export `NEWS_API_KEY`, `GUARDIAN_API_KEY`, and `NYT_API_KEY`
+in the shell before starting the stack. Vite environment files do not inject these
+server secrets into the Hono process. Never commit real values.
+
+Public PostHog settings use `VITE_PUBLIC_POSTHOG_KEY` and
+`VITE_PUBLIC_POSTHOG_HOST`. Set `MOCK_FAIL_PROVIDER` to demonstrate partial
+failure without changing code. The dated checklist does not claim a three-provider
+live smoke because no real provider credentials were used for that verification.
 
 ## Deliberate trade-offs
 
 - Preferences remain local because account sync and authentication are outside the brief.
 - The static demo is fixture-only; live providers require the Hono runtime.
-- Mock mode uses self-hosted fixture artwork; live provider image failures fall back to a branded placeholder.
-- Provider plans, quotas, and permitted use must be reviewed before production deployment.
-- A production rollout should add server-side response caching and request rate limiting.
-- Pagination and cross-publisher deduplication are natural next data-layer improvements.
+- NewsAPI `/everything` exposes no category field, so precise category behavior for that
+  live adapter needs a classification or endpoint strategy before production use.
+- Provider quotas and permitted use must be reviewed before production deployment.
+- Pagination and cross-publisher deduplication remain natural data-layer extensions.
 
-The identifying source documents are intentionally not tracked. The durable, anonymized
-requirements are preserved in [`docs/case-study-brief.md`](docs/case-study-brief.md).
+The durable, anonymized requirements are preserved in
+[the case study brief](docs/case-study-brief.md). The original identifying case-study
+PDF is intentionally not tracked.

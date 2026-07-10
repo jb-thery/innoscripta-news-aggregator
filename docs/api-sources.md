@@ -51,7 +51,6 @@ export interface SearchParams {
 
 export interface ArticleProvider {
   id: Article["provider"];
-  label: string;
   hasLiveCredentials(): boolean;
   search(params: SearchParams, signal?: AbortSignal): Promise<Article[]>;
 }
@@ -61,11 +60,15 @@ export interface ArticleProvider {
 
 - Ne pas prefixer les cles API avec `VITE_`.
 - Ne pas appeler une API necessitant un secret directement depuis le navigateur.
-- Preferer un proxy minimal, une API route ou un serveur Docker qui lit les cles cote serveur.
-- Si les cles ne sont pas disponibles, garder un mode mock explicite avec des fixtures realistes et documenter la limitation.
+- Le BFF Hono est l'unique frontiere qui lit et transmet les cles fournisseurs.
+- Docker Compose lit les cles depuis un `.env` ignore.
+- En local, exporter les cles dans le shell avant `mise run local`; Vite ne les transmet pas au processus Hono.
 
-## Fallbacks a documenter si besoin
+## Comportement runtime
 
-- Si NewsAPI bloque le navigateur ou le plan gratuit, passer par proxy ou fixtures.
-- Si Guardian depasse le quota, afficher un etat partiel et continuer les autres providers.
-- Si NYT ne retourne pas de contenu complet, afficher les metadonnees disponibles et le lien original.
+- Sans cle, l'adaptateur concerne utilise ses fixtures realistes.
+- Avec une cle, une erreur HTTP, un quota depasse ou un schema invalide marque la source en erreur sans remplacer la reponse par des fixtures.
+- Les autres fournisseurs continuent et leurs resultats restent visibles.
+- `/api/health` decrit uniquement le mode de configuration `mock`, `mixed` ou `live` selon la presence des cles.
+- `/api/search` expose le succes ou l'echec reel de chaque fournisseur pour la recherche courante.
+- NewsAPI `/everything` ne fournit pas de categorie native. La precision du filtre categorie de cet adaptateur live reste une limite a traiter avant une production reelle.

@@ -1,5 +1,6 @@
 import { Component, type ErrorInfo, type ReactNode } from "react"
 import { reportError } from "@/lib/analytics"
+import { i18n } from "@/lib/i18n"
 
 interface ErrorBoundaryProps {
   children: ReactNode
@@ -17,16 +18,16 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
-    reportError({ error, componentStack: info.componentStack })
+    void reportError({ error, componentStack: info.componentStack })
   }
 
   render() {
     if (this.state.hasError) {
       return (
         <main className="fatal-error" role="alert">
-          <p>Signal Desk could not render this view.</p>
+          <p>{i18n.t("states.fatalError")}</p>
           <button type="button" onClick={() => window.location.reload()}>
-            Reload the application
+            {i18n.t("states.reload")}
           </button>
         </main>
       )

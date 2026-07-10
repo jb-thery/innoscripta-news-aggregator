@@ -25,7 +25,7 @@ export function EmptyState({ start = false }: { start?: boolean }) {
   const { t } = useTranslation()
 
   return (
-    <div className="state-panel">
+    <div className="state-panel" role={start ? undefined : "status"}>
       <Newspaper size={32} aria-hidden="true" />
       <h2>{t(start ? "states.startTitle" : "states.emptyTitle")}</h2>
       <p>{t(start ? "states.startBody" : "states.emptyBody")}</p>

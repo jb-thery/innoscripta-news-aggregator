@@ -15,24 +15,54 @@ interface SearchFiltersProps {
 
 const SEARCH_DEBOUNCE_MS = 350
 
-export function SearchFilters({ value, onChange, onReset }: SearchFiltersProps) {
+interface SearchInputProps {
+  initialQuery: string
+  onChange: SearchFiltersProps["onChange"]
+}
+
+function SearchInput({ initialQuery, onChange }: SearchInputProps) {
   const { t } = useTranslation()
-  const [query, setQuery] = useState(value.q)
-  const [isOpen, setIsOpen] = useState(false)
-  const selectedProviders = new Set(value.providers.split(",").filter(Boolean))
+  const [query, setQuery] = useState(initialQuery)
+  const [synchronizedQuery, setSynchronizedQuery] = useState(initialQuery)
+
+  if (initialQuery !== synchronizedQuery) {
+    setSynchronizedQuery(initialQuery)
+    setQuery(initialQuery)
+  }
 
   useEffect(() => {
-    setQuery(value.q)
-  }, [value.q])
-
-  useEffect(() => {
-    if (query === value.q) {
+    if (query === initialQuery) {
       return
     }
 
     const timeout = window.setTimeout(() => onChange({ q: query }), SEARCH_DEBOUNCE_MS)
     return () => window.clearTimeout(timeout)
-  }, [onChange, query, value.q])
+  }, [initialQuery, onChange, query])
+
+  return (
+    <div className="search-field">
+      <Search size={22} aria-hidden="true" />
+      <label htmlFor="article-search" className="sr-only">
+        {t("search.label")}
+      </label>
+      <Input
+        id="article-search"
+        name="query"
+        type="search"
+        value={query}
+        onChange={(event) => setQuery(event.target.value)}
+        placeholder={t("search.placeholder")}
+        autoComplete="off"
+      />
+      <span className="search-field__hint">{t("search.hint")}</span>
+    </div>
+  )
+}
+
+export function SearchFilters({ value, onChange, onReset }: SearchFiltersProps) {
+  const { t } = useTranslation()
+  const [isOpen, setIsOpen] = useState(false)
+  const selectedProviders = new Set(value.providers.split(",").filter(Boolean))
 
   const toggleProvider = (providerId: ProviderId) => {
     const nextProviders = new Set(selectedProviders)
@@ -42,30 +72,19 @@ export function SearchFilters({ value, onChange, onReset }: SearchFiltersProps) 
       nextProviders.add(providerId)
     }
 
-    onChange({
-      providers: PROVIDERS.filter((provider) => nextProviders.has(provider.id))
-        .map((provider) => provider.id)
-        .join(","),
-    })
+    const providerIds: ProviderId[] = []
+    for (const provider of PROVIDERS) {
+      if (nextProviders.has(provider.id)) {
+        providerIds.push(provider.id)
+      }
+    }
+
+    onChange({ providers: providerIds.join(",") })
   }
 
   return (
     <section className="search-panel" aria-label={t("filters.title")}>
-      <div className="search-field">
-        <Search size={22} aria-hidden="true" />
-        <label htmlFor="article-search" className="sr-only">
-          {t("search.label")}
-        </label>
-        <Input
-          id="article-search"
-          type="search"
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder={t("search.placeholder")}
-          autoComplete="off"
-        />
-        <span className="search-field__hint">{t("search.hint")}</span>
-      </div>
+      <SearchInput initialQuery={value.q} onChange={onChange} />
 
       <div className="filter-toggle-row">
         <Button
@@ -93,19 +112,17 @@ export function SearchFilters({ value, onChange, onReset }: SearchFiltersProps) 
         </Button>
       </div>
 
-      <div
-        className={isOpen ? "filter-grid filter-grid--open" : "filter-grid"}
-        hidden={!isOpen}
-        id="search-filters"
-      >
-        <AdvancedSearchFilters
-          value={value}
-          selectedProviders={selectedProviders}
-          onChange={onChange}
-          onToggleProvider={toggleProvider}
-          translate={t}
-        />
-      </div>
+      {isOpen ? (
+        <div className="filter-grid" id="search-filters">
+          <AdvancedSearchFilters
+            value={value}
+            selectedProviders={selectedProviders}
+            onChange={onChange}
+            onToggleProvider={toggleProvider}
+            translate={t}
+          />
+        </div>
+      ) : null}
     </section>
   )
 }

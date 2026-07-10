@@ -1,6 +1,8 @@
 # Case Study Brief
 
-Ce document est la synthese anonymisee du brief original. Les documents source identifiants ne sont volontairement pas suivis dans le depot.
+Ce document est la synthese anonymisee du brief original. Le PDF original identifiant de
+l'etude de cas n'est volontairement pas suivi dans le depot. Le contexte PAC conserve
+separement sous `source-materials/` ne constitue pas une exigence de cet agregateur.
 
 Date de verification locale: 9 juillet 2026.
 
@@ -33,19 +35,18 @@ Creer l'interface utilisateur d'un site d'agregation de news qui recupere des ar
 - BBC News.
 - NewsAPI.org.
 
-## Sources recommandees pour l'implementation
-
-Les trois sources recommandees pour demarrer sont:
-
-1. NewsAPI.org.
-2. The Guardian Open Platform.
-3. New York Times APIs.
-
-Raison: ce sont les options les plus directement exploitables avec des documentations publiques et des endpoints adaptes a la recherche, au filtrage ou a la recuperation d'articles.
-
 ## Points d'attention
 
 - NewsAPI et NewsAPI.org semblent designer la meme famille de service dans le brief. Ne pas les compter comme deux sources independantes sans validation explicite.
 - BBC News peut etre couvert via NewsAPI avec `bbc-news`, mais cela ne remplace pas une integration BBC independante si l'evaluateur exige trois fournisseurs distincts.
 - Les cles API ne doivent pas etre exposees dans le bundle client. Prevoir un proxy serveur ou un mode mock selon les cles disponibles.
 - La personnalisation doit etre visible dans l'interface, pas seulement stockee en interne.
+
+Les trois fournisseurs retenus, leurs contrats et leurs limites sont documentes dans
+`docs/api-sources.md`.
+
+## Differentiateur de candidature
+
+La methodologie d'ingenierie assistee par IA presentee dans le README est un
+differentiateur professionnel personnel. Elle ne remplace aucune exigence du brief et
+n'est pas presentee ici comme une contrainte produit issue du document source.

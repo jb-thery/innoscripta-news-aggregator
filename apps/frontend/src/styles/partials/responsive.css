@@ -27,10 +27,6 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .filter-grid--open {
-    max-height: 600px;
-  }
-
   .article-card--lead {
     grid-column: 1 / -1;
   }
@@ -111,10 +107,6 @@
 
   .filter-grid {
     grid-template-columns: 1fr;
-  }
-
-  .filter-grid--open {
-    max-height: 900px;
   }
 
   .source-strip {

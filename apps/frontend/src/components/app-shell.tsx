@@ -7,9 +7,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="site-frame">
+      <a className="skip-link" href="#main-content">
+        {t("accessibility.skipToContent")}
+      </a>
       <div className="top-rule" aria-hidden="true" />
       <AppHeader />
-      <main>{children}</main>
+      <main id="main-content" tabIndex={-1}>
+        {children}
+      </main>
       <footer className="site-footer">
         <p>{t("footer.note")}</p>
         {__STATIC_MOCK__ ? (

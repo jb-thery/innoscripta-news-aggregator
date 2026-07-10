@@ -14,9 +14,9 @@
   display: grid;
   grid-template-columns: minmax(210px, 1fr) auto minmax(210px, 1fr);
   align-items: center;
-  width: min(100% - 2rem, 1480px);
+  width: 100%;
   min-height: 84px;
-  margin: 0 auto;
+  padding-inline: max(1rem, calc((100% - 1480px) / 2));
   border-bottom: 1px solid var(--line-strong);
   background: color-mix(in srgb, var(--paper) 90%, transparent);
   backdrop-filter: blur(16px);
@@ -55,6 +55,10 @@
   font-size: 1.4rem;
   font-weight: 650;
   line-height: 1;
+}
+
+.wordmark:hover strong {
+  color: var(--signal-dark);
 }
 
 .wordmark small {

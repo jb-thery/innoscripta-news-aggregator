@@ -7,21 +7,22 @@ Ces regles s'appliquent au depot Git Signal Desk.
 - Construire et maintenir un agregateur de news React + TypeScript livre avec son BFF.
 - Ne pas commit, push ou creer de remote sans demande explicite.
 - Le brief anonymise est la source produit autoritaire: `docs/case-study-brief.md`.
-- Ne pas reintegrer de nom d'entreprise, de document source identifiant ou de marque d'evaluateur dans le depot.
+- Ne pas reintegrer le PDF original, le nom d'entreprise ou la marque d'evaluateur dans le depot.
 - Le texte PAC est un contexte conserve: `source-materials/portail-academique-screen-map.md`. Ne pas en faire une exigence produit de l'agregateur de news sans instruction explicite.
 
 ## Communication et fichiers
 
 - Repondre a l'utilisateur en francais.
 - Ecrire le code, les identifiants, les commentaires, les noms de fichiers et les commits en anglais.
-- Garder les documents de projet en francais sauf contenu utilisateur ou API en anglais.
+- Garder les documents de projet en francais, sauf le README public et le contenu utilisateur ou API en anglais.
+- Le README peut nommer les outils IA et workflows utilises afin de documenter explicitement la methodologie professionnelle demandee pour cette candidature.
 - Ne jamais utiliser de tiret long U+2014.
 - Preferer des diffs courts, lisibles et strictement lies a la demande.
 
 ## Securite
 
 - Ne jamais commiter de secret, de cle API, de token ou de fichier `.env`.
-- Garder les vrais secrets dans `.env.local`, un secret manager ou les variables Docker/CI.
+- Garder les vrais secrets dans un `.env` ignore pour Docker, des variables exportees pour le runtime local, un secret manager ou les variables CI.
 - `.env.example` doit contenir uniquement des noms de variables et des valeurs factices non sensibles.
 - Les cles NewsAPI, Guardian et NYT ne doivent pas etre exposees dans le bundle navigateur.
 - Si une API exige une cle secrete, passer par un proxy local, un serveur minimal, une route backend ou un mode mock documente.
@@ -40,6 +41,8 @@ Ces regles s'appliquent au depot Git Signal Desk.
 - Donnees: TanStack Query, TanStack Router, schema `Article` Zod et un adaptateur serveur par source.
 - BFF: Hono contract-first dans `apps/backend`, OpenAPI partage et client Orval genere dans `apps/frontend`.
 - Runtime: un container Node sert la SPA et `/api` sur le port 3000.
+- Configuration frontend: Vite charge les variables publiques `VITE_*` depuis la racine du monorepo; Docker les recoit au build, les secrets fournisseurs restent au runtime.
+- Intelligence de code: GitNexus 1.6.9 est execute a la demande pour construire un graphe local ignore, sans entrer dans les dependances ou l'image de l'application.
 
 ## Commandes de reference
 
@@ -57,10 +60,18 @@ Ces regles s'appliquent au depot Git Signal Desk.
 - `mise run stop`: arret et suppression de la stack Docker locale.
 - `mise run verify`: Biome, TypeScript, couverture et build de production.
 - `mise run docker:verify`: build, smoke `/api/health` et `/api/search`, puis arret propre.
+- `pnpm gitnexus:analyze`: construire ou actualiser l'index GitNexus local sans injecter de fichiers de contexte.
+- `pnpm gitnexus:status`: verifier l'etat de l'index GitNexus pour le checkout courant.
 
-## JCode skills disponibles
+## GitNexus
 
-Les skills du repo `jcode-agent-skills` sont installees localement et peuvent etre utilisees dans ce dossier quand elles correspondent a la tache:
+- Garder `.gitnexus/` ignore: l'index est local, volumineux et entierement regenerable.
+- Actualiser l'index avant une exploration d'architecture ou une analyse d'impact non triviale.
+- Utiliser l'integration MCP du projet dans `.codex/config.toml`; ne pas lancer `gitnexus setup`, qui modifierait la configuration globale de la machine.
+
+## Skills maintenues par Jean-Baptiste Thery
+
+Les skills privees maintenues par Jean-Baptiste Thery sont installees localement et peuvent etre utilisees dans ce dossier quand elles correspondent a la tache:
 
 - `docs-cartographer`: synchroniser README, docs et consignes agent avec l'etat reel du dossier.
 - `dependency-tune-up`: auditer ou mettre a jour les dependances JavaScript/TypeScript.
@@ -97,6 +108,11 @@ Avant implementation, revalider les limites, les endpoints et les conditions d'u
 ## Qualite et validation
 
 - Appliquer KISS, DRY et des responsabilites separees sans abstraction speculative.
+- Appliquer SOLID uniquement aux frontieres qui le justifient et YAGNI avant toute generalisation.
+- Remplacer les magic strings et magic numbers significatifs par des constantes ou contrats partages.
+- Supprimer le code mort, duplique, obsolete, commente ou de debug au lieu de le conserver.
+- Refuser l'over-engineering, les couches generiques sans besoin actuel et les tests de couverture superficiels.
+- Mesurer la couverture Vitest sur la logique TypeScript non generee et couvrir les composants/routes par les parcours Playwright.
 - Preferer les tests de comportement sur les fonctions de normalisation, filtrage et preferences.
 - Avant de declarer une livraison prete, executer les plus petits controles pertinents:
   - format/lint;

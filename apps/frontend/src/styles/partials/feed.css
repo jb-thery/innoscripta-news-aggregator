@@ -32,6 +32,7 @@
   font-size: 5rem;
   font-weight: 500;
   line-height: 0.8;
+  font-variant-numeric: tabular-nums;
 }
 
 .feed-header__index span {
@@ -127,6 +128,8 @@
   border: 1px solid var(--line);
   font-size: 0.7rem;
   gap: 0.35rem;
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 .author-chip button {
@@ -139,6 +142,16 @@
   color: var(--ink-muted);
   cursor: pointer;
   place-items: center;
+}
+
+.author-chip button:hover {
+  color: var(--ink);
+}
+
+.field-error {
+  margin: 0.55rem 0 0;
+  color: var(--danger);
+  font-size: 0.72rem;
 }
 
 .saved-indicator {

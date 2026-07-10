@@ -43,7 +43,7 @@ function SearchPage() {
     (change: Partial<SearchState>) => {
       const query = change.q?.trim()
       if (query) {
-        safeCapture("news_search", { query_length: query.length })
+        void safeCapture("news_search", { query_length: query.length })
       }
 
       void navigate({
@@ -71,7 +71,7 @@ function SearchPage() {
         <div className="hero-orbit" aria-hidden="true">
           <span className="hero-orbit__ring" />
           <span className="hero-orbit__core">03</span>
-          <small>sources / one view</small>
+          <small>{t("hero.sourcesSummary")}</small>
         </div>
       </section>
 
@@ -81,7 +81,7 @@ function SearchPage() {
         {result.data ? <SourceStatusStrip sources={result.data.sources} /> : null}
 
         {hasQuery && result.data ? (
-          <div className="results-heading">
+          <div className="results-heading" role="status">
             <p>{t("search.results", { count: articleCount })}</p>
             <span>{t("search.for", { query: search.q })}</span>
           </div>

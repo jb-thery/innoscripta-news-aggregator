@@ -108,6 +108,8 @@
   font-weight: 540;
   letter-spacing: -0.025em;
   line-height: 1.02;
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
 }
 
 .article-card--lead h2 {
@@ -138,8 +140,10 @@
 }
 
 .article-card__footer > span {
+  min-width: 0;
   color: var(--ink-muted);
   font-size: 0.72rem;
+  overflow-wrap: anywhere;
 }
 
 .article-card__footer a {
@@ -148,6 +152,7 @@
   color: var(--signal-dark);
   font-size: 0.74rem;
   font-weight: 800;
+  flex-shrink: 0;
   gap: 0.35rem;
   text-decoration: none;
 }

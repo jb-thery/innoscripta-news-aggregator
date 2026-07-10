@@ -1,92 +1,92 @@
 # Control Checklist
 
-Verification locale du 10 juillet 2026.
+Vérification locale du 10 juillet 2026.
 
 ## Source et cadrage
 
-- [x] Les documents source identifiants ne sont pas suivis dans le depot.
-- [x] Les exigences durables sont couvertes dans `docs/case-study-brief.md`.
-- [x] La carte PAC est conservee et identifiee comme contexte hors perimetre.
+- [x] Le PDF original identifiant de l'étude de cas n'est pas suivi dans le dépôt.
+- [x] Les exigences durables sont conservées dans `docs/case-study-brief.md`.
+- [x] La méthodologie IA du README est présentée comme un différenciateur professionnel, pas comme une exigence inventée du brief.
+- [x] `PLAN.md` reste ignoré et non suivi par Git.
 
 ## Fonctionnel
 
-- [x] Recherche par mot-cle avec debounce.
-- [x] Filtres date, categorie, source et auteur dans l'URL.
-- [x] Preferences de sources, categories et auteurs.
-- [x] Flux personnalise visible et persistant apres rechargement.
-- [x] Etats chargement, vide, erreur et succes partiel.
-- [x] Liens vers les articles originaux.
-- [x] Interface anglais/allemand.
-- [x] Themes clair/sombre.
+- [x] Recherche par mot-clé avec debounce, conservation du focus et synchronisation après navigation arrière.
+- [x] Filtres date, catégorie, source et auteur dans l'URL.
+- [x] Préférences de sources, catégories et auteurs.
+- [x] Flux personnalisé visible et persistant après rechargement.
+- [x] Validation accessible des doublons d'auteur, traduite en anglais et allemand.
+- [x] États chargement, vide, erreur et succès partiel.
+- [x] Six destinations éditeur HTTPS dans les fixtures, sans URL `/mock/`; les tests vérifient les liens sans garantir la disponibilité externe permanente.
+- [x] Interface anglais/allemand et thèmes clair/sombre.
 
-## Sources de donnees
+## Sources de données
 
-- [x] NewsAPI.org integre avec fallback mock explicite.
-- [x] The Guardian integre avec fallback mock explicite.
-- [x] New York Times integre avec fallback mock explicite.
-- [x] Chaque provider est normalise vers le schema `Article`.
-- [x] Une indisponibilite provider conserve les autres resultats.
+- [x] NewsAPI.org intégré avec fallback mock explicite.
+- [x] The Guardian intégré avec fallback mock explicite.
+- [x] New York Times intégré avec fallback mock explicite.
+- [x] Chaque fournisseur est normalisé vers le schéma `Article`.
+- [x] Une indisponibilité fournisseur conserve les autres résultats.
+- [ ] Smoke live simultané des trois fournisseurs avec de vraies clés, non exécuté faute d'identifiants locaux.
 
-## Securite
+## Sécurité et configuration
 
-- [x] Aucun secret dans le code source ou `.env.example`.
-- [x] Les fichiers `.env` reels sont ignores par Git et Docker.
-- [x] Les cles API restent cote serveur et ne sont pas dans le bundle navigateur.
-- [x] Le serveur applique CSP et en-tetes de securite.
-- [x] Le CSP applicatif refuse les scripts inline et Swagger a une exception limitee a jsDelivr.
-- [x] `pnpm audit --audit-level low` ne remonte aucune vulnerabilite connue.
-- [x] PostHog est desactive sans configuration, ne duplique pas les erreurs globales et ne capture pas le texte recherche.
-- [x] Le conteneur s'execute avec l'utilisateur non-root `node`.
+- [x] Aucun secret détecté dans le diff ou les fichiers suivis.
+- [x] Les fichiers `.env` réels sont ignorés par Git et Docker.
+- [x] Les clés API restent côté serveur et ne sont pas injectées au build frontend.
+- [x] Vite charge les valeurs publiques `VITE_*` depuis la racine du monorepo.
+- [x] Compose transmet uniquement les valeurs PostHog publiques comme arguments de build.
+- [x] Le serveur applique CSP et les en-têtes de sécurité documentés.
+- [x] `pnpm audit --audit-level low` ne remonte aucune vulnérabilité connue dans les dépendances applicatives verrouillées.
+- [x] PostHog reste désactivé et hors du chemin initial sans configuration, et ne capture pas le texte recherché.
+- [x] Le conteneur s'exécute avec l'utilisateur non-root `node`.
+- [x] Les polices DM Sans et Newsreader sont distribuées avec leurs avis OFL 1.1 dans le build public.
 
-## UI et accessibilite
+## UI et accessibilité
 
-- [x] Interface controlee en 1200 x 900 et 390 x 844.
-- [x] Aucun overflow horizontal mobile.
-- [x] Controles semantiques, labels et focus visible.
-- [x] Filtres fermes absents de l'arbre accessible.
-- [x] Cibles tactiles principales de 44 px minimum.
-- [x] Badge de runtime, selecteur de langue et bouton de theme alignes a 44 px sur desktop.
-- [x] Images des trois providers servies localement et chargees en `200` dans le container Docker.
-- [x] Texte des cartes lisible sans troncature bloquante.
-- [x] Preuve navigateur mobile: structure accessible, absence d'overflow horizontal et console propre.
+- [x] Lien d'évitement clavier vers le contenu principal.
+- [x] Contrôles sémantiques, labels, noms de formulaire et focus visible.
+- [x] Régions live pour statut runtime, sources, résultats et erreurs de validation.
+- [x] Images avec dimensions intrinsèques, priorité de la première image et lazy loading des suivantes.
+- [x] Motion réduite respectée et transitions mortes des filtres supprimées.
+- [x] Aucun overflow horizontal en viewport mobile `390 x 844`.
+- [x] Header pleine largeur sur desktop et mobile, sans gouttières de fond latérales.
+- [x] Console sans erreur ni avertissement applicatif.
+- [x] Lighthouse mobile: 100 accessibilité, bonnes pratiques, SEO et navigation agentique.
 
-## Qualite et validation
+## Monorepo et scripts
 
-- [x] `pnpm check`.
-- [x] `pnpm typecheck`.
-- [x] `pnpm test:coverage`, 41 tests verts.
+- [x] `mise run local` installe puis démarre Vite `5173` et Hono `3001`.
+- [x] `mise run docker` construit et démarre la stack de revue sur `4174`.
+- [x] `mise run stop` nettoie la stack Docker.
+- [x] Le typecheck découvre automatiquement les cinq workspaces.
+- [x] Les configurations racine et la spec Playwright sont typecheckées.
+- [x] Vitest sépare les suites Node et jsdom.
+- [x] `preview` et `preview:static` construisent leurs artefacts avant démarrage.
+- [x] Node `22.22.3` et pnpm `10.34.4` sont épinglés.
+- [x] Les configurations partagées `.zed` et `.codex` sont suivies, sans secret, avec Ragmir et GitNexus épinglés et exécutables.
+- [x] GitNexus reste un outil local à la demande, exclu des dépendances, du contexte Docker et du runtime applicatif.
+
+## Qualité et validation
+
+- [x] `mise run verify`: Biome, TypeScript, couverture et build de production.
+- [x] 43 tests Vitest verts dans 11 fichiers.
 - [x] Seuils de couverture: 80% statements/lines/functions et 65% branches.
-- [x] Couverture mesuree: 82.59% statements, 82.14% lines, 84.81% functions et 66.48% branches.
-- [x] `pnpm test:e2e`, 6 scenarios verts sur desktop Chromium et Pixel 5.
-- [x] `pnpm build`.
-- [x] `pnpm build:static-demo`.
-- [x] `docker build -t signal-desk:local .`.
-- [x] `docker run` sans cle en mode mock.
-- [x] Smoke container sur `/`, `/api/health` et `/api/search`.
-- [x] Container non-root, healthcheck Compose et arret SIGTERM avec code `0`.
-- [x] `mise run docker:verify` reconstruit, teste et supprime la stack de revue.
-- [x] Console navigateur sans erreur ni avertissement.
-- [x] Zod configure en mode `jitless` avant validation pour respecter le CSP strict sans signal navigateur.
-- [x] Demo statique validee sans requete fetch ou XHR, y compris sur `/feed` apres rechargement.
-- [x] Diff controle avec `git diff --check`.
-- [x] Commitlint, pre-commit Biome et pre-push `verify:fast` operationnels.
-- [x] Zed configure au niveau projet pour Biome, tests, build et verification Docker.
+- [x] Couverture logique TypeScript: 85,14% statements, 84,77% lines, 85,36% functions et 66,66% branches.
+- [x] `pnpm test:e2e`: 5 parcours sur desktop et mobile Chromium, soit 10 exécutions vertes.
+- [x] `pnpm build:static-demo` et `pnpm build:pages`.
+- [x] `mise run docker:verify`: build, healthcheck, recherche API et nettoyage.
+- [x] Smokes preview sur `/`, `/feed`, `/api/health` et `/api/search`.
+- [x] React Doctor: 97/100, seul avertissement faux positif sur le setup Vitest référencé.
+- [x] Actionlint valide les workflows GitHub Actions.
+- [x] Client OpenAPI généré sans dérive.
+- [x] `git diff --check`.
 
-## Documentation livraison
+## Documentation et livraison
 
-- [x] `README.md` explique architecture, installation, local, Docker et variables.
-- [x] `.env.example` liste les variables sans valeur sensible.
-- [x] Modes mock, mixed, live et demo statique documentes.
-- [x] Limitations et suites documentees.
-- [x] Captures production desktop et mobile presentes.
-
-## Publication
-
-- [x] Repo GitHub public cree.
-- [x] Branches Git de travail poussees puis supprimees apres fusion.
-- [x] Pull requests Docker `#2` et finitions `#3` fusionnees dans `develop`.
-- [x] Release `#4`, back-merge `#5`, demo `#6`/`#7` et correctif routing `#8`/`#9` fusionnes.
-- [x] CI GitHub distante verte sur les pull requests et les branches protegees.
-- [x] Tag signe `v1.0.0` publie sur `main`.
-- [x] Demo live accessible sur GitHub Pages et liee depuis le README.
-- [ ] Email de soumission a envoyer manuellement avec lien du repo et CV a jour, non envoye.
+- [x] README public recentré sur la candidature et la méthodologie IA responsable.
+- [x] Stack, observabilité, CI, sécurité, règles d'ingénierie et commandes principales documentées.
+- [x] `docs/architecture.md` remplace l'ancien document nommé comme un plan.
+- [x] Captures desktop et mobile régénérées depuis le preview de production avec les fixtures actuelles.
+- [x] Les chiffres de validation détaillés ne sont conservés que dans cette checklist datée.
+- [x] Le workflow Pages attend une CI `main` réussie avant déploiement.
