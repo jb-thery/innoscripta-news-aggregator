@@ -73,6 +73,7 @@ Ces regles s'appliquent au depot Git Signal Desk.
 ## GitNexus
 
 - Garder `.gitnexus/` ignore: l'index est local, volumineux et entierement regenerable.
+- Garder `.gitnexusrc` suivi: il fixe `develop`, le mode index-only, PDG, embeddings et un seul worker.
 - Actualiser l'index avant une exploration d'architecture ou une analyse d'impact non triviale.
 - Utiliser l'integration MCP du projet dans `.codex/config.toml`; ne pas lancer `gitnexus setup`, qui modifierait la configuration globale de la machine.
 

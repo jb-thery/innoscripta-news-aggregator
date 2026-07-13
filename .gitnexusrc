@@ -1,0 +1,8 @@
+{
+  "defaultBranch": "develop",
+  "indexOnly": true,
+  "embeddings": true,
+  "pdg": true,
+  "workers": 1,
+  "embeddingThreads": 1
+}
